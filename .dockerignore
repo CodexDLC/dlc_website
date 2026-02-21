@@ -30,8 +30,9 @@ data/
 logs/
 
 # Tests
-tests/
 **/tests/
 
 # Dev tools
 .pre-commit-config.yaml
+tools/
+scripts/

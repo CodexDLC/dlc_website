@@ -53,7 +53,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: deploy/backend/Dockerfile
+          file: deploy/django/Dockerfile
           push: true
           tags: |
             ghcr.io/${{ env.REPO_LOWER }}-backend:latest
@@ -61,6 +61,19 @@ jobs:
             ghcr.io/${{ env.REPO_LOWER }}-backend:${{ github.sha }}
           cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-backend:buildcache
           cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-backend:buildcache,mode=max
+
+      - name: Build and Push Nginx
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: deploy/nginx/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_LOWER }}-nginx:latest
+            ghcr.io/${{ env.REPO_LOWER }}-nginx:${{ env.VERSION }}
+            ghcr.io/${{ env.REPO_LOWER }}-nginx:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-nginx:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-nginx:buildcache,mode=max
 
       - name: Build and Push Bot
         uses: docker/build-push-action@v5
@@ -88,19 +101,6 @@ jobs:
           cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-worker:buildcache
           cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-worker:buildcache,mode=max
 
-      - name: Build and Push Nginx
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: deploy/nginx/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ env.REPO_LOWER }}-nginx:latest
-            ghcr.io/${{ env.REPO_LOWER }}-nginx:${{ env.VERSION }}
-            ghcr.io/${{ env.REPO_LOWER }}-nginx:${{ github.sha }}
-          cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-nginx:buildcache
-          cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-nginx:buildcache,mode=max
-
       - name: Copy configs to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -108,7 +108,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           source: "deploy/"
-          target: "/opt/${{ github.event.repository.name }}/"
+          target: "/opt/dlc_website/"
           strip_components: 0
           rm: false
           overwrite: true
@@ -116,26 +116,25 @@ jobs:
       - name: SSH Deploy
         uses: appleboy/ssh-action@v1.0.3
         env:
-          DOCKER_IMAGE_BACKEND: ghcr.io/${{ env.REPO_LOWER }}-backend:latest
-          DOCKER_IMAGE_BOT: ghcr.io/${{ env.REPO_LOWER }}-bot:latest
-          DOCKER_IMAGE_WORKER: ghcr.io/${{ env.REPO_LOWER }}-worker:latest
-          DOCKER_IMAGE_NGINX: ghcr.io/${{ env.REPO_LOWER }}-nginx:latest
+          DOCKER_IMAGE_BACKEND: ${{ secrets.DOCKER_IMAGE_BACKEND }}
+          DOCKER_IMAGE_NGINX: ${{ secrets.DOCKER_IMAGE_NGINX }}
+          DOCKER_IMAGE_BOT: ${{ secrets.DOCKER_IMAGE_BOT }}
+          DOCKER_IMAGE_WORKER: ${{ secrets.DOCKER_IMAGE_WORKER }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
           REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
           VERSION: ${{ env.VERSION }}
           ENV_FILE_CONTENT: ${{ secrets.ENV_FILE }}
-          REPO_NAME: ${{ github.event.repository.name }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          envs: DOCKER_IMAGE_BACKEND,DOCKER_IMAGE_BOT,DOCKER_IMAGE_WORKER,DOCKER_IMAGE_NGINX,DOMAIN_NAME,REDIS_PASSWORD,GITHUB_TOKEN,GITHUB_ACTOR,VERSION,ENV_FILE_CONTENT,REPO_NAME
+          envs: DOCKER_IMAGE_BACKEND,DOCKER_IMAGE_NGINX,DOCKER_IMAGE_BOT,DOCKER_IMAGE_WORKER,DOMAIN_NAME,REDIS_PASSWORD,GITHUB_TOKEN,GITHUB_ACTOR,VERSION,ENV_FILE_CONTENT
           script: |
             set -e
 
-            cd /opt/$REPO_NAME/deploy
+            cd /opt/dlc_website/deploy
 
             echo "🚀 Deploying version: $VERSION"
 
@@ -146,9 +145,9 @@ jobs:
             }
 
             update_var "DOCKER_IMAGE_BACKEND" "$DOCKER_IMAGE_BACKEND"
+            update_var "DOCKER_IMAGE_NGINX" "$DOCKER_IMAGE_NGINX"
             update_var "DOCKER_IMAGE_BOT" "$DOCKER_IMAGE_BOT"
             update_var "DOCKER_IMAGE_WORKER" "$DOCKER_IMAGE_WORKER"
-            update_var "DOCKER_IMAGE_NGINX" "$DOCKER_IMAGE_NGINX"
 
             [ ! -z "$DOMAIN_NAME" ] && update_var "DOMAIN_NAME" "$DOMAIN_NAME"
             [ ! -z "$REDIS_PASSWORD" ] && update_var "REDIS_PASSWORD" "$REDIS_PASSWORD"
