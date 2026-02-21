@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DLC Montage GmbH - Zukunftssichere Energielösungen</title>
+  <link rel="stylesheet" href="src/prototype/static/css/base.css">
+  <link rel="stylesheet" href="src/prototype/static/css/layout.css">
+  <link rel="stylesheet" href="src/prototype/static/css/components.css">
+  <style>
+    /* Specific Page Styles */
+    .hero {
+      position: relative;
+      padding: 120px 0;
+      background-image: linear-gradient(rgba(10, 37, 64, 0.6), rgba(10, 37, 64, 0.6)), url('src/prototype/static/img/home_hero.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--white);
+      text-align: center;
+    }
+
+    .hero h1 {
+      color: var(--white);
+      margin-bottom: var(--space-md);
+    }
+
+    .hero p {
+      font-size: 20px;
+      margin-bottom: var(--space-lg);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .trust-bar {
+      background-color: var(--navy-100);
+      padding: var(--space-sm) 0;
+      display: flex;
+      justify-content: center;
+      gap: var(--space-xl);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .trust-bar span {
+      font-weight: 600;
+      color: var(--gray-500);
+      font-size: 18px;
+    }
+
+    .split-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-xl);
+      align-items: center;
+    }
+
+    @media(min-width: 1024px) {
+      .split-section {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .split-image {
+      border-radius: var(--border-radius);
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-lg);
+      text-align: center;
+    }
+
+    @media(min-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .stat-number {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--green-500);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 16px;
+      color: var(--navy-900);
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="top-bar">
+      <div class="container">
+        <div class="top-bar-contact">
+          <span>📞 +49 (0) 123 456 789</span> | <span>✉️ info@dlc-energy.de</span>
+        </div>
+        <div class="top-bar-links">
+          <a href="#">Kundenportal</a>
+        </div>
+      </div>
+    </div>
+    <div class="main-nav">
+      <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="brand-logo">
+          <a href="index.html" style="text-decoration: none; color: inherit;">DLC <span
+              style="color: var(--green-500);">Montage</span></a>
+        </div>
+        <nav class="nav-links">
+          <a href="src/prototype/templates/b2c/">Privatkunden</a>
+          <a href="src/prototype/templates/b2b/">Gewerbe</a>
+          <a href="src/prototype/templates/subcontracting/">Großprojekte</a>
+          <a href="src/prototype/templates/references/">Referenzen</a>
+        </nav>
+        <div class="nav-actions">
+          <a href="src/prototype/templates/contacts/" class="btn btn-primary">Projekt anfragen</a>
+          <button class="mobile-menu-btn">☰</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="animate-fade-in-up">Zukunftssichere Energielösungen</h1>
+      <p class="animate-fade-in-up delay-100">Engineering, Installation und Wartung für Industrie, Gewerbe und
+        Privathaushalte aus einer Hand.</p>
+      <a href="src/prototype/templates/contacts/" class="btn btn-primary animate-fade-in-up delay-200"
+        style="font-size: 18px; padding: 16px 32px;">Beratungstermin vereinbaren</a>
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <span>Huawei</span>
+    <span>Fronius</span>
+    <span>Schletter Group</span>
+    <span>K2 Systems</span>
+    <span style="border-left: 2px solid var(--gray-500); padding-left: var(--space-xl);">TÜV Zertifiziert</span>
+    <span>ISO 9001</span>
+  </div>
+
+  <!-- GATEWAY (BUSINESS LINES) -->
+  <section class="section section-bg-gray fade-in-section">
+    <div class="container">
+      <div class="section-header">
+        <h2>Unsere Lösungen</h2>
+        <p style="color: var(--gray-500); font-size: 18px;">Maßgeschneiderte Photovoltaik-Systeme für jede Anforderung.
+        </p>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <img src="src/prototype/static/img/b2c_house.png" alt="Privathaushalte" class="card-image">
+          <div class="card-content">
+            <h3 class="card-title">Privatkunden (B2C)</h3>
+            <p class="card-text">Alles aus einer Hand. Von der Beratung über Förderung bis zur schlüsselfertigen
+              Installation auf Ihrem Dach.</p>
+            <a href="src/prototype/templates/b2c/" class="btn btn-outline" style="width: 100%;">Mehr erfahren</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="src/prototype/static/img/b2b_industrial.png" alt="Gewerbe" class="card-image">
+          <div class="card-content">
+            <h3 class="card-title">Gewerbe (B2B)</h3>
+            <p class="card-text">Reduzieren Sie Energiekosten und erfüllen Sie ESG-Standards mit leistungsstarken
+              Industrieanlagen.</p>
+            <a href="src/prototype/templates/b2b/" class="btn btn-outline" style="width: 100%;">Zur B2B Lösung</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="src/prototype/static/img/epc_solarpark.png" alt="Großprojekte" class="card-image">
+          <div class="card-content">
+            <h3 class="card-title">Großprojekte (EPC)</h3>
+            <p class="card-text">Zuverlässige Partnerschaft im Subcontracting für Solarthermie und PV-Parks. Strikte
+              Einhaltung von Deadlines.</p>
+            <a href="src/prototype/templates/subcontracting/" class="btn btn-outline" style="width: 100%;">Zur EPC
+              Übersicht</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERTISE -->
+  <section class="section fade-in-section">
+    <div class="container">
+      <div class="split-section">
+        <div>
+          <h2>Engineering & Expertise</h2>
+          <p style="font-size: 18px; color: var(--gray-500); margin-bottom: var(--space-md);">Wir sind Ingenieure, keine
+            reinen Monteure. Jeder Prozessschritt ist datengetrieben und präzise durchdacht.</p>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 16px; display: flex; align-items: flex-start;">
+              <span style="color: var(--green-500); margin-right: 12px; font-weight: bold;">✓</span>
+              <div>
+                <strong>Dachstatik & Planung</strong><br>
+                <span style="color: var(--gray-500); font-size: 14px;">Exakte 3D-Simulationen und
+                  Wirtschaftlichkeitsberechnungen.</span>
+              </div>
+            </li>
+            <li style="margin-bottom: 16px; display: flex; align-items: flex-start;">
+              <span style="color: var(--green-500); margin-right: 12px; font-weight: bold;">✓</span>
+              <div>
+                <strong>Installation & Netzanschluss</strong><br>
+                <span style="color: var(--gray-500); font-size: 14px;">Reibungslose Umsetzung durch zertifizierte
+                  Fachteams.</span>
+              </div>
+            </li>
+            <li style="margin-bottom: 16px; display: flex; align-items: flex-start;">
+              <span style="color: var(--green-500); margin-right: 12px; font-weight: bold;">✓</span>
+              <div>
+                <strong>Wartung & Support</strong><br>
+                <span style="color: var(--gray-500); font-size: 14px;">Langfristige Überwachung für maximale
+                  Effizienz.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <img src="https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=800&q=80" alt="Engineering"
+            class="split-image">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL PROOF / STATS -->
+  <section class="section section-bg-gray fade-in-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div>
+          <div class="stat-number" data-target="50" data-suffix="+">0</div>
+          <div class="stat-label">MW Installierte Leistung</div>
+        </div>
+        <div>
+          <div class="stat-number" data-target="200" data-suffix="+">0</div>
+          <div class="stat-label">Erfolgreiche Projekte</div>
+        </div>
+        <div>
+          <div class="stat-number" data-target="15">0</div>
+          <div class="stat-label">Jahre Erfahrung</div>
+        </div>
+        <div>
+          <div class="stat-number" data-target="100" data-suffix="%">0</div>
+          <div class="stat-label">Zertifizierte Fachkräfte</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="section section-bg-dark fade-in-section" style="text-align: center;">
+    <div class="container" style="max-width: 600px;">
+      <h2 style="color: var(--white); margin-bottom: var(--space-md);">Bereit für die Energiewende?</h2>
+      <p style="color: var(--navy-100); margin-bottom: var(--space-xl); font-size: 18px;">Starten Sie jetzt und
+        berechnen Sie Ihr Potenzial in nur 2 Minuten.</p>
+      <a href="src/prototype/templates/contacts/" class="btn btn-primary"
+        style="font-size: 18px; padding: 16px 32px;">Kostenlose Anfrage starten</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-top container grid">
+      <div class="footer-column" style="grid-column: span 1;">
+        <div class="brand-logo" style="color: var(--white); margin-bottom: var(--space-sm);">
+          <a href="index.html" style="text-decoration: none; color: inherit;">DLC <span
+              style="color: var(--green-500);">Montage</span></a>
+        </div>
+        <p style="color: var(--gray-500); font-size: 14px;">Der Handel und die Montagetätigkeiten von
+          Unterkonstruktionen für Photovoltaikanlagen und sonstige genormte Fertigteile.</p>
+        <div style="margin-top: 16px; font-size: 14px; color: var(--gray-500);">
+          📍 Ackerstr. 7, 06366 Osternienburger Land<br>
+          📞 +49 (0) 123 456 789<br>
+          ✉️ info@dlc-energy.de<br>
+          <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--gray-500);">HRB 25564
+            (Amtsgericht Stendal)<br>EUID: DEW1215.HRB25564</span>
+        </div>
+      </div>
+
+      <div class="footer-column" style="grid-column: span 1;">
+        <h4>Lösungen</h4>
+        <ul class="footer-links">
+          <li><a href="src/prototype/templates/b2c/">Privatkunden (B2C)</a></li>
+          <li><a href="src/prototype/templates/b2b/">Gewerbe (B2B)</a></li>
+          <li><a href="src/prototype/templates/subcontracting/">Großprojekte (EPC)</a></li>
+          <li><a href="#">Wartung & Service</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column" style="grid-column: span 1;">
+        <h4>Unternehmen</h4>
+        <ul class="footer-links">
+          <li><a href="#">Über uns</a></li>
+          <li><a href="#">Referenzen</a></li>
+          <li><a href="#">Karriere</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column" style="grid-column: span 1;">
+        <h4>Newsletter</h4>
+        <p style="color: var(--gray-500); font-size: 14px; margin-bottom: 16px;">Bleiben Sie immer auf dem neuesten
+          Stand.</p>
+        <form style="display: flex;">
+          <input type="email" placeholder="Ihre E-Mail" class="form-input"
+            style="border-radius: var(--border-radius) 0 0 var(--border-radius); border: none;">
+          <button type="submit" class="btn btn-primary"
+            style="border-radius: 0 var(--border-radius) var(--border-radius) 0;">→</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="footer-trust">
+      <div class="container" style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;">
+        <strong>TÜV Rheinland</strong>
+        <strong>VDE</strong>
+        <strong>Handwerkskammer</strong>
+        <strong>ISO 9001</strong>
+      </div>
+    </div>
+
+    <div class="footer-bottom container">
+      <div>&copy; 2026 DLC Montage GmbH. Alle Rechte vorbehalten.</div>
+      <div class="footer-legal-links">
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+        <a href="#">AGB</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="src/prototype/static/js/main.js" defer></script>
+</body>
+
+</html>

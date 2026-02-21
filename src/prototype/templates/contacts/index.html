@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt & Anfrage - DLC Montage GmbH</title>
+    <link rel="stylesheet" href="../../static/css/base.css">
+    <link rel="stylesheet" href="../../static/css/layout.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    <style>
+        .page-hero {
+            background-color: var(--navy-900);
+            color: var(--white);
+            padding: 80px 0;
+            text-align: center;
+            background-image: linear-gradient(rgba(10, 37, 64, 0.7), rgba(10, 37, 64, 0.7)), url('../../static/img/home_hero.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .page-hero h1 {
+            color: var(--white);
+            margin-bottom: 16px;
+        }
+
+        .page-hero p {
+            color: var(--navy-100);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-form {
+            background-color: var(--white);
+            padding: var(--space-xl);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-card);
+            max-width: 800px;
+            margin: -60px auto 0 auto;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="top-bar">
+            <div class="container">
+                <div class="top-bar-contact">
+                    <span>📞 +49 (0) 123 456 789</span> | <span>✉️ info@dlc-energy.de</span>
+                </div>
+            </div>
+        </div>
+        <div class="main-nav">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="brand-logo">
+                    <a href="../../../../index.html" style="text-decoration: none; color: inherit;">DLC <span
+                            style="color: var(--green-500);">Montage</span></a>
+                </div>
+                <nav class="nav-links">
+                    <a href="../b2c/">Privatkunden</a>
+                    <a href="../b2b/">Gewerbe</a>
+                    <a href="../subcontracting/">Großprojekte</a>
+                    <a href="../references/">Referenzen</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-hero" style="background-attachment: fixed;">
+        <div class="container" style="max-width: 800px;">
+            <h1 class="animate-fade-in-up">Starten Sie Ihr Projekt</h1>
+            <p class="animate-fade-in-up delay-100">Ob Eigenheim, Gewerbebetrieb oder Solarpark – unsere Ingenieure
+                stehen Ihnen für eine erste Einschätzung zur Verfügung. Füllen Sie das Formular aus, wir melden uns
+                umgehend.</p>
+        </div>
+    </section>
+
+    <section class="section fade-in-section" style="padding-top: var(--space-3xl); background-color: var(--gray-100);">
+        <div class="container">
+            <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px;">
+                <!-- Contact Info Side -->
+                <div>
+                    <h2 style="margin-bottom: 24px;">Direkter Kontakt</h2>
+                    <p style="color: var(--gray-500); margin-bottom: 32px;">Sie bevorzugen ein persönliches Gespräch?
+                        Rufen Sie uns direkt an oder besuchen Sie uns in unserer Zentrale in Berlin.</p>
+
+                    <div
+                        style="background: var(--white); padding: 24px; border-radius: 8px; margin-bottom: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <h4 style="margin-bottom: 8px; color: var(--navy-900);">📍 Hauptsitz Osternienburger Land</h4>
+                        <p style="color: var(--gray-500);">Ackerstr. 7<br>06366 Köthen (Anhalt), Deutschland</p>
+                    </div>
+
+                    <div
+                        style="background: var(--white); padding: 24px; border-radius: 8px; margin-bottom: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <h4 style="margin-bottom: 8px; color: var(--navy-900);">📞 Telefon / E-Mail</h4>
+                        <p style="color: var(--gray-500);">+49 (0) 123 456 789<br>info@dlc-energy.de</p>
+                        <p style="color: var(--green-500); font-size: 14px; margin-top: 8px;">Mo-Fr: 08:00 - 18:00 Uhr
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Contact Form Side -->
+                <div class="contact-form"
+                    style="background: var(--white); padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+                    <h3 style="margin-bottom: 24px;">Online Anfrage</h3>
+                    <form>
+                        <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+                            <div class="form-group" style="grid-column: span 1;">
+                                <label class="form-label" for="firstname">Vorname</label>
+                                <input type="text" id="firstname" class="form-input" placeholder="Max">
+                            </div>
+                            <div class="form-group" style="grid-column: span 1;">
+                                <label class="form-label" for="lastname">Nachname</label>
+                                <input type="text" id="lastname" class="form-input" placeholder="Mustermann">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="email">E-Mail</label>
+                            <input type="email" id="email" class="form-input" placeholder="max@beispiel.de">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="project_type">Projekttyp</label>
+                            <select id="project_type" class="form-input">
+                                <option>Wählen Sie eine Option</option>
+                                <option>Privathaus (B2C)</option>
+                                <option>Gewerbeimmobilie (B2B)</option>
+                                <option>Großprojekt / Freifläche</option>
+                                <option>Subcontracting / Montageanfrage</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="message">Ihre Nachricht</label>
+                            <textarea id="message" class="form-input" rows="4"
+                                placeholder="Beschreiben Sie Ihr Projekt (Standort, Dachfläche, geschätzter Bedarf)..."></textarea>
+                        </div>
+
+                        <button type="button" class="btn btn-primary"
+                            style="width: 100%; border-radius: 8px; font-weight: 600;">Kostenfrei anfragen</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-top container grid">
+            <div class="footer-column" style="grid-column: span 1;">
+                <div class="brand-logo" style="color: var(--white); margin-bottom: var(--space-sm);">
+                    <a href="../../../../index.html" style="text-decoration: none; color: inherit;">DLC <span
+                            style="color: var(--green-500);">Montage</span></a>
+                </div>
+                <p style="color: var(--gray-500); font-size: 14px;">Der Handel und die Montagetätigkeiten von
+                    Unterkonstruktionen für Photovoltaikanlagen und sonstige genormte Fertigteile.</p>
+                <div style="margin-top: 16px; font-size: 14px; color: var(--gray-500);">
+                    📍 Ackerstr. 7, 06366 Osternienburger Land<br>
+                    📞 +49 (0) 123 456 789<br>
+                    ✉️ info@dlc-energy.de<br>
+                    <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--gray-500);">HRB 25564
+                        (Amtsgericht Stendal)<br>EUID: DEW1215.HRB25564</span>
+                </div>
+            </div>
+
+            <div class="footer-column" style="grid-column: span 1;">
+                <h4>Lösungen</h4>
+                <ul class="footer-links">
+                    <li><a href="../b2c/">Privatkunden (B2C)</a></li>
+                    <li><a href="../b2b/">Gewerbe (B2B)</a></li>
+                    <li><a href="../subcontracting/">Großprojekte (EPC)</a></li>
+                    <li><a href="#">Wartung & Service</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column" style="grid-column: span 1;">
+                <h4>Unternehmen</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Über uns</a></li>
+                    <li><a href="../references/">Referenzen</a></li>
+                    <li><a href="#">Karriere</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column" style="grid-column: span 1;">
+                <h4>Newsletter</h4>
+                <p style="color: var(--gray-500); font-size: 14px; margin-bottom: 16px;">Bleiben Sie immer auf dem
+                    neuesten Stand.</p>
+                <form style="display: flex;">
+                    <input type="email" placeholder="Ihre E-Mail" class="form-input"
+                        style="border-radius: var(--border-radius) 0 0 var(--border-radius); border: none;">
+                    <button type="submit" class="btn btn-primary"
+                        style="border-radius: 0 var(--border-radius) var(--border-radius) 0;">→</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-trust">
+            <div class="container" style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;">
+                <strong>TÜV Rheinland</strong>
+                <strong>VDE</strong>
+                <strong>Handwerkskammer</strong>
+                <strong>ISO 9001</strong>
+            </div>
+        </div>
+
+        <div class="footer-bottom container">
+            <div>&copy; 2026 DLC Montage GmbH. Alle Rechte vorbehalten.</div>
+            <div class="footer-legal-links">
+                <a href="#">Impressum</a>
+                <a href="#">Datenschutz</a>
+                <a href="#">AGB</a>
+            </div>
+        </div>
+    </footer>
+    <script src="../../static/js/main.js" defer></script>
+</body>
+
+</html>

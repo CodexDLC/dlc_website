@@ -1,0 +1,212 @@
+/* 
+  Layout CSS
+  Grid System, Header, Footer
+*/
+
+/* Container & Grid */
+.container {
+    width: 100%;
+    padding-right: 16px;
+    padding-left: 16px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 640px) {
+    .container {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding-right: 32px;
+        padding-left: 32px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1440px;
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+
+.grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+    .grid {
+        gap: 24px;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid {
+        gap: 24px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Header Structure */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+}
+
+.top-bar {
+    background-color: var(--navy-900);
+    color: var(--white);
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.top-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar-links a {
+    color: var(--navy-100);
+    margin-left: 16px;
+}
+
+.top-bar-links a:hover {
+    color: var(--white);
+}
+
+.main-nav {
+    background-color: var(--white);
+    border-bottom: 1px solid var(--gray-100);
+    padding: 16px 0;
+}
+
+.main-nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand-logo {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--navy-900);
+}
+
+.nav-links {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .nav-links {
+        display: flex;
+        gap: 32px;
+    }
+
+    .nav-links a {
+        font-weight: 500;
+    }
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-btn {
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+    .mobile-menu-btn {
+        display: none;
+    }
+}
+
+/* Footer Structure */
+.site-footer {
+    background-color: var(--navy-900);
+    color: var(--white);
+    padding-top: var(--space-2xl);
+}
+
+.footer-top {
+    padding-bottom: var(--space-xl);
+}
+
+.footer-column h4 {
+    color: var(--white);
+    margin-bottom: var(--space-sm);
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 8px;
+}
+
+.footer-links a {
+    color: var(--gray-500);
+}
+
+.footer-links a:hover {
+    color: var(--white);
+}
+
+.footer-trust {
+    background-color: var(--gray-100);
+    color: var(--navy-900);
+    padding: var(--space-md) 0;
+    text-align: center;
+}
+
+.footer-bottom {
+    padding: var(--space-md) 0;
+    border-top: 1px solid var(--navy-700);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: var(--gray-500);
+}
+
+@media (min-width: 640px) {
+    .footer-bottom {
+        flex-direction: row;
+    }
+}
+
+.footer-legal-links a {
+    color: var(--gray-500);
+    margin-left: 16px;
+}
+
+@media (min-width: 640px) {
+    .footer-top.grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .footer-top.grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

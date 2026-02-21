@@ -1,0 +1,80 @@
+/* 
+  Base CSS 
+  Variables, Fonts, CSS Reset
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500&display=swap');
+
+:root {
+  /* Colors */
+  --navy-900: #0A2540;
+  --navy-700: #1A3B5C;
+  --navy-100: #E6EAF0;
+
+  --green-500: #00D084;
+  --green-600: #00A86B;
+
+  --gray-900: #111827;
+  --gray-500: #6B7280;
+  --gray-100: #F3F4F6;
+  --white: #FFFFFF;
+
+  /* Typography */
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+
+  /* Spacing */
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+
+  /* Visuals */
+  --border-radius: 4px;
+  --shadow-card: 0 4px 6px -1px rgba(10, 37, 64, 0.1);
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--gray-900);
+  background-color: var(--white);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--space-sm);
+  color: var(--navy-900);
+}
+
+h1 { font-size: 48px; line-height: 56px; }
+h2 { font-size: 36px; line-height: 44px; font-weight: 600; }
+h3 { font-size: 24px; line-height: 32px; font-weight: 500; }
+
+a {
+  color: var(--navy-900);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--green-500);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

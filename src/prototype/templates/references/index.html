@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referenzen - DLC Montage GmbH</title>
+    <link rel="stylesheet" href="../../static/css/base.css">
+    <link rel="stylesheet" href="../../static/css/layout.css">
+    <link rel="stylesheet" href="../../static/css/components.css">
+    <style>
+        .page-hero {
+            background-color: var(--navy-900);
+            color: var(--white);
+            padding: 80px 0;
+            text-align: center;
+            background-image: linear-gradient(rgba(10, 37, 64, 0.8), rgba(10, 37, 64, 0.8)), url('../../static/img/home_hero.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .page-hero h1 {
+            color: var(--white);
+            margin-bottom: 16px;
+        }
+
+        .page-hero p {
+            color: var(--navy-100);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-lg);
+            text-align: center;
+            padding: var(--space-xl) 0;
+            border-bottom: 1px solid var(--gray-100);
+            margin-bottom: var(--space-xl);
+        }
+
+        @media(min-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--green-500);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--navy-900);
+            font-weight: 500;
+        }
+
+        /* Map Placeholder */
+        .map-container {
+            width: 100%;
+            height: 400px;
+            background-color: var(--navy-100);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-2xl);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gray-100);
+        }
+
+        .map-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+        }
+
+        .map-overlay-text {
+            position: absolute;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--navy-900);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 16px 32px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-card);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="top-bar">
+            <div class="container">
+                <div class="top-bar-contact">
+                    <span>📞 +49 (0) 123 456 789</span> | <span>✉️ info@dlc-energy.de</span>
+                </div>
+            </div>
+        </div>
+        <div class="main-nav">
+            <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="brand-logo">
+                    <a href="../../../../index.html" style="text-decoration: none; color: inherit;">DLC <span
+                            style="color: var(--green-500);">Montage</span></a>
+                </div>
+                <nav class="nav-links">
+                    <a href="../b2c/">Privatkunden</a>
+                    <a href="../b2b/">Gewerbe</a>
+                    <a href="../subcontracting/">Großprojekte</a>
+                    <a href="../references/" style="color: var(--green-500);">Referenzen</a>
+                </nav>
+                <div class="nav-actions">
+                    <a href="../contacts/" class="btn btn-primary">Projekt anfragen</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-hero" style="background-attachment: fixed;">
+        <div class="container" style="max-width: 800px;">
+            <h1 class="animate-fade-in-up">Erfolgreiche Projekte</h1>
+            <p class="animate-fade-in-up delay-100">Von privaten Dachanlagen bis hin zu großen Solarparks im
+                Megawatt-Bereich. Entdecken Sie unsere deutschlandweiten Referenzen und überzeugen Sie sich von unserer
+                Montagequalität.</p>
+        </div>
+    </section>
+
+    <section class="section section-bg-gray fade-in-section">
+        <div class="container">
+            <div class="stats-grid" style="margin-bottom: var(--space-3xl);">
+                <div>
+                    <div class="stat-number" data-target="200" data-suffix="+">0</div>
+                    <div class="stat-label">Fertiggestellte Anlagen</div>
+                </div>
+                <div>
+                    <div class="stat-number" data-target="50" data-suffix=" MW">0</div>
+                    <div class="stat-label">Installierte Leistung</div>
+                </div>
+                <div>
+                    <div class="stat-number" data-target="15" data-suffix="+">0</div>
+                    <div class="stat-label">Industrieparks</div>
+                </div>
+                <div>
+                    <div class="stat-number" data-target="100" data-suffix="%">0</div>
+                    <div class="stat-label">Termintreue</div>
+                </div>
+            </div>
+
+            <div class="section-header fade-in-section">
+                <h2>Ausgewähltes Portfolio</h2>
+                <p style="color: var(--gray-500);">Beispiele unserer Arbeit aus allen Geschäftsbereichen.</p>
+            </div>
+
+            <!-- Bento Reference Grid -->
+            <div class="grid fade-in-section">
+                <div class="card" style="grid-column: span 1;">
+                    <div style="overflow: hidden; border-radius: 12px 12px 0 0;">
+                        <img class="card-image" src="../../static/img/b2b_industrial.png" alt="Industriepark Nord">
+                    </div>
+                    <div class="card-content">
+                        <span
+                            style="display:inline-block; padding:4px 8px; background:rgba(0, 208, 132, 0.1); color:var(--green-600); border-radius:4px; font-weight: 600; font-size: 12px; text-transform: uppercase;">Gewerbe
+                            (B2B)</span>
+                        <h3 class="card-title" style="margin-top: 12px; font-size: 20px;">Logistikzentrum München</h3>
+                        <p class="card-text">Installation einer 850 kWp Dachanlage zur vollständigen
+                            Eigenstromversorgung eines modernen Kühllagers.</p>
+                        <div
+                            style="margin-top: 16px; font-size: 14px; color: var(--navy-900); font-weight: 500; display:flex; gap: 16px;">
+                            <span>⏱️ Bauzeit: 6 Wochen</span>
+                            <span>⚡ Leistung: 850 kWp</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" style="grid-column: span 1;">
+                    <div style="overflow: hidden; border-radius: 12px 12px 0 0;">
+                        <img class="card-image" src="../../static/img/epc_solarpark.png" alt="Solarpark">
+                    </div>
+                    <div class="card-content">
+                        <span
+                            style="display:inline-block; padding:4px 8px; background:rgba(0, 208, 132, 0.1); color:var(--green-600); border-radius:4px; font-weight: 600; font-size: 12px; text-transform: uppercase;">Subcontracting
+                            (EPC)</span>
+                        <h3 class="card-title" style="margin-top: 12px; font-size: 20px;">Solarpark Brandenburg</h3>
+                        <p class="card-text">Komplette DC-Seitige Installation und Modulmontage für einen 12 MWp
+                            Freiflächenpark als General-Subunternehmer.</p>
+                        <div
+                            style="margin-top: 16px; font-size: 14px; color: var(--navy-900); font-weight: 500; display:flex; gap: 16px;">
+                            <span>⏱️ Bauzeit: 3 Monate</span>
+                            <span>⚡ Leistung: 12 MWp</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" style="grid-column: span 1;">
+                    <div style="overflow: hidden; border-radius: 12px 12px 0 0;">
+                        <img class="card-image" src="../../static/img/b2c_house.png" alt="Privathaus">
+                    </div>
+                    <div class="card-content">
+                        <span
+                            style="display:inline-block; padding:4px 8px; background:rgba(0, 208, 132, 0.1); color:var(--green-600); border-radius:4px; font-weight: 600; font-size: 12px; text-transform: uppercase;">Privatkunden
+                            (B2C)</span>
+                        <h3 class="card-title" style="margin-top: 12px; font-size: 20px;">Einfamilienhaus Köln</h3>
+                        <p class="card-text">Komplettsystem inkl. hochleistungs PV-Anlage, intelligentem Li-Ion Speicher
+                            und Einbindung einer smarten EV-Wallbox.</p>
+                        <div
+                            style="margin-top: 16px; font-size: 14px; color: var(--navy-900); font-weight: 500; display:flex; gap: 16px;">
+                            <span>⏱️ Bauzeit: 3 Tage</span>
+                            <span>⚡ Leistung: 15 kWp</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header fade-in-section" style="margin-top: var(--space-4xl);">
+                <h2>Aktiv in ganz Deutschland</h2>
+                <p style="color: var(--gray-500);">Einsatzbereite Teams für Ihre Standorte.</p>
+            </div>
+
+            <div class="map-container fade-in-section"
+                style="border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1200"
+                    alt="Deutschlandkarte">
+                <div class="map-overlay-text"
+                    style="background: rgba(10,37,64,0.85); padding: 16px 32px; border-radius: 8px;">Wir montieren
+                    deutschlandweit</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-top container grid">
+            <div class="footer-column" style="grid-column: span 1;">
+                <div class="brand-logo" style="color: var(--white); margin-bottom: var(--space-sm);">
+                    <a href="../../../../index.html" style="text-decoration: none; color: inherit;">DLC <span
+                            style="color: var(--green-500);">Montage</span></a>
+                </div>
+                <p style="color: var(--gray-500); font-size: 14px;">Der Handel und die Montagetätigkeiten von
+                    Unterkonstruktionen für Photovoltaikanlagen und sonstige genormte Fertigteile.</p>
+                <div style="margin-top: 16px; font-size: 14px; color: var(--gray-500);">
+                    📍 Ackerstr. 7, 06366 Osternienburger Land<br>
+                    📞 +49 (0) 123 456 789<br>
+                    ✉️ info@dlc-energy.de<br>
+                    <span style="display:inline-block; margin-top:8px; font-size:12px; color:var(--gray-500);">HRB 25564
+                        (Amtsgericht Stendal)<br>EUID: DEW1215.HRB25564</span>
+                </div>
+            </div>
+
+            <div class="footer-column" style="grid-column: span 1;">
+                <h4>Lösungen</h4>
+                <ul class="footer-links">
+                    <li><a href="../b2c/">Privatkunden (B2C)</a></li>
+                    <li><a href="../b2b/">Gewerbe (B2B)</a></li>
+                    <li><a href="../subcontracting/">Großprojekte (EPC)</a></li>
+                    <li><a href="#">Wartung & Service</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column" style="grid-column: span 1;">
+                <h4>Unternehmen</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Über uns</a></li>
+                    <li><a href="../references/">Referenzen</a></li>
+                    <li><a href="#">Karriere</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column" style="grid-column: span 1;">
+                <h4>Newsletter</h4>
+                <p style="color: var(--gray-500); font-size: 14px; margin-bottom: 16px;">Bleiben Sie immer auf dem
+                    neuesten Stand.</p>
+                <form style="display: flex;">
+                    <input type="email" placeholder="Ihre E-Mail" class="form-input"
+                        style="border-radius: var(--border-radius) 0 0 var(--border-radius); border: none;">
+                    <button type="submit" class="btn btn-primary"
+                        style="border-radius: 0 var(--border-radius) var(--border-radius) 0;">→</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="footer-trust">
+            <div class="container" style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;">
+                <strong>TÜV Rheinland</strong>
+                <strong>VDE</strong>
+                <strong>Handwerkskammer</strong>
+                <strong>ISO 9001</strong>
+            </div>
+        </div>
+
+        <div class="footer-bottom container">
+            <div>&copy; 2026 DLC Montage GmbH. Alle Rechte vorbehalten.</div>
+            <div class="footer-legal-links">
+                <a href="#">Impressum</a>
+                <a href="#">Datenschutz</a>
+                <a href="#">AGB</a>
+            </div>
+        </div>
+    </footer>
+    <script src="../../static/js/main.js" defer></script>
+</body>
+
+</html>
