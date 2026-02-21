@@ -1,0 +1,41 @@
+## Database Migrations
+
+This project uses Alembic for database migrations.
+Migrations live in `database/migrations/versions/`.
+
+**Important:** Migrations are NOT run at app startup.
+They must be run via CLI or CD pipeline to avoid race conditions with multiple replicas.
+
+### Commands
+
+```bash
+# Apply all pending migrations
+alembic upgrade head
+
+# Create a new migration after model changes
+alembic revision --autogenerate -m "add_user_email_field"
+
+# Check current migration version
+alembic current
+
+# Show migration history
+alembic history
+
+# Rollback last migration
+alembic downgrade -1
+```
+
+### In Docker
+
+```bash
+# Development
+docker compose exec backend alembic upgrade head
+docker compose exec backend alembic revision --autogenerate -m "description"
+
+# Production (CD pipeline runs this automatically before deploy)
+docker compose -f deploy/docker-compose.prod.yml run --rm -T backend alembic upgrade head
+```
+
+### Migration naming convention
+
+Use descriptive names: `add_user_avatar`, `create_orders_table`, `alter_product_price_type`

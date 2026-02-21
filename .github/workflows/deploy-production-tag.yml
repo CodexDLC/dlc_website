@@ -1,0 +1,182 @@
+name: Deploy Production (Tag-based)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  pre-deploy-check:
+    name: Check Server Availability
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test SSH Connection
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: echo "SSH Connection Successful!"
+
+  deploy:
+    name: Build & Deploy to VPS
+    needs: pre-deploy-check
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Lowercase repo name
+        run: |
+          echo "REPO_LOWER=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push Backend
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: deploy/backend/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_LOWER }}-backend:latest
+            ghcr.io/${{ env.REPO_LOWER }}-backend:${{ env.VERSION }}
+            ghcr.io/${{ env.REPO_LOWER }}-backend:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-backend:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-backend:buildcache,mode=max
+
+      - name: Build and Push Bot
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: deploy/bot/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_LOWER }}-bot:latest
+            ghcr.io/${{ env.REPO_LOWER }}-bot:${{ env.VERSION }}
+            ghcr.io/${{ env.REPO_LOWER }}-bot:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-bot:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-bot:buildcache,mode=max
+
+      - name: Build and Push Worker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: deploy/worker/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_LOWER }}-worker:latest
+            ghcr.io/${{ env.REPO_LOWER }}-worker:${{ env.VERSION }}
+            ghcr.io/${{ env.REPO_LOWER }}-worker:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-worker:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-worker:buildcache,mode=max
+
+      - name: Build and Push Nginx
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: deploy/nginx/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPO_LOWER }}-nginx:latest
+            ghcr.io/${{ env.REPO_LOWER }}-nginx:${{ env.VERSION }}
+            ghcr.io/${{ env.REPO_LOWER }}-nginx:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-nginx:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ env.REPO_LOWER }}-nginx:buildcache,mode=max
+
+      - name: Copy configs to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "deploy/"
+          target: "/opt/${{ github.event.repository.name }}/"
+          strip_components: 0
+          rm: false
+          overwrite: true
+
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DOCKER_IMAGE_BACKEND: ghcr.io/${{ env.REPO_LOWER }}-backend:latest
+          DOCKER_IMAGE_BOT: ghcr.io/${{ env.REPO_LOWER }}-bot:latest
+          DOCKER_IMAGE_WORKER: ghcr.io/${{ env.REPO_LOWER }}-worker:latest
+          DOCKER_IMAGE_NGINX: ghcr.io/${{ env.REPO_LOWER }}-nginx:latest
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          VERSION: ${{ env.VERSION }}
+          ENV_FILE_CONTENT: ${{ secrets.ENV_FILE }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: DOCKER_IMAGE_BACKEND,DOCKER_IMAGE_BOT,DOCKER_IMAGE_WORKER,DOCKER_IMAGE_NGINX,DOMAIN_NAME,REDIS_PASSWORD,GITHUB_TOKEN,GITHUB_ACTOR,VERSION,ENV_FILE_CONTENT,REPO_NAME
+          script: |
+            set -e
+
+            cd /opt/$REPO_NAME/deploy
+
+            echo "🚀 Deploying version: $VERSION"
+
+            printf '%s\n' "$ENV_FILE_CONTENT" > .env
+
+            update_var() {
+              grep -q "^$1=" .env && sed -i "s|^$1=.*|$1=$2|g" .env || echo "$1=$2" >> .env
+            }
+
+            update_var "DOCKER_IMAGE_BACKEND" "$DOCKER_IMAGE_BACKEND"
+            update_var "DOCKER_IMAGE_BOT" "$DOCKER_IMAGE_BOT"
+            update_var "DOCKER_IMAGE_WORKER" "$DOCKER_IMAGE_WORKER"
+            update_var "DOCKER_IMAGE_NGINX" "$DOCKER_IMAGE_NGINX"
+
+            [ ! -z "$DOMAIN_NAME" ] && update_var "DOMAIN_NAME" "$DOMAIN_NAME"
+            [ ! -z "$REDIS_PASSWORD" ] && update_var "REDIS_PASSWORD" "$REDIS_PASSWORD"
+
+            if ! grep -q "DOMAIN_NAME" .env; then
+              DOMAIN=$(grep "SITE_BASE_URL" .env 2>/dev/null | cut -d'/' -f3 | cut -d':' -f1 || echo "")
+              [ ! -z "$DOMAIN" ] && update_var "DOMAIN_NAME" "$DOMAIN"
+            fi
+
+            echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+
+            docker compose -f docker-compose.prod.yml pull
+
+            echo "🔄 Running migrations..."
+            if ! docker compose -f docker-compose.prod.yml run --rm -T backend python manage.py migrate --noinput; then
+              echo "❌ Migration failed! Aborting deployment."
+              exit 1
+            fi
+
+            echo "📦 Collecting static files..."
+            docker compose -f docker-compose.prod.yml run --rm -T backend python manage.py collectstatic --noinput
+
+            echo "🚀 Starting services..."
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans --wait --wait-timeout 120
+
+            echo "✅ Checking container health..."
+            docker compose -f docker-compose.prod.yml ps
+
+            docker image prune -f
+
+            echo "✅ Deployment $VERSION completed successfully!"

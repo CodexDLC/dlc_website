@@ -1,0 +1,16 @@
+# Previous robots.txt configuration (before temporary block)
+
+User-agent: *
+Allow: /
+
+# Disallow admin panel
+Disallow: /admin/
+
+# Disallow internal search or technical pages if any
+Disallow: /search/
+
+# Allow AI bots to read llms.txt context
+Allow: /llms.txt
+
+# Sitemap
+Sitemap: https://lily-salon.de/sitemap.xml

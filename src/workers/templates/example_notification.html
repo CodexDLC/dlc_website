@@ -1,0 +1,87 @@
+{% extends "base_email.html" %}
+
+{% block title %}Notification — {{ company_name }}{% endblock %}
+
+{% block content %}
+
+{# -------------------------------------------------------
+   EXAMPLE NOTIFICATION TEMPLATE
+   -------------------------------------------------------
+   Available context variables (set by NotificationService._enrich_context):
+     - greeting          : "Dear John," (based on visits_count)
+     - company_name      : from SiteSettingsSchema
+     - site_url          : base site URL
+     - logo_url          : logo URL
+     - contact_form_url  : URL to contact form
+     - calendar_url      : Google Calendar event URL (if date/time passed)
+     - link_confirm      : confirmation URL (requires action_token)
+     - link_cancel       : cancellation URL (requires action_token)
+     - link_reschedule   : reschedule URL
+     - link_calendar     : same as link_reschedule
+
+   Additional variables come from the `data` dict passed to send_notification().
+   TODO: Replace this example with your own template.
+   ------------------------------------------------------- #}
+
+<!-- GREETING -->
+<tr>
+    <td style="padding-bottom: 20px;">
+        <p style="margin: 0; font-size: 18px; font-weight: bold; color: #2c3e50;">
+            {% if greeting %}{{ greeting }}{% else %}Hello,{% endif %}
+        </p>
+    </td>
+</tr>
+
+<!-- MESSAGE BODY -->
+<tr>
+    <td style="padding-bottom: 30px;">
+        <p style="margin: 0 0 16px 0;">
+            This is an example notification email from <strong>{{ company_name }}</strong>.
+        </p>
+        <p style="margin: 0 0 16px 0;">
+            Replace this content with your own message. You can use any variables
+            from the context dict passed to <code>send_notification()</code>.
+        </p>
+        {% if calendar_url %}
+        <p style="margin: 0;">
+            <a href="{{ calendar_url }}" style="color: #2c3e50;">Add to Google Calendar</a>
+        </p>
+        {% endif %}
+    </td>
+</tr>
+
+<!-- ACTION BUTTONS (optional) -->
+{% if link_confirm != '#' or link_cancel != '#' %}
+<tr>
+    <td align="center" style="padding: 20px 0;">
+        {% if link_confirm != '#' %}
+        <a href="{{ link_confirm }}"
+           style="display: inline-block; padding: 14px 30px; background-color: #27ae60;
+                  color: #ffffff; text-decoration: none; border-radius: 4px;
+                  font-family: Arial, sans-serif; font-weight: bold; margin: 0 8px 10px 8px;">
+            Confirm
+        </a>
+        {% endif %}
+        {% if link_cancel != '#' %}
+        <a href="{{ link_cancel }}"
+           style="display: inline-block; padding: 14px 30px; background-color: #e74c3c;
+                  color: #ffffff; text-decoration: none; border-radius: 4px;
+                  font-family: Arial, sans-serif; font-weight: bold; margin: 0 8px 10px 8px;">
+            Cancel
+        </a>
+        {% endif %}
+    </td>
+</tr>
+{% endif %}
+
+<!-- FOOTER NOTE -->
+<tr>
+    <td style="padding-top: 20px; border-top: 1px solid #eeeeee;">
+        <p style="margin: 0; font-size: 13px; color: #888888;">
+            If you have any questions, please
+            <a href="{{ contact_form_url }}" style="color: #2c3e50;">contact us</a>.
+        </p>
+    </td>
+</tr>
+
+{% endblock %}

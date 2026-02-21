@@ -1,0 +1,16 @@
+name: Protect Release Branch
+
+on:
+  pull_request:
+    branches: [ "release" ]
+
+jobs:
+  check-source-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check source branch
+        if: github.head_ref != 'main'
+        run: |
+          echo "❌ ERROR: Merging into 'release' is allowed ONLY from 'main' branch."
+          echo "Current source branch: ${{ github.head_ref }}"
+          exit 1

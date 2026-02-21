@@ -1,0 +1,38 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[codz]
+.venv
+.mypy_cache
+.ruff_cache
+.pytest_cache
+*.egg-info
+
+# IDE
+.idea
+.vscode
+.cursor*
+
+# Docs & Meta
+docs/
+*.md
+LICENSE
+
+# Environment
+.env
+.envrc
+
+# Data
+data/
+logs/
+
+# Tests
+**/tests/
+
+# Dev tools
+.pre-commit-config.yaml
+tools/
+scripts/

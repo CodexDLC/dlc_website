@@ -1,0 +1,11 @@
+# 📂 Worker Deployment
+
+[⬅️ Back](../README.md) | [🏠 Docs Root](../../../../README.md)
+
+This directory contains the Docker-related files for deploying the ARQ worker service, including its Dockerfile.
+
+## 🗺️ Module Map
+
+| Component | Description |
+|:---|:---|
+| **[📜 Dockerfile](./Dockerfile.md)** | Defines how the ARQ worker Docker image is built. |

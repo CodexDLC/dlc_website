@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls \"C:\\\\install\\\\progect\\\\project-template\\\\docs\\\\en_EN\\\\architecture\\\\telegram_bot\\\\services\\\\sender\"\" 2>/dev/null; ls \"C:installprogectproject-templatedocsen_ENarchitecturetelegram_botservicesfsm\"\")",
+      "Bash(python -c:*)",
+      "Bash(python -m tools.init_project:*)",
+      "Bash(ls:*)",
+      "WebFetch(domain:adambrianbright.github.io)",
+      "WebFetch(domain:segno.readthedocs.io)",
+      "WebFetch(domain:github.com)",
+      "Bash(dir:*)",
+      "Bash(poetry run ruff check:*)",
+      "Bash(poetry run ruff format:*)"
+    ]
+  }
+}

@@ -1,0 +1,90 @@
+# ═══════════════════════════════════════════
+# Python
+# ═══════════════════════════════════════════
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+*.egg
+dist/
+build/
+
+# ═══════════════════════════════════════════
+# Virtual Environment
+# ═══════════════════════════════════════════
+.venv/
+venv/
+
+# ═══════════════════════════════════════════
+# Environment Variables
+# ═══════════════════════════════════════════
+.env
+!.env.example
+!src/backend_django/.env.example
+
+# ═══════════════════════════════════════════
+# IDE
+# ═══════════════════════════════════════════
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ═══════════════════════════════════════════
+# OS
+# ═══════════════════════════════════════════
+.DS_Store
+Thumbs.db
+desktop.ini
+nul
+
+# ═══════════════════════════════════════════
+# Testing & Quality
+# ═══════════════════════════════════════════
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# ═══════════════════════════════════════════
+# Django
+# ═══════════════════════════════════════════
+*.log
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+mediafiles/
+
+# ═══════════════════════════════════════════
+# Poetry
+# ═══════════════════════════════════════════
+# poetry.lock — коммитим (reproducible builds)
+
+# ═══════════════════════════════════════════
+# Data (keep structure, ignore contents)
+# ═══════════════════════════════════════════
+data/logs/
+data/uploads/
+!data/logs/.gitkeep
+!data/uploads/.gitkeep
+
+# ═══════════════════════════════════════════
+# Docker & Deploy (local overrides)
+# ═══════════════════════════════════════════
+deploy/.env
+deploy/backend/
+deploy/bot/
+deploy/worker/
+deploy/nginx/
+deploy/docker-compose.yml
+deploy/docker-compose.prod.yml
+deploy/docker-compose.test.yml
+
+# ═══════════════════════════════════════════
+# Template installer artifacts
+# ═══════════════════════════════════════════
+.template_install_hash

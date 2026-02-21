@@ -1,0 +1,24 @@
+## Bot Database Migrations (Direct mode)
+
+Only used when BOT_DATA_MODE=direct (bot has its own database).
+When BOT_DATA_MODE=api, the bot talks to the backend via REST — no direct DB access.
+
+### Commands
+
+```bash
+cd src/telegram_bot
+
+# Apply all pending migrations
+alembic upgrade head
+
+# Create a new migration after model changes
+alembic revision --autogenerate -m "add_user_subscriptions"
+
+# Check current version
+alembic current
+```
+
+### Schema isolation
+
+Bot uses `bot_app` PostgreSQL schema (configurable via DB_SCHEMA env var).
+This allows sharing one database (e.g. Neon) with Django/FastAPI backends.
