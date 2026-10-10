@@ -64,7 +64,8 @@ COPY --chown=appuser:appgroup pyproject.toml /app/pyproject.toml
 
 # Pre-collect static files during build as non-root user
 USER appuser
-RUN python src/dlc_montage/manage.py collectstatic --noinput --settings=dlc_montage.core.settings.dev
+RUN FIELD_ENCRYPTION_KEY="$(python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())')" \
+    python src/dlc_montage/manage.py collectstatic --noinput --settings=dlc_montage.core.settings.dev
 
 # Healthcheck probing health endpoint
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \

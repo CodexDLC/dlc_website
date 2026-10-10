@@ -1,0 +1,65 @@
+# DLC Montage — Production Container Environment
+# Aggregates infra and django layers; hardened for production deployment.
+#
+# ==============================================================================
+# Production Reverse Proxy Boundary:
+# - Web service listens on internal container network (or loopback 127.0.0.1:8000).
+# - An external host reverse proxy (Nginx, Caddy, Traefik, or Cloudflare Tunnel)
+#   or the deploy/nginx container MUST handle:
+#     1. Public TLS/HTTPS termination (Let's Encrypt / custom certificates)
+#     2. Forwarding headers: Host, X-Real-IP, X-Forwarded-For, X-Forwarded-Proto
+#     3. Gzip / Brotli compression
+#     4. Rate limiting and DDoS protection at edge
+#     5. Serving collected static files from dlc_static_data volume (/app/staticfiles)
+#     6. Strictly blocking /data/private/ or /private/ paths from direct public access
+# - No database or Redis ports are exposed on the host interface.
+# ==============================================================================
+
+services:
+  web:
+    environment:
+      DEBUG: "False"
+      DJANGO_SETTINGS_MODULE: dlc_montage.core.settings.prod
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY must be provided via environment}
+      DLC_DB_PASSWORD: ${DLC_DB_PASSWORD:?DLC_DB_PASSWORD must be provided via environment}
+      DATABASE_URL: postgres://${DLC_DB_USER:-dlc_montage}:${DLC_DB_PASSWORD:?DLC_DB_PASSWORD must be provided via environment}@db:5432/${DLC_DB_NAME:-dlc_montage}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:?ALLOWED_HOSTS must be configured for production domains}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:?CSRF_TRUSTED_ORIGINS must be configured for production domains}
+      CSRF_COOKIE_DOMAIN: ${CSRF_COOKIE_DOMAIN:-}
+      SESSION_COOKIE_DOMAIN: ${SESSION_COOKIE_DOMAIN:-}
+      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:?FIELD_ENCRYPTION_KEY must be provided via environment}
+      PRIVATE_MEDIA_ROOT: /app/data/private
+    ports:
+      # Bound strictly to loopback interface for host reverse proxy consumption
+      - "127.0.0.1:${DLC_PROD_WEB_PORT:-8000}:8000"
+    restart: always
+
+  migrate:
+    environment:
+      DJANGO_SETTINGS_MODULE: dlc_montage.core.settings.prod
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY must be provided via environment}
+      DLC_DB_PASSWORD: ${DLC_DB_PASSWORD:?DLC_DB_PASSWORD must be provided via environment}
+      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:?FIELD_ENCRYPTION_KEY must be provided via environment}
+      DATABASE_URL: postgres://${DLC_DB_USER:-dlc_montage}:${DLC_DB_PASSWORD:?DLC_DB_PASSWORD must be provided via environment}@db:5432/${DLC_DB_NAME:-dlc_montage}
+      PRIVATE_MEDIA_ROOT: /app/data/private
+
+  collectstatic:
+    environment:
+      DJANGO_SETTINGS_MODULE: dlc_montage.core.settings.prod
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY must be provided via environment}
+      DLC_DB_PASSWORD: ${DLC_DB_PASSWORD:?DLC_DB_PASSWORD must be provided via environment}
+      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:?FIELD_ENCRYPTION_KEY must be provided via environment}
+      DATABASE_URL: postgres://${DLC_DB_USER:-dlc_montage}:${DLC_DB_PASSWORD:?DLC_DB_PASSWORD must be provided via environment}@db:5432/${DLC_DB_NAME:-dlc_montage}
+      PRIVATE_MEDIA_ROOT: /app/data/private
+
+  db:
+    environment:
+      POSTGRES_PASSWORD: ${DLC_DB_PASSWORD:?DLC_DB_PASSWORD must be provided via environment}
+    # No host port publication in production
+    ports: []
+    restart: always
+
+  redis:
+    # No host port publication in production
+    ports: []
+    restart: always
