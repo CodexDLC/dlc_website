@@ -1,73 +1,17 @@
-{% load static %}
 {% load i18n %}
-
-
-<header class="header" x-data="{ mobileMenuOpen: false }">
-    <div class="container header-inner">
-
-        <!-- Logo -->
-        <a href="{% url 'home' %}" class="logo-link">
+<header class="public-header">
+    <div class="container public-header-inner">
+        <a href="{% url 'home' %}" class="public-logo">
             {% if site_settings.logo_url %}
-                <img src="{{ site_settings.logo_url }}" alt="{{ site_settings.company_name }}" class="logo-img">
+                <img src="{{ site_settings.logo_url }}" alt="{{ site_settings.company_name|default:'DLC Montage' }}" width="160" height="40">
             {% else %}
-                <span class="logo-text">{{ site_settings.company_name }}</span>
+                <span class="public-logo-mark" aria-hidden="true"></span><span>{{ site_settings.company_name|default:"DLC Montage" }}</span>
             {% endif %}
         </a>
-
-        <!-- Desktop Navigation -->
-        <nav class="nav-desktop">
-            <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">{% trans "Home" %}</a>
-            <a href="{% url 'contacts' %}" class="nav-link {% if 'contacts' in request.path %}active{% endif %}">{% trans "Contacts" %}</a>
+        <nav class="public-header-actions" aria-label="{% trans 'Navigation' %}">
+            <a class="public-header-contact" href="{% if request.resolver_match.url_name == 'home' %}#kontakt{% else %}{% url 'contacts' %}{% endif %}">{% trans "Kontakt" %}</a>
+            {% include "includes/_language_switcher.html" %}
+            <a class="public-cabinet-link" href="{% url 'cabinet:account_login' %}">{% trans "Kundenportal" %}<span aria-hidden="true">↗</span></a>
         </nav>
-
-        <!-- Actions -->
-        <div class="header-actions">
-
-            
-            <!-- Language Switcher -->
-            <div class="lang-switcher" x-data="{ open: false }" @click.away="open = false">
-                <button class="btn-link" @click="open = !open">
-                    {{ LANGUAGE_CODE|upper }}
-                </button>
-                <div class="lang-dropdown" x-show="open" x-cloak>
-                    {% get_available_languages as LANGUAGES %}
-                    {% for lang_code, lang_name in LANGUAGES %}
-                        {% if lang_code != LANGUAGE_CODE %}
-                        <form action="{% url 'set_language' %}" method="post">
-                            {% csrf_token %}
-                            <input name="next" type="hidden" value="{{ request.path }}">
-                            <input name="language" type="hidden" value="{{ lang_code }}">
-                            <button type="submit" class="lang-option">{{ lang_code|upper }}</button>
-                        </form>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-            
-
-            <!-- Burger -->
-            <button class="burger-btn" @click="mobileMenuOpen = true" aria-label="Open menu">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-        </div>
     </div>
-
-    <!-- Mobile Menu -->
-    <template x-teleport="body">
-        <div class="mobile-menu" :class="{ 'active': mobileMenuOpen }" x-show="mobileMenuOpen" x-cloak>
-            <button class="close-btn" @click="mobileMenuOpen = false" style="position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 32px;">&times;</button>
-            <nav class="flex flex-col gap-lg">
-                <a href="{% url 'home' %}" class="mobile-nav-link" @click="mobileMenuOpen = false">{% trans "Home" %}</a>
-                <a href="{% url 'contacts' %}" class="mobile-nav-link" @click="mobileMenuOpen = false">{% trans "Contacts" %}</a>
-            </nav>
-            <div class="mt-auto">
-                <a href="tel:{{ site_settings.phone }}" class="btn btn-primary btn-block">{{ site_settings.phone }}</a>
-            </div>
-        </div>
-    </template>
 </header>
-

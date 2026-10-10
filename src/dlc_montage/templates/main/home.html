@@ -1,17 +1,51 @@
 {% extends "base.html" %}
-{% load i18n %}
-
-{% block title %}
-    {{ site_settings.company_name }} | {% trans "Home" %}
-{% endblock title %}
-
+{% load i18n static %}
+{% block title %}{{ site_settings.company_name|default:"DLC Montage" }} | {% trans "PV-Montage" %}{% endblock title %}
 {% block content %}
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="hero-title">{{ site_settings.company_name|default:"DLC Montage" }}</h1>
-                <p class="hero-subtitle">{% trans "The public website is being prepared." %}</p>
-            </div>
+<section class="public-hero" aria-labelledby="home-title">
+    <div class="container public-hero-layout">
+        <div class="public-hero-copy">
+            <p class="public-eyebrow">DLC Montage · AC / DC</p>
+            <h1 id="home-title">{% trans "Gemeinsam Solarprojekte umsetzen." %}</h1>
+            <p class="public-hero-description">{% trans "PV-Montage und Koordination der AC- und DC-Arbeiten auf Ihrer Baustelle." %}</p>
+            <a class="public-button" href="#kontakt">{% trans "Projekt besprechen" %}<span aria-hidden="true">↗</span></a>
         </div>
-    </section>
+        <div class="public-hero-image">
+            <img src="{% static 'img/public-home-hero.png' %}" alt="" width="640" height="640" fetchpriority="high">
+        </div>
+    </div>
+</section>
+<section class="public-work" aria-labelledby="work-title">
+    <div class="container public-work-layout">
+        <div class="public-section-heading">
+            <p class="public-eyebrow">{% trans "Was wir machen" %}</p>
+            <h2 id="work-title">{% trans "Montage. Abstimmung. Zusammenarbeit." %}</h2>
+        </div>
+        <div class="public-work-list">
+            <div class="public-work-item"><span class="public-work-number" aria-hidden="true">01</span><div><h3>{% trans "PV-Montage" %}</h3><p>{% trans "Montagearbeiten für Photovoltaikprojekte." %}</p></div></div>
+            <div class="public-work-item"><span class="public-work-number" aria-hidden="true">02</span><div><h3>{% trans "AC / DC" %}</h3><p>{% trans "Abstimmung der AC- und DC-Arbeiten vor Ort." %}</p></div></div>
+            <div class="public-work-item"><span class="public-work-number" aria-hidden="true">03</span><div><h3>{% trans "Baustellenkoordination" %}</h3><p>{% trans "Klare Absprachen mit den Beteiligten auf der Baustelle." %}</p></div></div>
+        </div>
+    </div>
+</section>
+<section id="kontakt" class="public-contact" aria-labelledby="contact-title">
+    <div class="container public-contact-layout">
+        <div>
+            <p class="public-eyebrow">{% trans "Kontakt" %}</p>
+            <h2 id="contact-title">{% trans "Ihr Projekt beginnt mit einem Gespräch." %}</h2>
+            <p class="public-contact-description">{% trans "Sprechen wir über Ihr Vorhaben und die nächsten Schritte." %}</p>
+        </div>
+        <div class="public-contact-actions">
+            {% if site_settings.email %}
+                <a class="public-button" href="mailto:{{ site_settings.email }}">{% trans "E-Mail schreiben" %}<span aria-hidden="true">↗</span></a>
+                <a class="public-contact-detail" href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>
+            {% elif site_settings.phone %}
+                <a class="public-button" href="tel:{{ site_settings.phone }}">{% trans "Jetzt anrufen" %}<span aria-hidden="true">↗</span></a>
+            {% else %}
+                <p class="public-contact-description">{% trans "Die Kontaktdaten werden ergänzt." %}</p>
+            {% endif %}
+            {% if site_settings.phone %}<a class="public-contact-detail" href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>{% endif %}
+        </div>
+    </div>
+</section>
 {% endblock content %}

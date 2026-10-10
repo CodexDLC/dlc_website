@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DLC Montage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-10 14:12+0200\n"
+"POT-Creation-Date: 2026-10-10 14:41+0200\n"
 "PO-Revision-Date: 2026-10-10 14:09+0200\n"
 "Last-Translator: DLC Montage\n"
 "Language-Team: ru\n"
@@ -5274,31 +5274,30 @@ msgstr "Ошибка сервера"
 msgid "Something went wrong on our end. Please try again later."
 msgstr "Произошла ошибка. Попробуйте позже."
 
-#: .\templates\includes\_footer.html:24
+#: .\templates\includes\_footer.html:8 .\templates\includes\_header.html:12
+#: .\templates\main\home.html:34
+msgid "Kontakt"
+msgstr "Контакты"
+
+#: .\templates\includes\_header.html:11
 msgid "Navigation"
 msgstr "Навигация"
 
-#: .\templates\includes\_footer.html:26 .\templates\includes\_header.html:19
-#: .\templates\includes\_header.html:64 .\templates\main\home.html:5
-msgid "Home"
-msgstr "Главная"
-
-#: .\templates\includes\_footer.html:27 .\templates\includes\_header.html:20
-#: .\templates\includes\_header.html:65 .\templates\main\contacts.html:5
-msgid "Contacts"
-msgstr "Контакты"
-
-#: .\templates\includes\_footer.html:33 .\templates\main\contacts.html:12
-msgid "Contact Us"
-msgstr "Свяжитесь с нами"
-
-#: .\templates\includes\_footer.html:53
-msgid "Management"
-msgstr "Управление"
+#: .\templates\includes\_header.html:14
+msgid "Kundenportal"
+msgstr "Кабинет"
 
 #: .\templates\includes\_language_switcher.html:3
 msgid "Sprache"
 msgstr "Язык"
+
+#: .\templates\main\contacts.html:5
+msgid "Contacts"
+msgstr "Контакты"
+
+#: .\templates\main\contacts.html:12
+msgid "Contact Us"
+msgstr "Свяжитесь с нами"
 
 #: .\templates\main\contacts.html:13
 msgid "We'd love to hear from you. Send us a message!"
@@ -5308,6 +5307,66 @@ msgstr "Будем рады вашему сообщению!"
 msgid "Add your contact form here."
 msgstr "Добавьте сюда контактную форму."
 
-#: .\templates\main\home.html:13
-msgid "The public website is being prepared."
-msgstr "Публичный сайт готовится к запуску."
+#: .\templates\main\home.html:3 .\templates\main\home.html:25
+msgid "PV-Montage"
+msgstr "Монтаж солнечных систем"
+
+#: .\templates\main\home.html:9
+msgid "Gemeinsam Solarprojekte umsetzen."
+msgstr "Реализуем солнечные проекты вместе."
+
+#: .\templates\main\home.html:10
+msgid "PV-Montage und Koordination der AC- und DC-Arbeiten auf Ihrer Baustelle."
+msgstr "Монтаж солнечных систем и координация работ AC и DC на вашем объекте."
+
+#: .\templates\main\home.html:11
+msgid "Projekt besprechen"
+msgstr "Обсудить проект"
+
+#: .\templates\main\home.html:21
+msgid "Was wir machen"
+msgstr "Что мы делаем"
+
+#: .\templates\main\home.html:22
+msgid "Montage. Abstimmung. Zusammenarbeit."
+msgstr "Монтаж. Координация. Сотрудничество."
+
+#: .\templates\main\home.html:25
+msgid "Montagearbeiten für Photovoltaikprojekte."
+msgstr "Монтажные работы для проектов солнечной энергетики."
+
+#: .\templates\main\home.html:26
+msgid "AC / DC"
+msgstr "AC / DC"
+
+#: .\templates\main\home.html:26
+msgid "Abstimmung der AC- und DC-Arbeiten vor Ort."
+msgstr "Координация работ AC и DC на объекте."
+
+#: .\templates\main\home.html:27
+msgid "Baustellenkoordination"
+msgstr "Организация работ"
+
+#: .\templates\main\home.html:27
+msgid "Klare Absprachen mit den Beteiligten auf der Baustelle."
+msgstr "Чёткие договорённости между участниками работ."
+
+#: .\templates\main\home.html:35
+msgid "Ihr Projekt beginnt mit einem Gespräch."
+msgstr "Ваш проект начинается с разговора."
+
+#: .\templates\main\home.html:36
+msgid "Sprechen wir über Ihr Vorhaben und die nächsten Schritte."
+msgstr "Обсудим ваш проект и следующие шаги."
+
+#: .\templates\main\home.html:40
+msgid "E-Mail schreiben"
+msgstr "Написать письмо"
+
+#: .\templates\main\home.html:43
+msgid "Jetzt anrufen"
+msgstr "Позвонить"
+
+#: .\templates\main\home.html:45
+msgid "Die Kontaktdaten werden ergänzt."
+msgstr "Контактные данные будут добавлены."
