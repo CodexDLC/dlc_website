@@ -152,17 +152,15 @@ def objects(request):
     request.cabinet_module = "customer"
     query = request.GET.get("q", "").strip()[:100]
     group_id = _scope_id_param(request, "group")
-    status = request.GET.get("status", "non_completed").strip()
-    if status not in {"non_completed", "completed", "all", "not_started", "started"}:
-        status = "non_completed"
+    status = request.GET.get("status", "all").strip()
+    if status not in {"non_completed", "completed", "all", "not_started", "started", "in_review"}:
+        status = "all"
     sort = request.GET.get("sort", "activity").strip()
     if sort not in {"activity", "name"}:
         sort = "activity"
 
     sites_qs = filtered_sites_for_actor(request.user, search=query, group_id=group_id, status=status, sort=sort)
     page_obj = Paginator(sites_qs, 20).get_page(request.GET.get("page"))
-    for s in page_obj:
-        s.cached_photo_summary = get_cached_photo_summary(s)
     attach_site_plan_progress(page_obj.object_list)
 
     selected_group = None

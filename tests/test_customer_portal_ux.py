@@ -5,11 +5,9 @@ from uuid import uuid4
 
 import pytest
 from django.contrib.auth import get_user_model
-from django.core.cache import cache
 from django.urls import reverse
 from features.customer_portal.models import SiteReview
 from features.customer_portal.services import grant_membership
-from features.integrations.nextcloud.services import get_site_photo_cache_key
 from features.mbg_reports.models import MbgDailyReport, MbgReportRevision
 from features.project_media.models import ProjectFile
 from features.projects.models import AcObject, Client, ProjectGroup
@@ -181,7 +179,11 @@ def test_home_groups_pagination_and_filters_and_card_links(ux_setup, client):
     assert "q=Batch" in res_page.content.decode()
 
 
-def test_objects_grid_pagination_and_filters_and_sorting(ux_setup, client):
+def test_objects_grid_pagination_and_filters_and_sorting(ux_setup, client, monkeypatch):
+    def no_network(*args, **kwargs):
+        raise AssertionError("Object list must not contact photo storage")
+
+    monkeypatch.setattr("features.customer_portal.views.get_cached_photo_summary", no_network)
     ctx = ux_setup
     client.force_login(ctx["alice"])
 
@@ -215,25 +217,16 @@ def test_objects_grid_pagination_and_filters_and_sorting(ux_setup, client):
     assert res_sort_name.status_code == 200
     assert "P-001" in res_sort_name.content.decode()
 
-    # 3. Кешированный бейдж Nextcloud (unknown / unavailable / count)
-    cache.clear()
-    site = ctx["site_a"]
-    key = get_site_photo_cache_key(site)
-
-    # Без кеша: unknown / —
-    res_obj = client.get(reverse("customer_portal:objects") + f"?q={site.name}")
-    assert "Keine Fotos" not in res_obj.content.decode()
-
-    # Кеш со статусом unavailable
-    cache.set(key, {"status": "unavailable", "count": 0, "photos": []}, 300)
-    res_unavail = client.get(reverse("customer_portal:objects") + f"?q={site.name}")
-    assert "Keine Fotos" not in res_unavail.content.decode()
-
-    # Кеш со статусом ok и 3 фото
-    sample_photos = [{"name": "1.jpg"}, {"name": "2.jpg"}, {"name": "3.jpg"}]
-    cache.set(key, {"status": "ok", "count": 3, "photos": sample_photos}, 300)
-    res_ok = client.get(reverse("customer_portal:objects") + f"?q={site.name}")
-    assert "3" in res_ok.content.decode()
+    assert res.context["status"] == "all"
+    assert res.context["sites_page"].paginator.count == 26
+    SiteReview.objects.create(site=ctx["site_a"], status="submitted")
+    SiteReview.objects.create(site=ctx["site_b"], status="submitted")
+    res_review = client.get(reverse("customer_portal:objects"), {"status": "in_review"})
+    assert res_review.status_code == 200
+    assert res_review.context["sites_page"].paginator.count == 1
+    assert ctx["site_a"].name in res_review.content.decode()
+    assert ctx["site_b"].name not in res_review.content.decode()
+    assert "На приёмке" in res_review.content.decode()
 
 
 def test_cross_client_crafted_params_cannot_leak(ux_setup, client):

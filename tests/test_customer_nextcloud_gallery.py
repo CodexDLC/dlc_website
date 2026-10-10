@@ -461,24 +461,16 @@ def test_customer_site_detail_shows_unavailable_state(mock_client_cls, portal_se
     assert "Нет фотографий" not in content
 
 
-def test_customer_objects_renders_cached_badges(portal_setup, client):
-    """Список объектов показывает бейдж из кеша без выполнения сетевых запросов."""
-    alice = portal_setup["alice"]
-    site_a = portal_setup["site_a"]
+def test_customer_objects_never_contacts_photo_storage(portal_setup, client, monkeypatch):
+    """The object list remains available even when external photo storage fails."""
+    def unavailable(*args, **kwargs):
+        raise AssertionError("Object list must not contact Nextcloud")
 
-    # Кладём в кеш сводку для site_a по path-aware ключу
-    cache.set(
-        get_site_photo_cache_key(site_a),
-        {"status": "ok", "is_available": True, "has_photos": True, "count": 7},
-        timeout=900,
-    )
-
-    client.force_login(alice)
+    monkeypatch.setattr(NextcloudWebDAVClient, "list_folder", unavailable)
+    client.force_login(portal_setup["alice"])
     response = client.get(reverse("customer_portal:objects"))
     assert response.status_code == 200
-    content = response.content.decode("utf-8")
-    assert "📸 7" in content
-    assert "фотограф" in content.lower()
+    assert "cust-badge--photo" not in response.content.decode()
 
 
 def test_cache_key_path_aware_and_rename_causes_fresh_listing_and_no_old_path(portal_setup):

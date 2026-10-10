@@ -72,11 +72,11 @@ def filtered_sites_for_actor(
     *,
     search: str = "",
     group_id: int | str | None = None,
-    status: str = "non_completed",
+    status: str = "all",
     sort: str = "activity",
 ):
     """Фильтрация и сортировка объектов заказчика до пагинации."""
-    queryset = sites_for_actor(actor).select_related("group", "group__client")
+    queryset = sites_for_actor(actor).select_related("group", "group__client", "customer_review")
 
     if group_id:
         scoped_group = groups_for_actor(actor).filter(pk=group_id).first()
@@ -92,7 +92,9 @@ def filtered_sites_for_actor(
             | Q(group__name__icontains=search)
         )
 
-    if status == "completed":
+    if status == "in_review":
+        queryset = queryset.filter(customer_review__status="submitted")
+    elif status == "completed":
         queryset = queryset.filter(status="completed")
     elif status == "all":
         pass

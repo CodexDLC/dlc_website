@@ -5317,3 +5317,6 @@ msgstr "Ein Mangelhinweis darf höchstens 2000 Zeichen enthalten."
 
 msgid "Проверка была отправлена заново. Обновите страницу перед сохранением."
 msgstr "Die Abnahme wurde erneut angefordert. Aktualisieren Sie die Seite vor dem Speichern."
+
+msgid "На приёмке"
+msgstr "Zur Abnahme"

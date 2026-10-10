@@ -15,18 +15,8 @@
       {% if site.plan_progress %}
         <span class="cust-badge cust-badge--progress" title="{% trans 'Принятый план' %}">📋 {{ site.plan_progress }}</span>
       {% endif %}
-      {% if site.cached_photo_summary %}
-        {% if site.cached_photo_summary.status == 'ok' %}
-          {% if site.cached_photo_summary.count > 0 %}
-            <span class="cust-badge cust-badge--photo-ok" title="{% trans 'Fotos vorhanden' %}">📸 {{ site.cached_photo_summary.count }}</span>
-          {% else %}
-            <span class="cust-badge cust-badge--not_started" title="{% trans 'Keine Fotos' %}">⏳ 0</span>
-          {% endif %}
-        {% else %}
-          <span class="cust-badge cust-badge--photo-unavail" title="{% trans 'Fotospeicher nicht erreichbar' %}">⚠️ {% trans 'Недоступно' %}</span>
-        {% endif %}
-      {% else %}
-        <span class="cust-badge cust-badge--photo-unknown" title="{% trans 'Fotospeicher nicht synchronisiert' %}">—</span>
+      {% if site.customer_review.status == 'submitted' %}
+        <span class="cust-badge cust-badge--submitted">{% trans "На приёмке" %}</span>
       {% endif %}
     </div>
   </div>

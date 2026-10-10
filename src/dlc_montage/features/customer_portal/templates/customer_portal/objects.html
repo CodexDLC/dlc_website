@@ -20,9 +20,10 @@
   <div class="customer-filter-item">
     <label for="id_objects_status">{% trans "Состояние" %}</label>
     <select id="id_objects_status" name="status">
-      <option value="non_completed"{% if status == 'non_completed' %} selected{% endif %}>{% trans "В работе (по умолчанию)" %}</option>
-      <option value="completed"{% if status == 'completed' %} selected{% endif %}>{% trans "Завершённые" %}</option>
       <option value="all"{% if status == 'all' %} selected{% endif %}>{% trans "Все состояния" %}</option>
+      <option value="in_review"{% if status == 'in_review' %} selected{% endif %}>{% trans "На приёмке" %}</option>
+      <option value="non_completed"{% if status == 'non_completed' %} selected{% endif %}>{% trans "В работе" %}</option>
+      <option value="completed"{% if status == 'completed' %} selected{% endif %}>{% trans "Завершённые" %}</option>
       <option value="not_started"{% if status == 'not_started' %} selected{% endif %}>{% trans "Не начато" %}</option>
       <option value="started"{% if status == 'started' %} selected{% endif %}>{% trans "Начато" %}</option>
     </select>
@@ -36,7 +37,7 @@
   </div>
   <div class="customer-filter-actions">
     <button type="submit" class="time-button secondary">{% trans "Применить" %}</button>
-    {% if query or status != 'non_completed' or sort != 'activity' or group_id %}
+    {% if query or status != 'all' or sort != 'activity' or group_id %}
       <a href="{% url 'customer_portal:objects' %}" class="time-button quiet">{% trans "Сбросить всё" %}</a>
     {% endif %}
   </div>
