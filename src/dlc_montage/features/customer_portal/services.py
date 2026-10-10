@@ -468,23 +468,33 @@ def decide_review(*, actor, site, decisions, snapshot_digest, submission_token):
 
 def review_work_snapshot(site):
     """Снять безценовой состав приёмки из подтверждённых версий дневных работ."""
+    from features.work_catalog.localization import WorkNameResolver
+
     from .selectors import accepted_completion_rows
 
+    names = WorkNameResolver()
     rows = []
-    for index, row in enumerate(accepted_completion_rows(site)):
+    for index, row in enumerate(accepted_completion_rows(site, localized=False)):
         rows.append(
             {
                 "key": str(index + 1),
-                "name": row.name,
+                "name": names.pair(row.name)[0],
+                "name_de": names.pair(row.name)[0],
+                "name_ru": names.pair(row.name)[1],
+                "route_de": names.pair(row.route)[0],
+                "route_ru": names.pair(row.route)[1],
+                "cable_type_de": names.pair(row.cable_type)[0],
+                "cable_type_ru": names.pair(row.cable_type)[1],
                 "unit": row.unit,
                 "quantity": str(row.quantity) if row.quantity is not None else None,
                 "kind": row.kind,
                 "route": row.route,
                 "cable_type": row.cable_type,
                 "work_item_id": row.work_item_id,
-                "sources": [{k: v for k, v in source.items()
-                             if k not in {"actual_person_hours", "normative_person_hours"}}
-                            for source in row.sources],
+                "sources": [
+                    {k: v for k, v in source.items() if k not in {"actual_person_hours", "normative_person_hours"}}
+                    for source in row.sources
+                ],
             }
         )
     return rows
@@ -528,7 +538,8 @@ def refresh_pending_review_snapshot(*, actor, review):
     def sources(rows):
         return {
             (s.get("report_id"), s.get("report_version"), s.get("entry_index"))
-            for row in rows for s in row.get("sources", [])
+            for row in rows
+            for s in row.get("sources", [])
             if str(s.get("description", "")).strip().casefold() != "mittagspause"
         }
 
@@ -540,9 +551,17 @@ def refresh_pending_review_snapshot(*, actor, review):
     review.work_snapshot = replacement
     review.submitted_at = timezone.now()
     review.save(update_fields=["work_snapshot", "submitted_at"])
-    _audit(actor=actor, action="review_snapshot_refreshed", target=review, before=before,
-           after={"digest": review.snapshot_digest, "work_snapshot": replacement,
-                  "submitted_at": review.submitted_at.isoformat()})
+    _audit(
+        actor=actor,
+        action="review_snapshot_refreshed",
+        target=review,
+        before=before,
+        after={
+            "digest": review.snapshot_digest,
+            "work_snapshot": replacement,
+            "submitted_at": review.submitted_at.isoformat(),
+        },
+    )
     return review
 
 

@@ -16,6 +16,7 @@ from features.internal_time.policies import is_manager
 from features.mbg_reports.models import MbgDailyReport, MbgReportRevision
 from features.projects.models import AcObject, ProjectGroup
 from features.projects.read_models import site_work_plan
+from features.work_catalog.localization import WorkNameResolver
 from features.work_catalog.models import WorkType
 
 from .completion_projection import project_customer_entries
@@ -164,6 +165,7 @@ def accepted_daily_work(site, *, iso_year: int | None = None, iso_week: int | No
     """Читать только текущие принятые снимки без ставок, сумм и имён работников."""
     reports = _current_accepted_snapshots(site)
     rows = []
+    names = WorkNameResolver()
     for _report_id, _version, work_date, snapshot in reports:
         if iso_year is not None and iso_week is not None:
             iso = work_date.isocalendar()
@@ -173,7 +175,7 @@ def accepted_daily_work(site, *, iso_year: int | None = None, iso_week: int | No
             rows.append(
                 CustomerDailyWork(
                     work_date=str(work_date),
-                    description=row.name,
+                    description=names.display(row.name),
                     quantity=str(row.quantity) if row.quantity is not None else "ungeklärt",
                     unit=row.unit,
                     actual_person_hours=row.actual_person_hours,
@@ -198,12 +200,13 @@ def _current_accepted_snapshots(site):
     return tuple(accepted)
 
 
-def accepted_completion_rows(site, *, iso_year: int | None = None, iso_week: int | None = None):
+def accepted_completion_rows(site, *, iso_year: int | None = None, iso_week: int | None = None, localized=True):
     """Получить агрегаты принятых работ из того же безценового контракта."""
     snapshots = _current_accepted_snapshots(site)
     if iso_year is not None and iso_week is not None:
         snapshots = tuple(s for s in snapshots if s[2].isocalendar()[:2] == (iso_year, iso_week))
-    return project_customer_entries(snapshots)
+    rows = project_customer_entries(snapshots)
+    return WorkNameResolver().rows(rows) if localized else rows
 
 
 def customer_available_weeks(site) -> tuple[tuple[int, int], ...]:
@@ -396,6 +399,7 @@ def customer_site_detail(site):
             stale = review.snapshot_digest != accepted_snapshot_digest(site)
         except ValidationError:
             stale = True
+    names = WorkNameResolver()
     return CustomerSiteDetail(
         site=site,
         plan=site_work_plan(site, include_internal=False),
@@ -405,7 +409,7 @@ def customer_site_detail(site):
         review_stale=stale,
         review_rows=tuple(
             {
-                **row,
+                **names.snapshot_row(row),
                 "unit_label": {**dict(WorkType.Unit.choices), "section": "участок"}.get(row["unit"], row["unit"]),
                 **review.item_decisions.get(row["key"], {}),
             }

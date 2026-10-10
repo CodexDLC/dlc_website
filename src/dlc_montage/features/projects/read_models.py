@@ -9,6 +9,7 @@ from django.db.models import Count, Max, Prefetch, Sum
 from django.utils.translation import gettext_lazy as _
 
 from features.mbg_reports.models import MbgDailyReport, MbgWorkEntry
+from features.work_catalog.localization import WorkNameResolver
 from features.work_catalog.models import CableRoute, CableType, WorkType
 
 from .models import AcObject, ProjectGroup, SiteWorkItem
@@ -49,6 +50,7 @@ class PlannedWorkRow:
     item: SiteWorkItem
     completed_quantity: Decimal
     actual_person_hours: Decimal
+    name: str = ""
 
     @property
     def remaining_quantity(self):
@@ -82,9 +84,11 @@ def site_work_plan(site, *, include_internal=True):
 
     progress = accepted_work_item_progress(site_id=site.pk, include_internal=include_internal)
     totals = {row.work_item_id: row for row in progress.items}
+    names = WorkNameResolver()
     rows = tuple(
         PlannedWorkRow(
             item=item,
+            name=names.display(item.label),
             completed_quantity=totals[item.pk].completed_quantity if item.pk in totals else ZERO,
             actual_person_hours=totals[item.pk].actual_person_hours if item.pk in totals else ZERO,
         )
@@ -133,9 +137,9 @@ def typical_plan_preview(specs):
         rows.append(
             TypicalPreviewRow(
                 spec,
-                work.name_de,
-                route.name_de if route else "",
-                cable.name_de if cable else "",
+                str(work),
+                str(route) if route else "",
+                str(cable) if cable else "",
                 cable.unit_display if cable else work.get_unit_display(),
             )
         )

@@ -133,3 +133,17 @@ class CableRoute(models.Model):
 
     def __str__(self):
         return (self.name_ru or self.name_de) if (get_language() or "").startswith("ru") else self.name_de
+
+
+class WorkDescriptionTranslation(models.Model):
+    """Утверждённые названия свободных работ без изменения первичных отчётов."""
+
+    original = models.CharField("Исходное название", max_length=1000, unique=True)
+    name_de = models.CharField("Название на немецком", max_length=1000)
+    name_ru = models.CharField("Название на русском", max_length=1000)
+
+    class Meta:
+        ordering: ClassVar = ["original"]
+
+    def __str__(self):
+        return (self.name_ru or self.name_de) if (get_language() or "").startswith("ru") else self.name_de
