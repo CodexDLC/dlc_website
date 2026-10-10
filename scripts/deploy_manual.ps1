@@ -73,8 +73,8 @@ compose() {
 compose config --quiet
 compose build web
 compose up -d --wait db redis
-compose run --rm --no-deps migrate
-compose run --rm --no-deps collectstatic
+compose run --rm --no-deps --interactive=false -T migrate
+compose run --rm --no-deps --interactive=false -T collectstatic
 compose up -d --wait web
 compose ps
 echo "DLC release started: $sha"
