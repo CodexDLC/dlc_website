@@ -1,0 +1,243 @@
+{% extends "internal_time/base.html" %}
+{% load i18n %}
+
+{% block report_content %}
+<div class="time-heading">
+  <div>
+    <p class="time-eyebrow">{% trans "ПРОЕКТ (ANLAGE)" %}</p>
+    <h1>{% if form.instance.pk %}{% trans "Карточка проекта" %}{% else %}{% trans "Новый проект (Anlage)" %}{% endif %}</h1>
+    {% if form.instance.pk %}<p>{{ form.instance.name }}</p>{% endif %}
+  </div>
+  {% if back %}
+    <a class="time-button secondary" href="{{ back }}">← {% trans "Назад к проекту" %}</a>
+  {% endif %}
+</div>
+
+<form method="post" class="project-form" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+    <div class="time-alert">{{ form.non_field_errors }}</div>
+  {% endif %}
+
+  <!-- 1. Основные параметры -->
+  <section class="time-card">
+    <h2>{% trans "1. Основные данные проекта" %}</h2>
+    <div class="time-grid">
+      <div class="time-field time-wide">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        {{ form.name.errors }}
+      </div>
+      <div class="time-field">
+        {{ form.client.label_tag }}
+        {{ form.client }}
+        {{ form.client.errors }}
+      </div>
+      <div class="time-field">
+        {{ form.capacity_kw.label_tag }}
+        {{ form.capacity_kw }}
+        {{ form.capacity_kw.errors }}
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Локация и адреса -->
+  <section class="time-card">
+    <h2>{% trans "2. Адрес и локация" %}</h2>
+    <div class="time-grid">
+      <div class="time-field time-wide">
+        {{ form.address.label_tag }}
+        {{ form.address }}
+        {{ form.address.errors }}
+      </div>
+      <div class="time-field time-wide">
+        {{ form.additional_addresses.label_tag }}
+        {{ form.additional_addresses }}
+        {{ form.additional_addresses.errors }}
+        {% if form.additional_addresses.help_text %}<small>{{ form.additional_addresses.help_text }}</small>{% endif %}
+      </div>
+      <div class="time-field time-wide">
+        {{ form.maps_url.label_tag }}
+        {{ form.maps_url }}
+        {{ form.maps_url.errors }}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Сроки и направления -->
+  <section class="time-card">
+    <h2>{% trans "3. Сроки и направления работ" %}</h2>
+    <div class="time-grid">
+      <div class="time-field">
+        {{ form.starts_on.label_tag }}
+        {{ form.starts_on }}
+        {{ form.starts_on.errors }}
+      </div>
+      <div class="time-field">
+        {{ form.ends_on.label_tag }}
+        {{ form.ends_on }}
+        {{ form.ends_on.errors }}
+      </div>
+      {% if form.has_ac or form.has_dc %}
+      <div class="time-field time-wide">
+        <label>{% trans "Активные направления работ" %}</label>
+        <div class="directions-toggles">
+          {% if form.has_ac %}
+          <label class="toggle-card">
+            {{ form.has_ac }}
+            <div>
+              <strong>{% trans "Направление AC" %}</strong>
+              <small>{% trans "Монтаж переменного тока, Standorte, MBG отчёты" %}</small>
+            </div>
+          </label>
+          {% endif %}
+          {% if form.has_dc %}
+          <label class="toggle-card">
+            {{ form.has_dc }}
+            <div>
+              <strong>{% trans "Направление DC" %}</strong>
+              <small>{% trans "Монтаж модулей и конструкций постоянного тока" %}</small>
+            </div>
+          </label>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+      {% if form.dc_status %}
+      <div class="time-field">
+        {{ form.dc_status.label_tag }}
+        {{ form.dc_status }}
+        {{ form.dc_status.errors }}
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- 4. Ответственные лица -->
+  {% if form.responsible or form.deputy or form.ac_responsible or form.dc_responsible %}
+  <section class="time-card">
+    <h2>{% trans "4. Команда и ответственные" %}</h2>
+    <div class="time-grid">
+      {% if form.responsible %}
+      <div class="time-field">
+        {{ form.responsible.label_tag }}
+        {{ form.responsible }}
+        {{ form.responsible.errors }}
+      </div>
+      {% endif %}
+      {% if form.deputy %}
+      <div class="time-field">
+        {{ form.deputy.label_tag }}
+        {{ form.deputy }}
+        {{ form.deputy.errors }}
+      </div>
+      {% endif %}
+      {% if form.ac_responsible %}
+      <div class="time-field">
+        {{ form.ac_responsible.label_tag }}
+        {{ form.ac_responsible }}
+        {{ form.ac_responsible.errors }}
+      </div>
+      {% endif %}
+      {% if form.dc_responsible %}
+      <div class="time-field">
+        {{ form.dc_responsible.label_tag }}
+        {{ form.dc_responsible }}
+        {{ form.dc_responsible.errors }}
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- 5. Статус и доступ -->
+  {% if form.status or form.edit_level %}
+  <section class="time-card">
+    <h2>{% trans "5. Статус и уровень доступа" %}</h2>
+    <div class="time-grid">
+      {% if form.status %}
+      <div class="time-field">
+        {{ form.status.label_tag }}
+        {{ form.status }}
+        {{ form.status.errors }}
+      </div>
+      {% endif %}
+      {% if form.edit_level %}
+      <div class="time-field">
+        {{ form.edit_level.label_tag }}
+        {{ form.edit_level }}
+        {{ form.edit_level.errors }}
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+
+  <div class="time-save">
+    <div class="time-inline">
+      <button class="time-button" type="submit">{% trans "Сохранить проект" %}</button>
+      {% if back %}<a class="time-button secondary" href="{{ back }}">{% trans "Отмена" %}</a>{% endif %}
+    </div>
+  </div>
+</form>
+
+<style>
+.project-form section.time-card {
+  margin-bottom: 20px;
+}
+.project-form section.time-card h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cab-primary);
+  border-bottom: 1px solid var(--cab-border);
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+}
+.directions-toggles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 6px;
+}
+.toggle-card {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--cab-border);
+  border-radius: var(--cab-radius);
+  background: var(--cab-topbar-bg);
+  cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.toggle-card:hover {
+  border-color: var(--cab-primary);
+}
+.toggle-card input[type=checkbox] {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 2px 0 0 0 !important;
+  accent-color: var(--cab-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.toggle-card strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cab-text);
+}
+.toggle-card small {
+  display: block;
+  font-size: 12px;
+  color: var(--cab-text-muted);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+@media (max-width: 767px) {
+  .directions-toggles {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+{% endblock %}

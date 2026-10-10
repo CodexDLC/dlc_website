@@ -1,0 +1,343 @@
+{% extends "internal_time/base.html" %}
+{% load i18n static %}
+{% block report_content %}
+<link rel="stylesheet" href="{% static 'mbg_reports/css/list.css' %}">
+{% include "mbg_reports/_section_nav.html" with active_section="exports" %}
+
+<div class="time-heading mbg-page-heading">
+  <div>
+    <p class="time-eyebrow">{% trans "ДОКУМЕНТЫ СДЕЛЬЩИНЫ (LEISTUNG / MBG)" %} {% trans '· ANLAGE' %}</p>
+    <h1>{{ group.name }}</h1>
+    <p>{% trans "Выгрузка актов сдачи (Leistungsnachweis) и промежуточных срезов (Zwischennachweis)." %}</p>
+  </div>
+  <a class="time-button secondary" href="{% url 'mbg_reports:export_hub' %}">← {% trans "Все документы" %}</a>
+</div>
+
+<div class="mbg-export-grid">
+  <!-- БЛОК 1: Предварительный Zwischennachweis -->
+  <section class="time-card">
+    <div class="card-header-flex">
+      <div>
+        <span class="badge-amber">{% trans "Промежуточный срез" %}</span>
+        <h2 style="margin-top:8px;">{% trans "1. Сформировать Zwischennachweis" %}</h2>
+        <p class="time-hint">{% trans "Выберите Standorte (в том числе в работе), по которым нужно выгрузить сдельщину на текущий момент." %}</p>
+      </div>
+    </div>
+
+    <form method="post" class="preliminary-export-form">
+      {% csrf_token %}
+      <input type="hidden" name="mode" value="preliminary">
+
+      <div class="sites-select-header">
+        <strong>{% trans "Объекты для выгрузки:" %}</strong>
+        <button type="button" class="btn-text-action" onclick="toggleAllSites(true)">{% trans "Выбрать все" %}</button>
+        <button type="button" class="btn-text-action" onclick="toggleAllSites(false)">{% trans "Снять все" %}</button>
+      </div>
+
+      <div class="sites-checklist">
+        {% for item in sites_data %}
+          <label class="site-checkbox-row{% if not item.has_accepted %} site-no-reports{% endif %}">
+            <input type="checkbox" name="site_ids" value="{{ item.site.pk }}" {% if item.has_accepted %}checked{% else %}disabled{% endif %}>
+            <div class="site-checkbox-info">
+              <strong>{{ item.site.name }}</strong>
+              <small>{{ item.site.address|default:"—" }} {% trans '· P/Nr' %} {{ item.site.project_number|default:"—" }}</small>
+            </div>
+            <div class="site-checkbox-meta">
+              <span class="site-mini-status status-{{ item.site.status }}">{{ item.site.get_status_display }}</span>
+              <span class="site-reports-count">
+                {% if item.accepted_reports %}{{ item.accepted_reports }} {% trans "принятых отч." %}{% else %}{% trans "нет отчётов" %}{% endif %}
+              </span>
+              <strong class="site-amount">{{ item.known_subtotal|floatformat:2 }} €{% if item.amount == None %} · {% trans "Teilbetrag" %}{% endif %}</strong>
+            </div>
+          </label>
+        {% empty %}
+          <p class="time-hint">{% trans "В проекте пока нет Standorte." %}</p>
+        {% endfor %}
+      </div>
+
+      <div style="margin-top: 18px;">
+        <button class="time-button" type="submit" style="background:#0A2540; border-color:#0A2540;">
+          📋 {% trans "Сформировать Zwischennachweis" %}
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- БЛОК 2: Финальный Leistungsnachweis -->
+  <section class="time-card">
+    <div class="card-header-flex">
+      <div>
+        <span class="badge-green">{% trans "Официальная сдача" %}</span>
+        <h2 style="margin-top:8px;">{% trans "2. Финальный Leistungsnachweis" %}</h2>
+        <p class="time-hint">{% trans "Формируется строго по завершённым (Abgeschlossen) Standorte с принятыми отчётами." %}</p>
+      </div>
+    </div>
+
+    <div class="completed-summary-box">
+      <strong>{% blocktrans with count=completed_sites|length %}Завершено объектов: {{ count }}{% endblocktrans %}</strong>
+      <div class="completed-sites-tags">
+        {% for site in completed_sites %}
+          <span class="site-tag">🟢 {{ site.name }}</span>
+        {% empty %}
+          <span class="time-hint">{% trans "Пока нет объектов в статусе «Завершено»." %}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if rows %}
+    <div class="mbg-performance-table" style="margin-top: 14px; max-height: 240px; overflow-y: auto; border: 1px solid var(--cab-border); border-radius: var(--cab-radius); padding: 8px;">
+      <div class="mbg-performance-row mbg-performance-row--head"><span>{% trans "Работа" %}</span><span>{% trans "Количество" %}</span><span>{% trans "Сумма" %}</span></div>
+      {% for row in rows %}
+        <div class="mbg-performance-row"><span><strong>{{ row.name }}</strong><small>{% trans row.unit %}</small></span><span>{% if row.quantity == None %}{% trans "Menge ungeklärt" %}{% else %}{{ row.quantity }}{% endif %}</span><span>{% if row.amount == None %}{% trans "Preis nicht vereinbart" %}{% else %}{{ row.amount }} €{% endif %}</span></div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" style="margin-top: 18px;">
+      {% csrf_token %}
+      <input type="hidden" name="mode" value="final">
+      <button class="time-button" type="submit" {% if not completed_sites %}disabled{% endif %}>
+        📄 {% trans "Выпустить Leistungsnachweis" %}
+      </button>
+    </form>
+  </section>
+</div>
+
+<!-- БЛОК 3: История документов -->
+<section class="time-card" style="margin-top: 24px;">
+  <h2>{% trans "История сформированных документов" %}</h2>
+  <div class="mbg-export-history-grid">
+    {% for export in exports %}
+      <a class="mbg-export-file" href="{% url 'mbg_reports:performance_download' export.pk %}">
+        <span class="mbg-export-file-icon">XLSX</span>
+        <span class="mbg-export-info">
+          <strong>{{ export.filename }}</strong>
+          <small>{{ export.created_at|date:"d.m.Y H:i" }} · {{ export.author }}</small>
+        </span>
+        <span class="download-arrow" aria-hidden="true">↓</span>
+      </a>
+    {% empty %}
+      <p class="time-hint">{% trans "Документы по этому объекту ещё не создавались." %}</p>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+.mbg-export-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.badge-amber {
+  display: inline-block;
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #F59E0B;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+.badge-green {
+  display: inline-block;
+  background: #E6FBF2;
+  color: #00875A;
+  border: 1px solid #00A86B;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+.sites-select-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 10px;
+  font-size: 13px;
+}
+.btn-text-action {
+  background: none;
+  border: none;
+  color: var(--cab-primary);
+  cursor: pointer;
+  padding: 0;
+  font-size: 12px;
+  text-decoration: underline;
+}
+.sites-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  border: 1px solid var(--cab-border);
+  border-radius: var(--cab-radius);
+  padding: 8px;
+  background: var(--cab-bg, #f8fafc);
+}
+.site-checkbox-row {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--cab-border);
+  border-radius: 6px;
+  background: var(--cab-topbar-bg);
+  cursor: pointer;
+  margin: 0 !important;
+}
+.site-checkbox-row:hover {
+  border-color: var(--cab-primary);
+}
+.site-checkbox-row input[type=checkbox] {
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 !important;
+  accent-color: var(--cab-primary);
+  flex-shrink: 0;
+}
+.site-checkbox-info {
+  flex: 1;
+  min-width: 0;
+}
+.site-checkbox-info strong {
+  display: block;
+  font-size: 13.5px;
+  color: var(--cab-text);
+}
+.site-checkbox-info small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--cab-text-muted);
+}
+.site-checkbox-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.site-mini-status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--cab-border);
+}
+.site-mini-status.status-completed {
+  background: #E6FBF2;
+  border-color: #00A86B;
+  color: #00875A;
+}
+.site-mini-status.status-started {
+  background: #FEF3C7;
+  border-color: #F59E0B;
+  color: #B45309;
+}
+.site-mini-status.status-not_started {
+  background: #F1F5F9;
+  border-color: #94A3B8;
+  color: #475569;
+}
+.site-reports-count {
+  font-size: 11.5px;
+  color: var(--cab-text-muted);
+}
+.site-amount {
+  font-size: 13px;
+  color: #00875A;
+  min-width: 60px;
+  text-align: right;
+}
+.site-no-reports {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.completed-summary-box {
+  margin-top: 14px;
+  padding: 14px;
+  background: var(--cab-bg, #f8fafc);
+  border: 1px solid var(--cab-border);
+  border-radius: var(--cab-radius);
+}
+.completed-sites-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.site-tag {
+  background: #E6FBF2;
+  border: 1px solid #00A86B;
+  color: #00875A;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.mbg-export-history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+.mbg-export-file {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--cab-border);
+  border-radius: var(--cab-radius);
+  background: var(--cab-topbar-bg);
+  text-decoration: none;
+  color: var(--cab-text);
+  transition: border-color .15s ease;
+}
+.mbg-export-file:hover {
+  border-color: var(--cab-primary);
+}
+.mbg-export-file-icon {
+  background: #0A2540;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 6px 8px;
+  border-radius: 4px;
+}
+.mbg-export-info {
+  flex: 1;
+  min-width: 0;
+}
+.mbg-export-info strong {
+  display: block;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mbg-export-info small {
+  display: block;
+  font-size: 11px;
+  color: var(--cab-text-muted);
+}
+.download-arrow {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cab-primary);
+}
+@media (max-width: 860px) {
+  .mbg-export-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+function toggleAllSites(checked) {
+  document.querySelectorAll('.preliminary-export-form input[type=checkbox]:not(:disabled)').forEach(function(cb) {
+    cb.checked = checked;
+  });
+}
+</script>
+{% endblock %}

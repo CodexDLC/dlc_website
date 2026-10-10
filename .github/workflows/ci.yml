@@ -1,0 +1,100 @@
+name: CI Quality Gate & Container Validation
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_call:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: dlc_test_db
+          POSTGRES_USER: dlc_test_user
+          POSTGRES_PASSWORD: dlc_test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "0.11.8"
+
+      - name: Set up Python 3.13
+        run: uv python install 3.13
+
+      - name: Install dependencies from frozen lock
+        run: uv sync --frozen --extra dev
+
+      - name: Generate ephemeral encryption key for isolated CI data
+        run: uv run python -c "from cryptography.fernet import Fernet; print('FIELD_ENCRYPTION_KEY=' + Fernet.generate_key().decode('ascii'))" >> "$GITHUB_ENV"
+
+      - name: Report pre-existing lint debt across full repository (non-suppressed)
+        continue-on-error: true
+        run: uv run ruff check .
+
+      - name: Enforce Ruff on container readiness and core modules
+        run: uv run ruff check src/dlc_montage/core src/dlc_montage/system/views tests/test_container_readiness_config.py
+
+      - name: Django System Check (Dev)
+        run: uv run python src/dlc_montage/manage.py check --settings=dlc_montage.core.settings.dev
+
+      - name: Django System Check (Production Guard)
+        env:
+          DATABASE_URL: postgres://dlc_test_user:dlc_test_password@localhost:5432/dlc_test_db
+          SECRET_KEY: ci-test-secret-key-must-be-long-enough-32-chars-guaranteed
+        run: uv run python src/dlc_montage/manage.py check --settings=dlc_montage.core.settings.prod
+
+      - name: Run Pytest Suite with Isolated PostgreSQL & Redis
+        env:
+          TEST_DATABASE_URL: postgres://dlc_test_user:dlc_test_password@localhost:5432/dlc_test_db
+          REDIS_URL: redis://localhost:6379/0
+        run: uv run pytest
+
+      - name: Validate Compose Configurations
+        env:
+          DLC_DB_PASSWORD: ci_test_password_32chars_long_str
+          SECRET_KEY: ci-test-secret-key-32chars-long-str
+          ALLOWED_HOSTS: localhost
+          CSRF_TRUSTED_ORIGINS: http://localhost
+        run: |
+          docker compose -f deploy/compose.infra.yml -f deploy/compose.django.yml config --quiet
+          docker compose -f deploy/compose.local.yml config --quiet
+          docker compose -f deploy/compose.prod.yml config --quiet
+
+      - name: Build Django Container Image
+        run: docker build -f deploy/django/Dockerfile -t dlc-montage-django:ci .
+
+      - name: Build Nginx Container Image
+        run: docker build -f deploy/nginx/Dockerfile -t dlc-montage-nginx:ci .

@@ -1,0 +1,172 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "AC · Обзор" %} {% trans '— DLC Montage' %}{% endblock %}
+
+{% block cabinet_content %}
+<link rel="stylesheet" href="{% static 'internal_time/css/reports.css' %}">
+<link rel="stylesheet" href="{% static 'customer_portal/css/portal.css' %}">
+
+<div class="customer-portal-shell time-page">
+  <div class="customer-header">
+    <div class="customer-header-title">
+      <p class="time-eyebrow">DLC Montage · AC</p>
+      <h1>{% trans "Обзор направления AC" %}</h1>
+      <p>{% trans "Оперативная сводка по проектам, объектам, отчётам MBG и документации." %}</p>
+    </div>
+    {% if is_manager %}
+      <div class="customer-header-actions time-inline">
+        <a class="time-button" href="{% url 'projects:new' %}">+ {% trans "Создать проект" %}</a>
+        <a class="time-button secondary" href="{% url 'mbg_reports:new' %}">+ {% trans "Создать отчёт" %}</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="customer-grid" style="margin-bottom: 32px;">
+    <!-- Проекты (Anlagen) -->
+    <article class="customer-card">
+      <div class="customer-card-body">
+        <div class="customer-card-eyebrow">{% trans "Проекты" %} {% trans '· ANLAGEN' %}</div>
+        <h2 class="customer-card-title">
+          <a href="{% url 'cabinet:workspace_page' 'ac' 'groups' %}">{% trans "Группы проектов" %}</a>
+        </h2>
+        <div style="font-size: 32px; font-weight: 700; color: var(--cab-text); margin: 12px 0 6px;">
+          {{ total_groups }}
+        </div>
+        <p class="customer-card-meta">
+          {% blocktrans with active=active_groups %}Активных: {{ active }}{% endblocktrans %}
+        </p>
+        <div class="customer-card-badges">
+          <span class="cust-badge cust-badge--active">{% trans "Активных" %}: {{ active_groups }}</span>
+        </div>
+      </div>
+      <div class="customer-card-footer">
+        <a class="time-button secondary" href="{% url 'cabinet:workspace_page' 'ac' 'groups' %}">
+          {% trans "Перейти к проектам" %} →
+        </a>
+      </div>
+    </article>
+
+    <!-- Объекты (Standorte) -->
+    <article class="customer-card">
+      <div class="customer-card-body">
+        <div class="customer-card-eyebrow">{% trans "Объекты" %} {% trans '· STANDORTE' %}</div>
+        <h2 class="customer-card-title">
+          <a href="{% url 'cabinet:workspace_page' 'ac' 'objects' %}">{% trans "AC-объекты" %}</a>
+        </h2>
+        <div style="font-size: 32px; font-weight: 700; color: var(--cab-text); margin: 12px 0 6px;">
+          {{ total_sites }}
+        </div>
+        <p class="customer-card-meta">
+          {% blocktrans with started=started_sites completed=completed_sites %}В работе: {{ started }} · Завершено: {{ completed }}{% endblocktrans %}
+        </p>
+        <div class="customer-card-badges">
+          <span class="cust-badge cust-badge--started">{% trans "В работе" %}: {{ started_sites }}</span>
+          <span class="cust-badge cust-badge--completed">{% trans "Завершено" %}: {{ completed_sites }}</span>
+        </div>
+      </div>
+      <div class="customer-card-footer">
+        <a class="time-button secondary" href="{% url 'cabinet:workspace_page' 'ac' 'objects' %}">
+          {% trans "Перейти к объектам" %} →
+        </a>
+      </div>
+    </article>
+
+    <!-- Отчёты MBG -->
+    <article class="customer-card">
+      <div class="customer-card-body">
+        <div class="customer-card-eyebrow">{% trans "Отчёты" %} {% trans '· MBG' %}</div>
+        <h2 class="customer-card-title">
+          <a href="{% url 'mbg_reports:list' %}">{% trans "Отчёты MBG" %}</a>
+        </h2>
+        <div style="font-size: 32px; font-weight: 700; color: var(--cab-text); margin: 12px 0 6px;">
+          {{ total_reports }}
+        </div>
+        <p class="customer-card-meta">
+          {% blocktrans with accepted=accepted_reports pending=pending_reports %}Принято: {{ accepted }} · На проверке: {{ pending }}{% endblocktrans %}
+        </p>
+        <div class="customer-card-badges">
+          <span class="cust-badge cust-badge--accepted">{% trans "Принято" %}: {{ accepted_reports }}</span>
+          {% if pending_reports %}
+            <span class="cust-badge cust-badge--started">{% trans "На проверке" %}: {{ pending_reports }}</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="customer-card-footer">
+        <a class="time-button secondary" href="{% url 'mbg_reports:list' %}">
+          {% trans "Журнал отчётов" %} →
+        </a>
+      </div>
+    </article>
+
+    <!-- Экспорт и файлы -->
+    <article class="customer-card">
+      <div class="customer-card-body">
+        <div class="customer-card-eyebrow">{% trans "Документы" %} {% trans '· EXPORTS & FILES' %}</div>
+        <h2 class="customer-card-title">
+          <a href="{% url 'mbg_reports:export_hub' %}">{% trans "Акты и файлы" %}</a>
+        </h2>
+        <div style="font-size: 32px; font-weight: 700; color: var(--cab-text); margin: 12px 0 6px;">
+          {{ total_files }}
+        </div>
+        <p class="customer-card-meta">
+          {% trans "Выгрузки Leistungsnachweis, Stundennachweis и фотографии." %}
+        </p>
+        <div class="customer-card-badges">
+          <span class="cust-badge cust-badge--progress">{% trans "Excel-хаб" %}</span>
+        </div>
+      </div>
+      <div class="customer-card-footer">
+        <a class="time-button secondary" href="{% url 'mbg_reports:export_hub' %}">
+          {% trans "Экспорт Excel" %} →
+        </a>
+        <a class="time-button quiet" href="{% url 'cabinet:workspace_page' 'ac' 'files' %}">
+          {% trans "Файлы" %}
+        </a>
+      </div>
+    </article>
+  </div>
+
+  {% if recent_groups %}
+    <section class="time-card">
+      <div class="time-inline spread" style="margin-bottom: 16px;">
+        <h2 style="margin: 0;">{% trans "Недавние проекты AC" %}</h2>
+        <a class="time-button quiet" href="{% url 'cabinet:workspace_page' 'ac' 'groups' %}">{% trans "Все проекты" %} ({{ total_groups }}) →</a>
+      </div>
+      <div class="time-table-scroll">
+        <table class="time-table">
+          <thead>
+            <tr>
+              <th>{% trans "Проект (Anlage)" %}</th>
+              <th>{% trans "Адрес" %}</th>
+              <th>{% trans "Заказчик" %}</th>
+              <th>{% trans "Статус" %}</th>
+              <th style="text-align: right;">{% trans "Действия" %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for group in recent_groups %}
+              <tr>
+                <td>
+                  <strong><a href="{% url 'projects:detail' group.pk %}">{{ group.name }}</a></strong>
+                </td>
+                <td>{{ group.address|default:"—" }}</td>
+                <td>{{ group.client.name|default:"—" }}</td>
+                <td>
+                  <span class="cust-badge cust-badge--{{ group.status }}">{{ group.get_status_display }}</span>
+                </td>
+                <td style="text-align: right;">
+                  <div class="time-inline" style="justify-content: flex-end; gap: 6px;">
+                    <a class="time-button secondary sm" href="{% url 'projects:detail' group.pk %}">{% trans "Открыть" %}</a>
+                    <a class="time-button quiet sm" href="{% url 'mbg_reports:list' %}?group={{ group.pk }}">{% trans "Отчёты" %}</a>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  {% endif %}
+</div>
+{% endblock %}

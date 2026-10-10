@@ -1,0 +1,32 @@
+{% load i18n %}
+<div class="cab-sidebar__logo crm-sidebar__brand">
+  <span class="cab-sidebar__logo-icon bi bi-lightning-charge-fill"></span>
+  <span class="cab-sidebar__logo-name">DLC Montage</span>
+</div>
+
+<nav class="cab-sidebar__nav" aria-label="{% trans 'Разделы текущего пространства' %}">
+  <div class="crm-sidebar__section-label">{% trans cabinet_active_topbar.label %}</div>
+  <div class="flex-grow-1 overflow-auto py-2">
+    <ul class="list-unstyled m-0">
+      {% for item in cabinet_sidebar %}
+        <li>
+          <a href="{{ item.url }}"
+             aria-label="{% trans item.label %}" title="{% trans item.label %}"
+             class="cab-nav__item{% if request.path == item.url %} cab-nav__item--active{% endif %}">
+            <i class="bi {{ item.icon }} cab-nav__icon"></i>
+            <span class="cab-nav__label">{% trans item.label %}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</nav>
+
+<div class="cab-sidebar__footer">
+  <button class="cab-sidebar__collapse-btn"
+          @click="sidebarCollapsed = !sidebarCollapsed"
+          :title="sidebarCollapsed ? '{% trans 'Развернуть' %}' : '{% trans 'Свернуть' %}'">
+    <i class="bi cab-nav__icon" :class="sidebarCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
+    <span class="cab-nav__label">{% trans "Свернуть" %}</span>
+  </button>
+</div>

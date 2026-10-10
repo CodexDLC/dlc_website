@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+    {{ site_settings.company_name }} | {% trans "Home" %}
+{% endblock title %}
+
+{% block content %}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">{{ site_settings.company_name|default:"DLC Montage" }}</h1>
+                <p class="hero-subtitle">{% trans "The public website is being prepared." %}</p>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

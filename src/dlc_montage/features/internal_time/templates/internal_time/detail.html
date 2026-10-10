@@ -1,0 +1,31 @@
+{% extends "internal_time/base.html" %}
+{% load i18n %}
+{% block title %}{% trans 'Отчёт №' %}{{ report.pk }}{% endblock %}
+{% block report_content %}
+<header class="time-heading"><div><a href="{% url 'internal_time:list' %}">{% trans '← Внутренние отчёты' %}</a>
+<p class="time-eyebrow">{{ report.direction|upper }} / {{ report.work_date|date:"d.m.Y" }}</p>
+<h1>{{ report.project_group }}</h1><p>{% trans 'Отчёт №' %}{{ report.pk }} · {{ report.author }}</p></div>
+<span class="time-badge">{{ report.get_status_display }}</span></header>
+{% if report.review_note %}<div class="time-alert">{{ report.review_note }}</div>{% endif %}
+<div class="time-card"><h2>{% trans 'Рабочий день' %}</h2><div class="time-grid three">
+<div><small>{% trans 'Общее время' %}</small><p><strong>{{ report.starts_at|time:"H:i" }}–{{ report.ends_at|time:"H:i" }}</strong></p></div>
+<div><small>{% trans 'На человека' %}</small><p><strong>{{ base }}</strong></p></div>
+<div><small>{% trans 'Обед · не вычитается' %}</small><p><strong>{{ report.lunch_minutes }} {% trans 'мин' %}</strong></p></div></div></div>
+<div class="time-card"><h2>{% trans 'Команда' %}</h2>
+{% for member in members %}<div class="time-detail-member"><strong>{{ member.employee }}</strong>
+<span>{% if member.deduction %}−{{ member.deduction }} {% trans 'мин ·' %} {% endif %}{{ member.hours }}</span></div>{% endfor %}
+<div class="time-base">{% trans 'Всего человеко-часов' %} <strong>{{ total }}</strong></div></div>
+{% if report.work_description or report.note %}<div class="time-card"><h2>{% trans 'Примечания' %}</h2><p>{{ report.work_description }}</p><p>{{ report.note|linebreaksbr }}</p></div>{% endif %}
+{% if editable %}<a class="time-button" href="{% url 'internal_time:edit' report.pk %}">{% trans 'Изменить отчёт' %}</a>
+{% else %}<p class="time-hint">{% trans 'Правка закрыта: отчёт принят или истёк срок редактирования. Обратитесь к администратору.' %}</p>{% endif %}
+{% if manager and report.status == 'submitted' %}
+<form method="post" action="{% url 'internal_time:review' report.pk %}" class="time-card">
+{% csrf_token %}<input type="hidden" name="version" value="{{ report.version }}">
+<h2>{% trans 'Проверка администратором' %}</h2><label>{% trans 'Комментарий' %}<input name="reason" placeholder="{% trans 'Что нужно исправить, если возвращаете отчёт' %}"></label>
+<div class="time-inline"><button class="time-button" name="decision" value="accept">{% trans 'Принять отчёт' %}</button>
+<button class="time-button secondary" name="decision" value="return">{% trans 'Вернуть на исправление' %}</button></div></form>{% endif %}
+<details class="time-card"><summary>{% trans 'История изменений' %}</summary>
+{% for revision in revisions %}<p>{{ revision.created_at|date:"d.m.Y H:i" }} · {{ revision.actor }} ·
+{{ revision.action }} {% trans '· версия' %} {{ revision.snapshot.version }}{% if revision.reason %} — {{ revision.reason }}{% endif %}</p>{% endfor %}</details>
+{% endblock %}
+

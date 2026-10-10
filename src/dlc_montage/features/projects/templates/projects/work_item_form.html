@@ -1,0 +1,19 @@
+{% extends "internal_time/base.html" %}{% load i18n %}
+{% block report_content %}
+<div class="time-heading">
+  <div>
+    <p class="time-eyebrow"><a href="{% url 'projects:site_detail' site.group_id site.pk %}">{{ site.group.name }} · {{ site.name }}</a></p>
+    <h1>{% if item %}{% trans "Редактировать позицию плана" %}{% else %}{% trans "Новая позиция плана" %}{% endif %}</h1>
+    <p>{% trans "Отдельные кабели и трассы создавайте отдельными позициями, даже если у них одинаковый путь." %}</p>
+  </div>
+</div>
+<form method="post" class="time-card">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="time-grid three">
+    {% for field in form.visible_fields %}<div{% if field.name == "label" %} class="time-wide"{% endif %}>{{ field.label_tag }}{{ field }}{{ field.errors }}</div>{% endfor %}
+  </div>
+  <p class="time-hint">{% trans "Плановый объём не означает выполненный. Выполнение подтверждается приростом в принятом дневном отчёте." %}</p>
+  <div class="time-inline"><button class="time-button" type="submit">{% trans "Сохранить позицию" %}</button><a class="time-button secondary" href="{% url 'projects:site_detail' site.group_id site.pk %}">{% trans "К Standort" %}</a></div>
+</form>
+{% endblock %}

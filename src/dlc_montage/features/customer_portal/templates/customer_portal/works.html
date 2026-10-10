@@ -1,0 +1,90 @@
+{% extends "customer_portal/base.html" %}
+{% load i18n %}
+
+{% block report_content %}
+<div class="customer-header">
+  <div class="customer-header-title">
+    <h1>{% trans "Выполненные работы" %}</h1>
+    <p>{% trans "Только текущие принятые дневные отчёты по уникальным дням. Паузы исключены, отображается фактическое количество строк работ." %}</p>
+  </div>
+</div>
+
+{% if date_error %}
+  <div class="time-alert" role="alert">{{ date_error }}</div>
+{% endif %}
+
+<form method="get" class="customer-filter-bar" aria-label="{% trans 'Фильтры журнала работ' %}">
+  <div class="customer-filter-item">
+    <label for="id_works_group">{% trans "Anlage" %}</label>
+    <select id="id_works_group" name="group">
+      <option value="">{% trans "Все проекты" %}</option>
+      {% for g in allowed_groups %}
+        <option value="{{ g.pk }}"{% if group_id == g.pk|stringformat:"s" %} selected{% endif %}>{{ g.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="customer-filter-item">
+    <label for="id_works_site">{% trans "Standort" %}</label>
+    <select id="id_works_site" name="site">
+      <option value="">{% trans "Все объекты" %}</option>
+      {% for s in allowed_sites %}
+        <option value="{{ s.pk }}"{% if site_id == s.pk|stringformat:"s" %} selected{% endif %}>{{ s.group.name }} · {{ s.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="customer-filter-item">
+    <label for="id_works_from">{% trans "Дата с" %}</label>
+    <input id="id_works_from" type="date" name="from" value="{{ from_str }}" placeholder="YYYY-MM-DD">
+  </div>
+  <div class="customer-filter-item">
+    <label for="id_works_to">{% trans "Дата по" %}</label>
+    <input id="id_works_to" type="date" name="to" value="{{ to_str }}" placeholder="YYYY-MM-DD">
+  </div>
+  <div class="customer-filter-actions">
+    <button type="submit" class="time-button secondary">{% trans "Применить" %}</button>
+    {% if group_id or site_id or from_str or to_str %}
+      <a href="{% url 'customer_portal:works' %}" class="time-button quiet">{% trans "Сбросить" %}</a>
+    {% endif %}
+  </div>
+</form>
+
+{% for day in day_groups %}
+  <section class="customer-day-section">
+    <div class="customer-day-header">
+      <h2>📅 {{ day.work_date|date:"d.m.Y"|default:day.work_date_str }}</h2>
+      <span class="cust-badge cust-badge--active">{% trans "Принятые отчёты" %}</span>
+    </div>
+    <div class="customer-grid">
+      {% for card in day.site_cards %}
+        <article class="customer-card">
+          <div class="customer-card-body">
+            <h3 class="customer-card-title">
+              <a href="{% url 'customer_portal:site' card.site.pk %}?date={{ card.work_date_str }}">{{ card.site.name }}</a>
+            </h3>
+            {% if card.site.address %}
+              <p class="customer-card-meta">{{ card.site.address }}</p>
+            {% endif %}
+            <div class="customer-card-badges">
+              <span class="cust-badge cust-badge--progress">
+                {{ card.work_rows_count }} {% trans "строк работ" %}
+              </span>
+            </div>
+          </div>
+          <div class="customer-card-footer">
+            <a class="time-button secondary sm" href="{% url 'customer_portal:site' card.site.pk %}?date={{ card.work_date_str }}">
+              {% trans "Детали за дату" %}
+            </a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+{% empty %}
+  <div class="customer-empty-card">
+    <p>{% trans "Принятых работ за выбранный период не найдено." %}</p>
+  </div>
+{% endfor %}
+
+{% include "customer_portal/includes/_pagination.html" with page_obj=days_page extra_params="group="|add:group_id|add:"&site="|add:site_id|add:"&from="|add:from_str|add:"&to="|add:to_str %}
+
+{% endblock %}

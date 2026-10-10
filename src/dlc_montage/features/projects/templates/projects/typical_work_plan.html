@@ -1,0 +1,34 @@
+{% extends "internal_time/base.html" %}{% load i18n %}
+{% block report_content %}
+<div class="time-heading">
+  <div>
+    <p class="time-eyebrow"><a href="{% url 'projects:site_detail' site.group_id site.pk %}">{{ site.group.name }} · {{ site.name }}</a></p>
+    <h1>{% trans "Составить типовой AC-план" %}</h1>
+    <p>{% trans "Выберите состав оборудования и кабелей. Затем проверьте каждую позицию и её плановый объём." %}</p>
+  </div>
+</div>
+<form method="post" class="time-card">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="time-grid three">
+    {% for field in form.visible_fields %}<div class="time-field">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>{% endfor %}
+  </div>
+  <div class="time-inline">
+    <button class="time-button secondary" type="submit" name="step" value="preview">{% trans "Показать план" %}</button>
+    <a class="time-button quiet" href="{% url 'projects:site_detail' site.group_id site.pk %}">{% trans "Отмена" %}</a>
+  </div>
+  {% if preview_rows %}
+    <h2>{% trans "Проверьте позиции перед сохранением" %}</h2>
+    <p class="time-hint">{% trans "Уберите ненужные строки и измените объём в единицах каталога. Для существующего плана используйте редактор позиции." %}</p>
+    <div class="time-table-scroll"><table class="time-table">
+      <thead><tr><th>{% trans "Включить" %}</th><th>{% trans "Позиция" %}</th><th>{% trans "Плановый объём" %}</th></tr></thead>
+      <tbody>{% for row in preview_rows %}<tr>
+        <td><input type="checkbox" name="include-{{ row.spec.key }}"{% if row.selected %} checked{% endif %} aria-label="{% trans 'Включить' %} {{ row.spec.label }}"></td>
+        <td><strong>{{ row.spec.label }}</strong><small> · {{ row.work_name }}{% if row.route_name %} · {{ row.route_name }}{% endif %}{% if row.cable_name %} · {{ row.cable_name }}{% endif %}</small></td>
+        <td><input type="number" name="quantity-{{ row.spec.key }}" min="0.01" step="0.01" value="{{ row.quantity }}" required aria-label="{% trans 'Плановый объём' %} {{ row.spec.label }}"> {% trans row.unit %}</td>
+      </tr>{% endfor %}</tbody>
+    </table></div>
+    <button class="time-button" type="submit" name="step" value="apply">{% trans "Сохранить выбранные позиции" %}</button>
+  {% endif %}
+</form>
+{% endblock %}

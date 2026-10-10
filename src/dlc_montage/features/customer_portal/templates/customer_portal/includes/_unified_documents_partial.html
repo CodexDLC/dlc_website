@@ -1,0 +1,60 @@
+{% load i18n %}
+
+<div class="unified-documents-content">
+  <form method="get" class="customer-filter-bar" aria-label="{% trans 'Поиск документов' %}">
+    <input type="hidden" name="page_groups" value="{{ page_groups }}">
+    <input type="hidden" name="page_pdf" value="{{ page_pdf }}">
+    <div class="customer-filter-item">
+      <label for="id_doc_search_group">{% trans "Поиск проектов (Anlagen)" %}</label>
+      <input id="id_doc_search_group" type="search" name="q_group" value="{{ q_group }}" placeholder="{% trans 'Название или адрес Anlage' %}">
+    </div>
+    <div class="customer-filter-item">
+      <label for="id_doc_search_pdf">{% trans "Поиск PDF документов" %}</label>
+      <input id="id_doc_search_pdf" type="search" name="q_pdf" value="{{ q_pdf }}" placeholder="{% trans 'Имя файла или описание' %}">
+    </div>
+    <div class="customer-filter-actions">
+      <button type="submit" class="time-button secondary">{% trans "Найти" %}</button>
+      {% if q_group or q_pdf %}
+        <a href="?" class="time-button quiet">{% trans "Сбросить" %}</a>
+      {% endif %}
+    </div>
+  </form>
+
+  {% include "customer_portal/includes/_unified_documents_table.html" %}
+
+  <section class="time-card">
+    <h2>{% trans "Проектные документы (PDF)" %}</h2>
+    <div class="time-table-scroll">
+      <table class="time-table">
+        <thead>
+          <tr>
+            <th>{% trans "Документ" %}</th>
+            <th>{% trans "Anlage" %}</th>
+            <th>{% trans "Standort" %}</th>
+            <th>{% trans "Загружено" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for file in files_page %}
+            <tr>
+              <td>
+                <a href="{% if file.download_url %}{{ file.download_url }}{% else %}{% url 'customer_portal:file_download' file.pk %}{% endif %}">
+                  <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> {{ file.original_name }}
+                </a>
+              </td>
+              <td>{{ file.group.name }}</td>
+              <td>{{ file.site.name|default:"—" }}</td>
+              <td>{{ file.created_at|date:"d.m.Y H:i"|default:file.created_at }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4">{% trans "Нет доступных PDF-документов." %}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% include "customer_portal/includes/_pagination.html" with page_obj=files_page page_param_name="page_pdf" extra_params="q_group="|add:q_group|add:"&q_pdf="|add:q_pdf|add:"&page_groups="|add:page_groups|stringformat:"s" %}
+  </section>
+</div>

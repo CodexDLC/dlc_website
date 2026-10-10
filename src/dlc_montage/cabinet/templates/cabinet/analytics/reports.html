@@ -1,0 +1,77 @@
+{# CODEX_DJANGO_CLI BLUEPRINT STATUS: MOVE_TO_CLI_BLUEPRINT. Reason: generated app-layer or scaffold-owned template for codex-django-cli blueprints. #}
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Reports" %} — {{ active_tab|capfirst }}{% endblock %}
+
+{% block cabinet_content %}
+<div x-data="{ showExport: false }">
+
+    {# ── Page Header ── #}
+    {% include "cabinet/includes/_page_header.html" with title=report_title subtitle=period_label %}
+
+    {# ── Unified Filters & Export Bar ── #}
+    <div class="mb-4">
+        {% include "cabinet/includes/_report_filters.html" %}
+    </div>
+
+    {# ── Trend Widget ── #}
+    <div class="row g-3 mb-4">
+        <div class="col-12">
+            {% trans "Revenue Performance Trend" as revenue_trend_title %}
+            {% trans "vs last month" as revenue_trend_delta %}
+            {% include "cabinet/widgets/chart.html" with title=revenue_trend_title kpi_value=table_summary.total_revenue kpi_trend="+12.4%" kpi_trend_label=revenue_trend_delta chart_id="revenueTrend" height="220" icon="bi-graph-up-arrow" %}
+        </div>
+    </div>
+
+    {# ── Main Data Table ── #}
+    {% if columns %}
+    <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 12px;">
+        {% include "cabinet/widgets/table.html" with columns=columns rows=rows summary=summary_row bar_key="revenue_fmt" bar_max=bar_max %}
+    </div>
+    {% else %}
+    <div class="p-5 text-center bg-white rounded-3 shadow-sm border">
+        <span class="bi bi-info-circle fs-2 text-muted mb-3 d-block"></span>
+        <p class="text-muted mb-0">{% trans "No data available for this report type." %}</p>
+    </div>
+    {% endif %}
+
+    {# ── Export Modal ── #}
+    {% include "cabinet/includes/_export_modal.html" %}
+
+</div>
+
+{# ── Chart Initialization (Mock Script) ── #}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('revenueTrend');
+    if (ctx) {
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['01.03', '05.03', '10.03', '15.03', '20.03', '25.03', '31.03'],
+                datasets: [{
+                    label: 'Revenue',
+                    data: [12000, 19000, 15000, 25000, 22000, 30000, 28000],
+                    borderColor: '#6366f1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

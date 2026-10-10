@@ -1,0 +1,118 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "AC-объекты" %} {% trans '— DLC Montage' %}{% endblock %}
+
+{% block cabinet_content %}
+<link rel="stylesheet" href="{% static 'internal_time/css/reports.css' %}">
+<link rel="stylesheet" href="{% static 'customer_portal/css/portal.css' %}">
+
+<div class="customer-portal-shell time-page">
+  <div class="customer-header">
+    <div class="customer-header-title">
+      <p class="time-eyebrow">{% trans 'AC · STANDORTE' %}</p>
+      <h1>{% trans "AC-объекты" %}</h1>
+      <p>{% trans "Объекты AC-направления, статус готовности, план и отчёты." %}</p>
+    </div>
+  </div>
+
+  <form method="get" class="customer-filter-bar" aria-label="{% trans 'Фильтры объектов' %}">
+    <div class="customer-filter-item">
+      <label for="id_obj_search">{% trans "Поиск" %}</label>
+      <input id="id_obj_search" type="search" name="q" value="{{ query }}" placeholder="{% trans 'Название, адрес или P/Nr' %}">
+    </div>
+    <div class="customer-filter-item">
+      <label for="id_obj_group">{% trans "Проект (Anlage)" %}</label>
+      <select id="id_obj_group" name="group">
+        <option value="">{% trans "Все проекты" %}</option>
+        {% for grp in groups %}
+          <option value="{{ grp.pk }}"{% if group_id == grp.pk|stringformat:"s" %} selected{% endif %}>{{ grp.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="customer-filter-item">
+      <label for="id_obj_status">{% trans "Статус" %}</label>
+      <select id="id_obj_status" name="status">
+        <option value="non_completed"{% if status == 'non_completed' %} selected{% endif %}>{% trans "В работе (по умолчанию)" %}</option>
+        <option value="completed"{% if status == 'completed' %} selected{% endif %}>{% trans "Завершённые" %}</option>
+        <option value="all"{% if status == 'all' %} selected{% endif %}>{% trans "Все статусы" %}</option>
+        <option value="not_started"{% if status == 'not_started' %} selected{% endif %}>{% trans "Не начато" %}</option>
+        <option value="started"{% if status == 'started' %} selected{% endif %}>{% trans "Начато" %}</option>
+      </select>
+    </div>
+    <div class="customer-filter-item">
+      <label for="id_obj_sort">{% trans "Сортировка" %}</label>
+      <select id="id_obj_sort" name="sort">
+        <option value="activity"{% if sort == 'activity' %} selected{% endif %}>{% trans "По активности отчётов" %}</option>
+        <option value="name"{% if sort == 'name' %} selected{% endif %}>{% trans "По названию" %}</option>
+      </select>
+    </div>
+    <div class="customer-filter-actions">
+      <button type="submit" class="time-button secondary">{% trans "Применить" %}</button>
+      {% if query or status != 'non_completed' or sort != 'activity' or group_id %}
+        <a href="{% url 'cabinet:workspace_page' 'ac' 'objects' %}" class="time-button quiet">{% trans "Сбросить" %}</a>
+      {% endif %}
+    </div>
+  </form>
+
+  {% if selected_group %}
+    <div class="customer-chips">
+      <span class="customer-chip">
+        {% trans "Anlage" %}: {{ selected_group.name }}
+        <a href="?q={{ query|urlencode }}&status={{ status|urlencode }}&sort={{ sort|urlencode }}" class="customer-chip-clear" title="{% trans 'Сбросить фильтр по проекту' %}">&times;</a>
+      </span>
+    </div>
+  {% endif %}
+
+  <div class="customer-grid">
+    {% for site in sites %}
+      <article class="customer-card">
+        <div class="customer-card-body">
+          <h2 class="customer-card-title">
+            <a href="{% url 'projects:site_detail' site.group_id site.pk %}">{{ site.name }}</a>
+          </h2>
+          {% if site.address %}
+            <p class="customer-card-meta">{{ site.address }}</p>
+          {% endif %}
+          <div class="customer-card-badges">
+            <span class="cust-badge cust-badge--{{ site.status }}">{{ site.get_status_display }}</span>
+            {% if site.project_number %}
+              <span class="cust-badge">{% trans 'P/Nr:' %} {{ site.project_number }}</span>
+            {% endif %}
+            {% if site.plan_progress %}
+              <span class="cust-badge cust-badge--progress" title="{% trans 'Принятый план' %}">📋 {{ site.plan_progress }}</span>
+            {% endif %}
+            {% if site.cached_photo_summary %}
+              {% if site.cached_photo_summary.status == 'ok' %}
+                {% if site.cached_photo_summary.count > 0 %}
+                  <span class="cust-badge cust-badge--photo-ok" title="{% trans 'Fotos vorhanden' %}">📸 {{ site.cached_photo_summary.count }}</span>
+                {% else %}
+                  <span class="cust-badge cust-badge--not_started" title="{% trans 'Keine Fotos' %}">⏳ 0</span>
+                {% endif %}
+              {% else %}
+                <span class="cust-badge cust-badge--photo-unavail" title="{% trans 'Fotospeicher nicht erreichbar' %}">⚠️ {% trans "Недоступно" %}</span>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        <div class="customer-card-footer">
+          <a class="time-button secondary" href="{% url 'projects:site_detail' site.group_id site.pk %}">
+            {% trans "Открыть" %}
+          </a>
+          {% if manager and site.is_active and site.group.status == "active" %}
+            <a class="time-button quiet" href="{% url 'mbg_reports:new' %}?group={{ site.group_id }}&site={{ site.pk }}">+ {% trans "Отчёт" %}</a>
+          {% endif %}
+        </div>
+      </article>
+    {% empty %}
+      <div class="customer-empty-card" style="grid-column: 1 / -1;">
+        <p>{% trans "Подходящих Standorte не найдено." %}</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if sites_page and sites_page.paginator.num_pages > 1 %}
+    {% include "customer_portal/includes/_pagination.html" with page_obj=sites_page extra_params="q="|add:query|add:"&group="|add:group_id|add:"&status="|add:status|add:"&sort="|add:sort %}
+  {% endif %}
+</div>
+{% endblock %}

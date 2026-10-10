@@ -1,0 +1,43 @@
+{% extends "customer_portal/base.html" %}
+{% load i18n %}
+
+{% block report_content %}
+<div class="customer-header">
+  <div class="customer-header-title">
+    <h1>{% trans "Доступ заказчиков" %}</h1>
+    <p>{% trans "Права назначаются вручную; совпадение адреса электронной почты не даёт доступа." %}</p>
+  </div>
+  <div class="customer-header-actions">
+    <a class="time-button" href="{% url 'customer_portal:membership_edit' %}">{% trans "Назначить пользователя" %}</a>
+  </div>
+</div>
+
+<section class="time-card">
+  <div class="time-table-scroll">
+    <table class="time-table">
+      <thead>
+        <tr>
+          <th>{% trans "Пользователь" %}</th>
+          <th>{% trans "Заказчик" %}</th>
+          <th>{% trans "Активен" %}</th>
+          <th>{% trans "Создаёт проекты" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for membership in memberships %}
+          <tr>
+            <td>{{ membership.user.username }}</td>
+            <td>{{ membership.client.name }}</td>
+            <td>{{ membership.is_active|yesno:_("Да,Нет") }}</td>
+            <td>{{ membership.can_manage_projects|yesno:_("Да,Нет") }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">{% trans "Назначений пока нет." %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

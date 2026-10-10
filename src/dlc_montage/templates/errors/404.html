@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}404 — {% trans "Page Not Found" %}{% endblock title %}
+{% block meta_robots %}<meta name="robots" content="noindex, nofollow">{% endblock meta_robots %}
+
+{% block content %}
+<section class="section">
+    <div class="container text-center">
+        <h1 class="error-code">404</h1>
+        <h2>{% trans "Page Not Found" %}</h2>
+        <p class="text-muted">{% trans "The page you are looking for does not exist." %}</p>
+        <a href="{% url 'home' %}" class="btn btn-primary">{% trans "Go Home" %}</a>
+    </div>
+</section>
+{% endblock content %}

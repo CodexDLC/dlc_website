@@ -1,0 +1,5313 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: DLC Montage\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-10 14:12+0200\n"
+"PO-Revision-Date: 2026-10-10 14:09+0200\n"
+"Last-Translator: DLC Montage\n"
+"Language-Team: ru\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: .\cabinet\cabinet.py:50
+#: .\features\customer_portal\templates\customer_portal\group.html:7
+#: .\features\customer_portal\templates\customer_portal\home.html:8
+msgid "Кабинет заказчика"
+msgstr "Кабинет заказчика"
+
+#: .\cabinet\cabinet.py:56
+msgid "Мои проекты"
+msgstr "Мои проекты"
+
+#: .\cabinet\cabinet.py:57
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:53
+#: .\features\customer_portal\templates\customer_portal\includes\_group_card.html:22
+#: .\features\customer_portal\templates\customer_portal\objects.html:7
+msgid "Объекты"
+msgstr "Объекты"
+
+#: .\cabinet\cabinet.py:59
+#: .\features\customer_portal\templates\customer_portal\works.html:7
+#: .\features\projects\templates\projects\object_detail.html:35
+msgid "Выполненные работы"
+msgstr "Выполненные работы"
+
+#: .\cabinet\cabinet.py:62
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:91
+#: .\features\customer_portal\models.py:59
+#: .\features\customer_portal\templates\customer_portal\reviews.html:7
+#: .\features\management_reports\templates\management_reports\month.html:4
+#: .\features\management_reports\templates\management_reports\month.html:5
+msgid "На проверке"
+msgstr "На проверке"
+
+#: .\cabinet\cabinet.py:65
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:105
+#: .\features\customer_portal\templates\customer_portal\documents.html:15
+#: .\features\customer_portal\templates\customer_portal\unified_documents.html:15
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:12
+#: .\features\mbg_reports\templates\mbg_reports\list.html:20
+#: .\features\mbg_reports\templates\mbg_reports\unified_documents.html:18
+msgid "Документы"
+msgstr "Документы"
+
+#: .\cabinet\cabinet.py:68
+#: .\features\customer_portal\templates\customer_portal\audit.html:7
+msgid "История решений"
+msgstr "История решений"
+
+#: .\cabinet\services\analytics.py:16
+msgid "Выручка за месяц"
+msgstr "Выручка за месяц"
+
+#: .\cabinet\services\analytics.py:25
+msgid "Клиентов всего"
+msgstr "Клиентов всего"
+
+#: .\cabinet\services\analytics.py:33
+msgid "Средний чек"
+msgstr "Средний чек"
+
+#: .\cabinet\services\analytics.py:74
+msgid "Топ бригадиров"
+msgstr "Топ бригадиров"
+
+#: .\cabinet\services\analytics.py:78
+msgid "Елена С."
+msgstr "Елена С."
+
+#: .\cabinet\services\analytics.py:79
+msgid "Анна М."
+msgstr "Анна М."
+
+#: .\cabinet\services\analytics.py:80
+msgid "Ольга К."
+msgstr "Ольга К."
+
+#: .\cabinet\services\analytics.py:84
+msgid "Топ услуги"
+msgstr "Топ услуги"
+
+#: .\cabinet\services\analytics.py:88
+msgid "Маникюр с покрытием"
+msgstr "Маникюр с покрытием"
+
+#: .\cabinet\services\analytics.py:89
+msgid "Стрижка женская"
+msgstr "Стрижка женская"
+
+#: .\cabinet\services\analytics.py:90
+msgid "Окрашивание"
+msgstr "Окрашивание"
+
+#: .\cabinet\services\analytics.py:103 .\cabinet\services\analytics.py:121
+msgid "Revenue"
+msgstr "Выручка"
+
+#: .\cabinet\services\analytics.py:104
+msgid "Services"
+msgstr "Услуги"
+
+#: .\cabinet\services\analytics.py:105
+msgid "Foremen"
+msgstr "Бригадиры"
+
+#: .\cabinet\services\analytics.py:108
+msgid "Week"
+msgstr "Неделя"
+
+#: .\cabinet\services\analytics.py:109
+msgid "Month"
+msgstr "Месяц"
+
+#: .\cabinet\services\analytics.py:110
+msgid "Quarter"
+msgstr "Квартал"
+
+#: .\cabinet\services\analytics.py:120
+msgid "Period"
+msgstr "Период"
+
+#: .\cabinet\services\analytics.py:122
+msgid "Conversion"
+msgstr "Конверсия"
+
+#: .\cabinet\services\analytics.py:125
+msgid "Total"
+msgstr "Всего"
+
+#: .\cabinet\services\analytics.py:133
+#: .\cabinet\templates\cabinet\analytics\reports.html:5
+msgid "Reports"
+msgstr "Отчёты"
+
+#: .\cabinet\services\analytics.py:135
+msgid "Current reporting period"
+msgstr "Текущий отчётный период"
+
+#: .\cabinet\services\conversations.py:36
+#: .\cabinet\templates\cabinet\conversations\inbox.html:5
+#: .\features\conversations\cabinet.py:47
+#: .\features\conversations\cabinet.py:60
+msgid "Inbox"
+msgstr "Входящие"
+
+#: .\cabinet\services\conversations.py:37
+#: .\cabinet\templates\cabinet\conversations\inbox.html:102
+#: .\features\conversations\cabinet.py:67
+#: .\features\conversations\models\message.py:21
+msgid "Processed"
+msgstr "Обработано"
+
+#: .\cabinet\services\conversations.py:38
+#: .\features\conversations\cabinet.py:73
+msgid "All"
+msgstr "Все"
+
+#: .\cabinet\services\conversations.py:92
+msgid "Reply saved."
+msgstr "Ответ сохранён."
+
+#: .\cabinet\services\conversations.py:92
+msgid "Reply body was empty."
+msgstr "Текст ответа пуст."
+
+#: .\cabinet\services\conversations.py:101
+msgid "Thread marked as read."
+msgstr "Переписка отмечена прочитанной."
+
+#: .\cabinet\services\conversations.py:102
+msgid "Thread marked as unread."
+msgstr "Переписка отмечена непрочитанной."
+
+#: .\cabinet\services\conversations.py:105
+msgid "Thread marked as processed."
+msgstr "Переписка отмечена обработанной."
+
+#: .\cabinet\services\conversations.py:108
+msgid "Thread moved back to inbox."
+msgstr "Переписка возвращена во входящие."
+
+#: .\cabinet\services\conversations.py:109
+msgid "Thread marked as spam."
+msgstr "Переписка отмечена как спам."
+
+#: .\cabinet\services\conversations.py:110
+msgid "Thread archived."
+msgstr "Переписка архивирована."
+
+#: .\cabinet\services\conversations.py:116
+msgid "Unsupported thread action."
+msgstr "Неподдерживаемое действие с перепиской."
+
+#: .\cabinet\services\conversations.py:142
+msgid "Recipient email and body are required."
+msgstr "Укажите адрес получателя и текст сообщения."
+
+#: .\cabinet\services\conversations.py:155
+msgid "Message created."
+msgstr "Сообщение создано."
+
+#: .\cabinet\services\conversations.py:168
+msgid "Bulk action is required."
+msgstr "Выберите групповое действие."
+
+#: .\cabinet\services\conversations.py:175
+msgid "Select at least one thread."
+msgstr "Выберите хотя бы одну переписку."
+
+#: .\cabinet\services\conversations.py:182
+msgid "Unsupported bulk action."
+msgstr "Неподдерживаемое групповое действие."
+
+#: .\cabinet\services\conversations.py:191
+#, python-format
+msgid "%(count)s threads updated."
+msgstr "Обновлено переписок: %(count)s."
+
+#: .\cabinet\services\conversations.py:208
+msgid "Mark as processed"
+msgstr "Отметить обработанным"
+
+#: .\cabinet\services\conversations.py:212
+msgid "Mark as unread"
+msgstr "Отметить непрочитанным"
+
+#: .\cabinet\services\conversations.py:212
+msgid "Mark as read"
+msgstr "Отметить прочитанным"
+
+#: .\cabinet\services\conversations.py:218
+msgid "Move to inbox"
+msgstr "Переместить во входящие"
+
+#: .\cabinet\services\conversations.py:218
+msgid "Mark as spam"
+msgstr "Отметить как спам"
+
+#: .\cabinet\services\conversations.py:221
+#: .\cabinet\templates\cabinet\conversations\inbox.html:35
+msgid "Archive"
+msgstr "Архивировать"
+
+#: .\cabinet\services\users.py:24
+msgid "All Users"
+msgstr "Все пользователи"
+
+#: .\cabinet\services\users.py:25
+msgid "Clients"
+msgstr "Заказчики"
+
+#: .\cabinet\services\users.py:26 .\features\staff\apps.py:8
+msgid "Staff"
+msgstr "Сотрудники"
+
+#: .\cabinet\services\users.py:34
+msgid "Administration"
+msgstr "Администрирование"
+
+#: .\cabinet\services\users.py:35
+msgid "Users"
+msgstr "Пользователи"
+
+#: .\cabinet\templates\cabinet\analytics\reports.html:21
+msgid "Revenue Performance Trend"
+msgstr "Динамика выручки"
+
+#: .\cabinet\templates\cabinet\analytics\reports.html:22
+msgid "vs last month"
+msgstr "к прошлому месяцу"
+
+#: .\cabinet\templates\cabinet\analytics\reports.html:35
+msgid "No data available for this report type."
+msgstr "Для этого отчёта нет данных."
+
+#: .\cabinet\templates\cabinet\auth\login.html:3
+#: .\cabinet\templates\cabinet\auth\login.html:9
+#: .\cabinet\templates\cabinet\auth\login.html:17
+msgid "Sign In"
+msgstr "Войти"
+
+#: .\cabinet\templates\cabinet\base_cabinet.html:3
+msgid "Кабинет"
+msgstr "Кабинет"
+
+#: .\cabinet\templates\cabinet\components\entity_form.html:6
+msgid "КАБИНЕТ"
+msgstr "КАБИНЕТ"
+
+#: .\cabinet\templates\cabinet\components\entity_form.html:9
+msgid "Назад"
+msgstr "Назад"
+
+#: .\cabinet\templates\cabinet\components\entity_form.html:38
+#: .\features\customer_portal\templates\customer_portal\form.html:25
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:125
+#: .\features\project_media\templates\project_media\list.html:62
+#: .\features\projects\templates\projects\clients.html:1
+#: .\features\work_catalog\templates\work_catalog\list.html:1
+msgid "Сохранить"
+msgstr "Сохранить"
+
+#: .\cabinet\templates\cabinet\components\entity_form.html:39
+#: .\cabinet\templates\cabinet\conversations\compose.html:37
+#: .\features\customer_portal\templates\customer_portal\form.html:26
+#: .\features\projects\templates\projects\group_form.html:179
+#: .\features\projects\templates\projects\typical_work_plan.html:18
+msgid "Отмена"
+msgstr "Отмена"
+
+#: .\cabinet\templates\cabinet\conversations\compose.html:5
+msgid "Новое сообщение"
+msgstr "Новое сообщение"
+
+#: .\cabinet\templates\cabinet\conversations\compose.html:18
+msgid "Кому"
+msgstr "Кому"
+
+#: .\cabinet\templates\cabinet\conversations\compose.html:22
+msgid "Тема"
+msgstr "Тема"
+
+#: .\cabinet\templates\cabinet\conversations\compose.html:26
+msgid "Сообщение"
+msgstr "Сообщение"
+
+#: .\cabinet\templates\cabinet\conversations\compose.html:31
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:126
+msgid "Отправить"
+msgstr "Отправить"
+
+#: .\cabinet\templates\cabinet\conversations\compose.html:35
+#: .\cabinet\templates\cabinet\conversations\thread.html:95
+msgid "Предпросмотр"
+msgstr "Предпросмотр"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:15
+msgid "Поиск сообщений..."
+msgstr "Поиск сообщений..."
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:21
+msgid "Проверить почту"
+msgstr "Проверить почту"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:31
+msgid "Mark read"
+msgstr "Отметить прочитанным"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:32
+msgid "Mark unread"
+msgstr "Отметить непрочитанным"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:33
+msgid "Mark processed"
+msgstr "Отметить обработанным"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:34
+#: .\cabinet\templates\cabinet\conversations\inbox.html:104
+#: .\features\conversations\models\message.py:22
+msgid "Spam"
+msgstr "Спам"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:47
+#: .\features\customer_portal\templates\customer_portal\home.html:44
+#: .\features\projects\templates\projects\list.html:34
+msgid "Все"
+msgstr "Все"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:97
+#: .\cabinet\templates\cabinet\conversations\thread.html:39
+msgid "Unread"
+msgstr "Не прочитано"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:100
+msgid "Открыто"
+msgstr "Открыто"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:123
+msgid "Page navigation"
+msgstr "Навигация по страницам"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:127
+msgid "Previous"
+msgstr "Назад"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:143
+msgid "Next"
+msgstr "Далее"
+
+#: .\cabinet\templates\cabinet\conversations\inbox.html:154
+msgid "В этом разделе нет сообщений."
+msgstr "В этом разделе нет сообщений."
+
+#: .\cabinet\templates\cabinet\conversations\thread.html:36
+msgid "Read"
+msgstr "Прочитано"
+
+#: .\cabinet\templates\cabinet\conversations\thread.html:61
+msgid "История переписки"
+msgstr "История переписки"
+
+#: .\cabinet\templates\cabinet\conversations\thread.html:84
+msgid "Ваш ответ"
+msgstr "Ваш ответ"
+
+#: .\cabinet\templates\cabinet\conversations\thread.html:86
+msgid "Напишите ваш ответ здесь..."
+msgstr "Напишите ваш ответ здесь..."
+
+#: .\cabinet\templates\cabinet\conversations\thread.html:91
+msgid "Отправить ответ"
+msgstr "Отправить ответ"
+
+#: .\cabinet\templates\cabinet\conversations\thread.html:98
+#: .\features\customer_portal\templates\customer_portal\group.html:61
+#: .\features\project_media\templates\project_media\list.html:75
+msgid "Закрыть"
+msgstr "Закрыть"
+
+#: .\cabinet\templates\cabinet\includes\_modal_base.html:22
+msgid "Close"
+msgstr "Закрыть"
+
+#: .\cabinet\templates\cabinet\includes\_modal_base.html:27
+msgid "Loading details..."
+msgstr "Загрузка подробностей..."
+
+#: .\cabinet\templates\cabinet\includes\_sidebar_staff.html:7
+msgid "Разделы текущего пространства"
+msgstr "Разделы текущего пространства"
+
+#: .\cabinet\templates\cabinet\includes\_sidebar_staff.html:28
+msgid "Развернуть"
+msgstr "Развернуть"
+
+#: .\cabinet\templates\cabinet\includes\_sidebar_staff.html:28
+#: .\cabinet\templates\cabinet\includes\_sidebar_staff.html:30
+msgid "Свернуть"
+msgstr "Свернуть"
+
+#: .\cabinet\templates\cabinet\includes\_topbar.html:8
+msgid "Open navigation"
+msgstr "Открыть навигацию"
+
+#: .\cabinet\templates\cabinet\includes\_topbar.html:12
+msgid "Основные разделы CRM"
+msgstr "Основные разделы CRM"
+
+#: .\cabinet\templates\cabinet\includes\_topbar.html:31
+msgid "Site"
+msgstr "Сайт"
+
+#: .\cabinet\templates\cabinet\includes\_topbar.html:50
+#: .\features\customer_portal\templates\customer_portal\account.html:3
+#: .\features\customer_portal\templates\customer_portal\account.html:5
+#: .\features\customer_portal\templates\customer_portal\base.html:7
+#: .\features\customer_portal\templates\customer_portal\base.html:9
+msgid "Mein Konto"
+msgstr "Мой аккаунт"
+
+#: .\cabinet\templates\cabinet\includes\_topbar.html:55
+msgid "Sign Out"
+msgstr "Выйти"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:4
+msgid "AC · Обзор"
+msgstr "AC · Обзор"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:4
+#: .\features\mbg_reports\templates\mbg_reports\list.html:4
+#: .\features\project_media\templates\project_media\groups.html:4
+#: .\features\projects\templates\projects\list.html:4
+#: .\features\projects\templates\projects\object_detail.html:4
+#: .\features\projects\templates\projects\objects.html:4
+msgid "— DLC Montage"
+msgstr "— DLC Montage"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:14
+msgid "Обзор направления AC"
+msgstr "Обзор направления AC"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:15
+msgid "Оперативная сводка по проектам, объектам, отчётам MBG и документации."
+msgstr "Оперативная сводка по проектам, объектам, отчётам MBG и документации."
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:19
+#: .\features\internal_time\templates\internal_time\_editor.html:25
+#: .\features\projects\templates\projects\list.html:19
+msgid "Создать проект"
+msgstr "Создать проект"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:20
+#: .\features\mbg_reports\templates\mbg_reports\list.html:22
+msgid "Создать отчёт"
+msgstr "Создать отчёт"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:29
+#: .\features\management_reports\templates\management_reports\month.html:6
+#: .\features\projects\templates\projects\list.html:4
+#: .\features\projects\templates\projects\list.html:14
+msgid "Проекты"
+msgstr "Проекты"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:29
+msgid "· ANLAGEN"
+msgstr "· ПРОЕКТЫ"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:31
+#: .\cabinet\workspaces.py:39 .\cabinet\workspaces.py:57
+#: .\cabinet\workspaces.py:80
+msgid "Группы проектов"
+msgstr "Группы проектов"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:37
+#, python-format
+msgid "Активных: %(active)s"
+msgstr "Активных: %(active)s"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:40
+msgid "Активных"
+msgstr "Активных"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:45
+msgid "Перейти к проектам"
+msgstr "Перейти к проектам"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:53
+msgid "· STANDORTE"
+msgstr "· ОБЪЕКТЫ"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:55
+#: .\cabinet\workspaces.py:40
+#: .\features\projects\templates\projects\objects.html:4
+#: .\features\projects\templates\projects\objects.html:14
+msgid "AC-объекты"
+msgstr "AC-объекты"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:61
+#, python-format
+msgid "В работе: %(started)s · Завершено: %(completed)s"
+msgstr "В работе: %(started)s · Завершено: %(completed)s"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:64
+#: .\features\projects\templates\projects\object_detail.html:129
+msgid "В работе"
+msgstr "В работе"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:65
+#: .\features\projects\models\group.py:31
+#: .\features\projects\models\group.py:37
+#: .\features\projects\models\project.py:41
+#: .\features\projects\templates\projects\object_detail.html:124
+msgid "Завершено"
+msgstr "Завершено"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:70
+msgid "Перейти к объектам"
+msgstr "Перейти к объектам"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:78
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:161
+#: .\features\projects\templates\projects\list.html:74
+msgid "Отчёты"
+msgstr "Отчёты"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:78
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:2
+msgid "· MBG"
+msgstr "· MBG"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:80
+#: .\cabinet\workspaces.py:41
+#: .\features\mbg_reports\templates\mbg_reports\_section_nav.html:3
+#: .\features\mbg_reports\templates\mbg_reports\list.html:4
+#: .\features\projects\templates\projects\detail.html:27
+#: .\features\projects\templates\projects\list.html:74
+msgid "Отчёты MBG"
+msgstr "Отчёты MBG"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:86
+#, python-format
+msgid "Принято: %(accepted)s · На проверке: %(pending)s"
+msgstr "Принято: %(accepted)s · На проверке: %(pending)s"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:89
+#: .\features\management_reports\templates\management_reports\month.html:4
+msgid "Принято"
+msgstr "Принято"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:97
+msgid "Журнал отчётов"
+msgstr "Журнал отчётов"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:105
+msgid "· EXPORTS & FILES"
+msgstr "· ВЫГРУЗКИ И ФАЙЛЫ"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:107
+msgid "Акты и файлы"
+msgstr "Акты и файлы"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:113
+msgid "Выгрузки Leistungsnachweis, Stundennachweis и фотографии."
+msgstr "Выгрузки актов выполненных работ, табелей часов и фотографий."
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:116
+msgid "Excel-хаб"
+msgstr "Excel-хаб"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:121
+#: .\features\mbg_reports\templates\mbg_reports\_section_nav.html:5
+msgid "Экспорт Excel"
+msgstr "Экспорт Excel"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:124
+#: .\cabinet\workspaces.py:48 .\cabinet\workspaces.py:59
+msgid "Файлы"
+msgstr "Файлы"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:133
+msgid "Недавние проекты AC"
+msgstr "Недавние проекты AC"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:134
+#: .\features\customer_portal\templates\customer_portal\works.html:20
+#: .\features\internal_time\templates\internal_time\list.html:13
+#: .\features\mbg_reports\forms.py:124 .\features\mbg_reports\forms.py:171
+#: .\features\mbg_reports\templates\mbg_reports\exports.html:13
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:6
+#: .\features\projects\templates\projects\objects.html:27
+msgid "Все проекты"
+msgstr "Все проекты"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:140
+#: .\features\projects\templates\projects\objects.html:25
+msgid "Проект (Anlage)"
+msgstr "Проект"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:141
+#: .\features\projects\forms.py:77 .\features\projects\models\group.py:22
+#: .\features\projects\models\project.py:32
+msgid "Адрес"
+msgstr "Адрес"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:142
+#: .\features\customer_portal\templates\customer_portal\audit.html:19
+#: .\features\customer_portal\templates\customer_portal\memberships.html:21
+#: .\features\projects\forms.py:22 .\features\projects\models\group.py:17
+#: .\features\projects\templates\projects\detail.html:8
+msgid "Заказчик"
+msgstr "Заказчик"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:143
+#: .\features\customer_portal\templates\customer_portal\home.html:40
+#: .\features\internal_time\templates\internal_time\list.html:12
+#: .\features\mbg_reports\forms.py:145 .\features\projects\models\group.py:73
+#: .\features\projects\templates\projects\list.html:30
+#: .\features\projects\templates\projects\object_detail.html:107
+#: .\features\projects\templates\projects\objects.html:34
+#: .\features\staff\forms.py:33
+msgid "Статус"
+msgstr "Статус"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:144
+msgid "Действия"
+msgstr "Действия"
+
+#: .\cabinet\templates\cabinet\workspaces\ac_dashboard.html:160
+#: .\features\customer_portal\templates\customer_portal\group.html:61
+#: .\features\mbg_reports\templates\mbg_reports\list.html:80
+#: .\features\project_media\templates\project_media\list.html:40
+#: .\features\projects\templates\projects\detail.html:46
+#: .\features\projects\templates\projects\list.html:68
+#: .\features\projects\templates\projects\object_detail.html:145
+#: .\features\projects\templates\projects\objects.html:100
+msgid "Открыть"
+msgstr "Открыть"
+
+#: .\cabinet\templates\cabinet\workspaces\placeholder.html:8
+msgid "DLC Montage CRM · структура страницы"
+msgstr "DLC Montage CRM · структура страницы"
+
+#: .\cabinet\templates\cabinet\workspaces\placeholder.html:10
+msgid "· визуальный прототип без данных и рабочих действий."
+msgstr "· визуальный прототип без данных и рабочих действий."
+
+#: .\cabinet\workspaces.py:38 .\cabinet\workspaces.py:56
+#: .\cabinet\workspaces.py:67 .\cabinet\workspaces.py:79
+msgid "Обзор"
+msgstr "Обзор"
+
+#: .\cabinet\workspaces.py:58
+msgid "Отчёты DC"
+msgstr "Отчёты DC"
+
+#: .\cabinet\workspaces.py:64
+msgid "Персонал"
+msgstr "Персонал"
+
+#: .\cabinet\workspaces.py:68 .\features\crews\forms.py:14
+#: .\features\management_reports\templates\management_reports\month.html:5
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:117
+#: .\features\staff\templates\staff\employees.html:2
+msgid "Сотрудники"
+msgstr "Сотрудники"
+
+#: .\cabinet\workspaces.py:69 .\features\crews\templates\crews\teams.html:3
+#: .\features\crews\templates\crews\teams.html:6
+msgid "Команды"
+msgstr "Команды"
+
+#: .\cabinet\workspaces.py:70
+#: .\features\internal_time\templates\internal_time\list.html:3
+#: .\features\internal_time\templates\internal_time\list.html:5
+msgid "Внутренние отчёты"
+msgstr "Внутренние отчёты"
+
+#: .\cabinet\workspaces.py:71
+msgid "Часы и подтверждения"
+msgstr "Часы и подтверждения"
+
+#: .\cabinet\workspaces.py:76
+msgid "Администрирование"
+msgstr "Администрирование"
+
+#: .\cabinet\workspaces.py:81
+#: .\features\projects\templates\projects\clients.html:1
+msgid "Заказчики"
+msgstr "Заказчики"
+
+#: .\cabinet\workspaces.py:82
+#: .\features\work_catalog\templates\work_catalog\list.html:1
+msgid "Каталог работ"
+msgstr "Каталог работ"
+
+#: .\cabinet\workspaces.py:83
+msgid "Пользователи и права"
+msgstr "Пользователи и права"
+
+#: .\cabinet\workspaces.py:84
+msgid "Выгрузки"
+msgstr "Выгрузки"
+
+#: .\cabinet\workspaces.py:85
+msgid "Настройки системы"
+msgstr "Настройки системы"
+
+#: .\core\forms.py:18
+msgid "Выберите вариант"
+msgstr "Выберите вариант"
+
+#: .\features\ac_reporting\apps.py:8
+msgid "AC reporting"
+msgstr "Отчётность AC"
+
+#: .\features\conversations\admin.py:27
+msgid "Sender"
+msgstr "Отправитель"
+
+#: .\features\conversations\admin.py:28
+msgid "Content"
+msgstr "Содержание"
+
+#: .\features\conversations\admin.py:29
+msgid "Classification"
+msgstr "Категория"
+
+#: .\features\conversations\admin.py:30
+msgid "Meta"
+msgstr "Метаданные"
+
+#: .\features\conversations\apps.py:8
+msgid "Conversations"
+msgstr "Переписка"
+
+#: .\features\conversations\cabinet.py:20
+msgid "New messages"
+msgstr "Новые сообщения"
+
+#: .\features\conversations\cabinet.py:32
+#: .\features\conversations\models\message.py:68
+msgid "Messages"
+msgstr "Сообщения"
+
+#: .\features\conversations\cabinet.py:34
+msgid "waiting"
+msgstr "ожидает"
+
+#: .\features\conversations\cabinet.py:35
+msgid "no response yet"
+msgstr "ответа пока нет"
+
+#: .\features\conversations\cabinet.py:54
+msgid "Compose"
+msgstr "Написать сообщение"
+
+#: .\features\conversations\forms\contact.py:14
+msgid "Your Name"
+msgstr "Ваше имя"
+
+#: .\features\conversations\forms\contact.py:15
+msgid "Your Email"
+msgstr "Ваша электронная почта"
+
+#: .\features\conversations\forms\contact.py:16
+msgid "Phone (optional)"
+msgstr "Телефон (необязательно)"
+
+#: .\features\conversations\forms\contact.py:17
+msgid "Subject"
+msgstr "Тема"
+
+#: .\features\conversations\forms\contact.py:18
+msgid "Topic"
+msgstr "Категория"
+
+#: .\features\conversations\forms\contact.py:19
+#: .\features\conversations\models\message.py:67
+msgid "Message"
+msgstr "Сообщение"
+
+#: .\features\conversations\forms\contact.py:23
+msgid "+49 …"
+msgstr "+49 …"
+
+#: .\features\conversations\models\message.py:10
+msgid "Contact Form"
+msgstr "Контактная форма"
+
+#: .\features\conversations\models\message.py:11
+msgid "Email Import"
+msgstr "Импорт почты"
+
+#: .\features\conversations\models\message.py:12
+msgid "Manual"
+msgstr "Вручную"
+
+#: .\features\conversations\models\message.py:15
+msgid "Email"
+msgstr "Электронная почта"
+
+#: .\features\conversations\models\message.py:16
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: .\features\conversations\models\message.py:17
+msgid "Telegram"
+msgstr "Telegram"
+
+#: .\features\conversations\models\message.py:20
+msgid "Open"
+msgstr "Открыто"
+
+#: .\features\conversations\models\message.py:25
+msgid "General Inquiry"
+msgstr "Общий вопрос"
+
+#: .\features\conversations\models\message.py:26
+msgid "Support"
+msgstr "Поддержка"
+
+#: .\features\conversations\models\message.py:27
+msgid "Feedback"
+msgstr "Обратная связь"
+
+#: .\features\conversations\models\message.py:28
+msgid "Other"
+msgstr "Другое"
+
+#: .\features\conversations\models\message.py:31
+msgid "sender name"
+msgstr "имя отправителя"
+
+#: .\features\conversations\models\message.py:32
+msgid "sender email"
+msgstr "электронная почта отправителя"
+
+#: .\features\conversations\models\message.py:33
+msgid "sender phone"
+msgstr "телефон отправителя"
+
+#: .\features\conversations\models\message.py:36
+msgid "subject"
+msgstr "тема"
+
+#: .\features\conversations\models\message.py:37
+#: .\features\conversations\models\reply.py:17
+msgid "body"
+msgstr "текст"
+
+#: .\features\conversations\models\message.py:40
+msgid "topic"
+msgstr "категория"
+
+#: .\features\conversations\models\message.py:41
+msgid "status"
+msgstr "статус"
+
+#: .\features\conversations\models\message.py:43
+msgid "source"
+msgstr "источник"
+
+#: .\features\conversations\models\message.py:46
+msgid "channel"
+msgstr "канал"
+
+#: .\features\conversations\models\message.py:48
+msgid "read"
+msgstr "прочитано"
+
+#: .\features\conversations\models\message.py:49
+msgid "archived"
+msgstr "архивировано"
+
+#: .\features\conversations\models\message.py:55
+msgid "thread key"
+msgstr "ключ переписки"
+
+#: .\features\conversations\models\message.py:63
+msgid "created at"
+msgstr "создано"
+
+#: .\features\conversations\models\message.py:64
+msgid "updated at"
+msgstr "обновлено"
+
+#: .\features\conversations\models\reply.py:15
+msgid "message"
+msgstr "сообщение"
+
+#: .\features\conversations\models\reply.py:18
+msgid "sent at"
+msgstr "отправлено"
+
+#: .\features\conversations\models\reply.py:25
+msgid "sent by"
+msgstr "отправитель"
+
+#: .\features\conversations\models\reply.py:28
+msgid "inbound"
+msgstr "входящее"
+
+#: .\features\conversations\models\reply.py:31
+msgid "Reply"
+msgstr "Ответ"
+
+#: .\features\conversations\models\reply.py:32
+msgid "Replies"
+msgstr "Ответы"
+
+#: .\features\conversations\services\alerts.py:107
+#, python-format
+msgid "[New message] %(sender)s - %(preview)s"
+msgstr "[Новое сообщение] %(sender)s - %(preview)s"
+
+#: .\features\conversations\services\alerts.py:115
+#, python-format
+msgid ""
+"From: %(name)s <%(email)s>\n"
+"Topic: %(topic)s\n"
+"Source: %(source)s\n"
+"Channel: %(channel)s\n"
+"\n"
+"%(body)s"
+msgstr ""
+"От: %(name)s <%(email)s>\n"
+"Тема: %(topic)s\n"
+"Источник: %(source)s\n"
+"Канал: %(channel)s\n"
+"\n"
+"%(body)s"
+
+#: .\features\conversations\services\alerts.py:133
+#, python-format
+msgid "Re: Conversation %(thread)s"
+msgstr "Ответ: переписка %(thread)s"
+
+#: .\features\conversations\services\alerts.py:136
+#, python-format
+msgid "Re: %(subject)s"
+msgstr "Ответ: %(subject)s"
+
+#: .\features\conversations\services\workflow.py:107
+msgid "Mail check queued in background."
+msgstr "Проверка почты поставлена в очередь."
+
+#: .\features\conversations\services\workflow.py:109
+msgid "Mail check started."
+msgstr "Проверка почты запущена."
+
+#: .\features\crews\apps.py:8
+msgid "Crews"
+msgstr "Бригады"
+
+#: .\features\crews\forms.py:11
+msgid "Название команды"
+msgstr "Название команды"
+
+#: .\features\crews\forms.py:12
+msgid "Ответственный бригадир"
+msgstr "Ответственный бригадир"
+
+#: .\features\crews\models\crew.py:9
+msgid "name"
+msgstr "название"
+
+#: .\features\crews\services.py:24
+msgid "Выберите действующих сотрудников."
+msgstr "Выберите действующих сотрудников."
+
+#: .\features\crews\services.py:26
+msgid "Укажите название команды."
+msgstr "Укажите название команды."
+
+#: .\features\crews\services.py:28
+msgid "У бригадира уже есть команда с таким названием."
+msgstr "У бригадира уже есть команда с таким названием."
+
+#: .\features\crews\templates\crews\teams.html:5
+#: .\features\internal_time\templates\internal_time\_editor.html:3
+#: .\features\internal_time\templates\internal_time\detail.html:5
+msgid "← Внутренние отчёты"
+msgstr "← Внутренние отчёты"
+
+#: .\features\crews\templates\crews\teams.html:6
+msgid "ПЕРСОНАЛ / КОМАНДЫ"
+msgstr "ПЕРСОНАЛ / КОМАНДЫ"
+
+#: .\features\crews\templates\crews\teams.html:7
+msgid "Сохраните состав один раз, чтобы добавлять его в отчёт одной кнопкой."
+msgstr "Сохраните состав один раз, чтобы добавлять его в отчёт одной кнопкой."
+
+#: .\features\crews\templates\crews\teams.html:12
+msgid "Соберите первую команду"
+msgstr "Соберите первую команду"
+
+#: .\features\crews\templates\crews\teams.html:12
+msgid "Сотрудников заводит администратор в базе."
+msgstr "Сотрудников заводит администратор в базе."
+
+#: .\features\crews\templates\crews\teams.html:13
+msgid "Управление сотрудниками"
+msgstr "Управление сотрудниками"
+
+#: .\features\crews\templates\crews\teams.html:14
+msgid "Изменить команду"
+msgstr "Изменить команду"
+
+#: .\features\crews\templates\crews\teams.html:14
+msgid "Новая команда"
+msgstr "Новая команда"
+
+#: .\features\crews\templates\crews\teams.html:17
+msgid "Сохранить команду"
+msgstr "Сохранить команду"
+
+#: .\features\crews\templates\crews\teams.html:17
+msgid "Создать другую"
+msgstr "Создать другую"
+
+#: .\features\customer_portal\forms.py:17
+#: .\features\customer_portal\forms.py:42
+msgid "Причина изменения после начала работ"
+msgstr "Причина изменения после начала работ"
+
+#: .\features\customer_portal\forms.py:53
+#: .\features\customer_portal\views.py:598
+msgid "PDF-Dokument"
+msgstr "PDF-документ"
+
+#: .\features\customer_portal\forms.py:55
+msgid "Beschreibung"
+msgstr "Описание"
+
+#: .\features\customer_portal\forms.py:60
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:33
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:63
+#: .\features\customer_portal\templates\customer_portal\works.html:27
+#: .\features\customer_portal\views.py:455
+msgid "Standort"
+msgstr "Объект"
+
+#: .\features\customer_portal\forms.py:67
+msgid "Benutzer"
+msgstr "Пользователь"
+
+#: .\features\customer_portal\forms.py:68
+msgid "Auftraggeber"
+msgstr "Заказчик"
+
+#: .\features\customer_portal\forms.py:69
+msgid "Aktiv"
+msgstr "Активен"
+
+#: .\features\customer_portal\forms.py:70
+msgid "Projekte verwalten"
+msgstr "Управлять проектами"
+
+#: .\features\customer_portal\forms.py:81
+msgid "Begründung"
+msgstr "Причина"
+
+#: .\features\customer_portal\forms.py:87
+#: .\features\internal_time\models\time_entry.py:15
+#: .\features\mbg_reports\forms.py:192 .\features\projects\forms.py:97
+msgid "Вид работы"
+msgstr "Вид работы"
+
+#: .\features\customer_portal\forms.py:88
+msgid "Название позиции"
+msgstr "Название позиции"
+
+#: .\features\customer_portal\forms.py:89 .\features\projects\forms.py:98
+#: .\features\projects\templates\projects\typical_work_plan.html:24
+#: .\features\projects\templates\projects\typical_work_plan.html:28
+msgid "Плановый объём"
+msgstr "Плановый объём"
+
+#: .\features\customer_portal\forms.py:90 .\features\mbg_reports\forms.py:213
+#: .\features\projects\forms.py:99
+msgid "Путь"
+msgstr "Путь"
+
+#: .\features\customer_portal\forms.py:91 .\features\mbg_reports\forms.py:211
+#: .\features\projects\forms.py:100
+msgid "Тип кабеля"
+msgstr "Тип кабеля"
+
+#: .\features\customer_portal\forms.py:92
+msgid "С Unterkonstruktion"
+msgstr "С монтажной конструкцией"
+
+#: .\features\customer_portal\models.py:34
+msgid "Ожидает"
+msgstr "Ожидает"
+
+#: .\features\customer_portal\models.py:35
+msgid "Утверждено"
+msgstr "Утверждено"
+
+#: .\features\customer_portal\models.py:36
+msgid "Отклонено"
+msgstr "Отклонено"
+
+#: .\features\customer_portal\models.py:58
+#: .\features\customer_portal\templates\customer_portal\site.html:37
+msgid "Не отправлено"
+msgstr "Не отправлено"
+
+#: .\features\customer_portal\models.py:60
+msgid "Без замечаний"
+msgstr "Без замечаний"
+
+#: .\features\customer_portal\models.py:61
+msgid "С замечаниями"
+msgstr "С замечаниями"
+
+#: .\features\customer_portal\services.py:52
+msgid "Выберите активного заказчика и обычного активного пользователя."
+msgstr "Выберите активного заказчика и обычного активного пользователя."
+
+#: .\features\customer_portal\services.py:121
+msgid "Объясните изменение уже начатой Anlage."
+msgstr "Объясните изменение уже начатого проекта."
+
+#: .\features\customer_portal\services.py:124
+msgid "Администратор создаёт Anlage через внутренний редактор."
+msgstr "Администратор создаёт проект через внутренний редактор."
+
+#: .\features\customer_portal\services.py:161
+msgid "Требуется активная AC-Anlage."
+msgstr "Требуется активный проект AC."
+
+#: .\features\customer_portal\services.py:169
+msgid "Объясните изменение уже начатого Standort."
+msgstr "Объясните изменение уже начатого объекта."
+
+#: .\features\customer_portal\services.py:191
+msgid "Выберите позиции типового плана."
+msgstr "Выберите позиции типового плана."
+
+#: .\features\customer_portal\services.py:199
+#: .\features\customer_portal\services.py:201
+#: .\features\customer_portal\services.py:287
+#: .\features\customer_portal\services.py:289
+msgid "Укажите положительный плановый объём."
+msgstr "Укажите положительный плановый объём."
+
+#: .\features\customer_portal\services.py:203
+msgid "Вид работы отсутствует в каталоге."
+msgstr "Вид работы отсутствует в каталоге."
+
+#: .\features\customer_portal\services.py:205
+msgid "Путь отсутствует в каталоге."
+msgstr "Путь отсутствует в каталоге."
+
+#: .\features\customer_portal\services.py:209
+msgid "Тип кабеля отсутствует или не подходит к позиции."
+msgstr "Тип кабеля отсутствует или не подходит к позиции."
+
+#: .\features\customer_portal\services.py:235
+#: .\features\customer_portal\services.py:260
+msgid "Требуется активный AC-Standort."
+msgstr "Требуется активный объект AC."
+
+#: .\features\customer_portal\services.py:237
+#: .\features\customer_portal\services.py:262
+msgid "Предложение по этому Standort уже ожидает решения."
+msgstr "Предложение по этому объекту уже ожидает решения."
+
+#: .\features\customer_portal\services.py:265
+msgid "Выберите активный AC-вид работ из каталога."
+msgstr "Выберите активный AC-вид работ из каталога."
+
+#: .\features\customer_portal\services.py:270
+msgid "Почасовые работы нельзя предлагать как физическую позицию."
+msgstr "Почасовые работы нельзя предлагать как физическую позицию."
+
+#: .\features\customer_portal\services.py:274
+#: .\features\projects\services.py:224
+msgid "Для этой работы нужен маршрут."
+msgstr "Для этой работы нужен маршрут."
+
+#: .\features\customer_portal\services.py:276
+msgid "Тип кабеля нужен только для прокладки кабеля."
+msgstr "Тип кабеля нужен только для прокладки кабеля."
+
+#: .\features\customer_portal\services.py:278
+msgid "Тип кабеля не подходит к позиции."
+msgstr "Тип кабеля не подходит к позиции."
+
+#: .\features\customer_portal\services.py:281
+#: .\features\projects\services.py:230
+msgid "Укажите название позиции."
+msgstr "Укажите название позиции."
+
+#: .\features\customer_portal\services.py:283
+msgid "В плане уже есть такая позиция."
+msgstr "В плане уже есть такая позиция."
+
+#: .\features\customer_portal\services.py:311
+msgid "Предложение уже рассмотрено."
+msgstr "Предложение уже рассмотрено."
+
+#: .\features\customer_portal\services.py:314
+msgid "Укажите причину решения."
+msgstr "Укажите причину решения."
+
+#: .\features\customer_portal\services.py:319
+msgid "В плане уже есть такая позиция; сначала разберите дубликат."
+msgstr "В плане уже есть такая позиция; сначала разберите дубликат."
+
+#: .\features\customer_portal\services.py:321
+msgid "В предложении повторяются позиции."
+msgstr "В предложении повторяются позиции."
+
+#: .\features\customer_portal\services.py:329
+msgid "Тип кабеля больше не подходит к плану."
+msgstr "Тип кабеля больше не подходит к плану."
+
+#: .\features\customer_portal\services.py:368
+msgid "У принятого отчёта отсутствует текущий подтверждённый снимок."
+msgstr "У принятого отчёта отсутствует текущий подтверждённый снимок."
+
+#: .\features\customer_portal\services.py:380
+msgid "Для проверки требуется активный заказчик Anlage."
+msgstr "Для проверки требуется активный заказчик проекта."
+
+#: .\features\customer_portal\services.py:382
+msgid "Для проверки требуются принятые дневные работы."
+msgstr "Для проверки требуются принятые дневные работы."
+
+#: .\features\customer_portal\services.py:386
+msgid "Standort уже ожидает проверки заказчика."
+msgstr "Объект уже ожидает проверки заказчика."
+
+#: .\features\customer_portal\services.py:415
+msgid "Нет открытой проверки."
+msgstr "Нет открытой проверки."
+
+#: .\features\customer_portal\services.py:417
+msgid "Укажите замечание для возврата."
+msgstr "Укажите замечание для возврата."
+
+#: .\features\customer_portal\services.py:419
+msgid "Принятые работы изменились. Попросите отправить объект на проверку заново."
+msgstr "Принятые работы изменились. Попросите отправить объект на проверку заново."
+
+#: .\features\customer_portal\services.py:440
+msgid "Standort не принадлежит Anlage."
+msgstr "Объект не принадлежит проекту."
+
+#: .\features\customer_portal\services.py:442
+msgid "Для документов заказчика разрешён только PDF."
+msgstr "Для документов заказчика разрешён только PDF."
+
+#: .\features\customer_portal\services.py:479
+msgid "Укажите причину изменения доступа к документу."
+msgstr "Укажите причину изменения доступа к документу."
+
+#: .\features\customer_portal\services.py:482
+msgid "Открывать заказчику можно только PDF-документ."
+msgstr "Открывать заказчику можно только PDF-документ."
+
+#: .\features\customer_portal\templates\customer_portal\account.html:7
+msgid "Persönliche Angaben"
+msgstr "Личные данные"
+
+#: .\features\customer_portal\templates\customer_portal\account.html:9
+msgid "Name"
+msgstr "Имя"
+
+#: .\features\customer_portal\templates\customer_portal\account.html:9
+#: .\features\customer_portal\templates\customer_portal\account.html:10
+msgid "Nicht hinterlegt"
+msgstr "Не указано"
+
+#: .\features\customer_portal\templates\customer_portal\account.html:10
+msgid "E-Mail"
+msgstr "Электронная почта"
+
+#: .\features\customer_portal\templates\customer_portal\account.html:11
+msgid "Benutzername"
+msgstr "Имя пользователя"
+
+#: .\features\customer_portal\templates\customer_portal\account.html:13
+msgid "Diese Angaben werden von der Administration verwaltet."
+msgstr "Эти данные изменяет администратор."
+
+#: .\features\customer_portal\templates\customer_portal\account.html:17
+#: .\features\customer_portal\templates\customer_portal\account.html:26
+msgid "Passwort ändern"
+msgstr "Сменить пароль"
+
+#: .\features\customer_portal\templates\customer_portal\account.html:18
+msgid "Verwenden Sie ein eigenes, sicheres Passwort."
+msgstr "Используйте собственный надёжный пароль."
+
+#: .\features\customer_portal\templates\customer_portal\audit.html:8
+msgid "Кто и когда изменил клиентские данные или рассмотрел предложение."
+msgstr "Кто и когда изменил клиентские данные или рассмотрел предложение."
+
+#: .\features\customer_portal\templates\customer_portal\audit.html:17
+msgid "Когда"
+msgstr "Когда"
+
+#: .\features\customer_portal\templates\customer_portal\audit.html:18
+msgid "Кто"
+msgstr "Кто"
+
+#: .\features\customer_portal\templates\customer_portal\audit.html:20
+#: .\features\projects\templates\projects\object_detail.html:109
+msgid "Действие"
+msgstr "Действие"
+
+#: .\features\customer_portal\templates\customer_portal\audit.html:21
+#: .\features\mbg_reports\forms.py:75 .\features\mbg_reports\forms.py:133
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:130
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:147
+#: .\features\project_media\forms.py:41
+msgid "Объект"
+msgstr "Объект"
+
+#: .\features\customer_portal\templates\customer_portal\audit.html:22
+#: .\features\customer_portal\templates\customer_portal\group.html:59
+#: .\features\projects\templates\projects\object_detail.html:151
+msgid "Причина"
+msgstr "Причина"
+
+#: .\features\customer_portal\templates\customer_portal\audit.html:37
+msgid "Событий пока нет."
+msgstr "Событий пока нет."
+
+#: .\features\customer_portal\templates\customer_portal\base.html:8
+msgid "Meine Übersicht"
+msgstr "Мой обзор"
+
+#: .\features\customer_portal\templates\customer_portal\documents.html:16
+#: .\features\customer_portal\templates\customer_portal\unified_documents.html:16
+msgid "Клиентские ведомости, табели MBG и утверждённые проектные документы. Без коммерческих цен и персональных данных."
+msgstr "Клиентские ведомости, табели MBG и утверждённые проектные документы. Без коммерческих цен и персональных данных."
+
+#: .\features\customer_portal\templates\customer_portal\form.html:8
+msgid "Изменения сохраняются с указанием пользователя и времени."
+msgstr "Изменения сохраняются с указанием пользователя и времени."
+
+#: .\features\customer_portal\templates\customer_portal\group.html:14
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:46
+msgid "Сводный акт (XLSX)"
+msgstr "Сводный акт (XLSX)"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:15
+#: .\features\customer_portal\templates\customer_portal\site.html:7
+msgid "Табель MBG (XLSX)"
+msgstr "Табель MBG (XLSX)"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:16
+msgid "Открыть в объектах"
+msgstr "Открыть в объектах"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:18
+msgid "Изменить Anlage"
+msgstr "Изменить проект"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:19
+#: .\features\projects\templates\projects\detail.html:25
+msgid "Добавить Standort"
+msgstr "Добавить объект"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:20
+msgid "Прикрепить PDF"
+msgstr "Прикрепить PDF"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:25
+#: .\features\projects\templates\projects\detail.html:32
+#: .\features\projects\templates\projects\list.html:62
+msgid "Standorte"
+msgstr "Объекты"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:33
+msgid "Пока нет Standorte."
+msgstr "Пока нет объектов."
+
+#: .\features\customer_portal\templates\customer_portal\group.html:39
+msgid "Документы заказчика"
+msgstr "Документы заказчика"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:47
+msgid "Нет доступных PDF."
+msgstr "Нет доступных PDF."
+
+#: .\features\customer_portal\templates\customer_portal\group.html:54
+msgid "Все PDF Anlage · управление видимостью"
+msgstr "Все PDF проекта · управление видимостью"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:58
+msgid "виден заказчику"
+msgstr "виден заказчику"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:58
+msgid "закрыт"
+msgstr "закрыт"
+
+#: .\features\customer_portal\templates\customer_portal\group.html:65
+msgid "PDF нет."
+msgstr "PDF нет."
+
+#: .\features\customer_portal\templates\customer_portal\home.html:9
+msgid "Ваши Anlagen и Standorte, план и подтверждённые работы."
+msgstr "Ваши проекты и объекты, план и подтверждённые работы."
+
+#: .\features\customer_portal\templates\customer_portal\home.html:13
+msgid "Доступ пользователей"
+msgstr "Доступ пользователей"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:14
+msgid "Создать Anlage в CRM"
+msgstr "Создать проект в CRM"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:18
+msgid "Создать Anlage"
+msgstr "Создать проект"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:25
+msgid "Планы на проверке"
+msgstr "Планы на проверке"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:34
+#: .\features\projects\templates\projects\list.html:24
+msgid "Фильтры проектов"
+msgstr "Фильтры проектов"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:36
+#: .\features\customer_portal\templates\customer_portal\objects.html:17
+#: .\features\projects\templates\projects\list.html:26
+#: .\features\projects\templates\projects\objects.html:21
+#: .\features\projects\widgets.py:31
+msgid "Поиск"
+msgstr "Поиск"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:37
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:9
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:20
+msgid "Название или адрес Anlage"
+msgstr "Название или адрес проекта"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:42
+#: .\features\projects\templates\projects\list.html:32
+msgid "Активные (по умолчанию)"
+msgstr "Активные (по умолчанию)"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:43
+#: .\features\customer_portal\templates\customer_portal\objects.html:24
+#: .\features\projects\templates\projects\list.html:33
+#: .\features\projects\templates\projects\objects.html:37
+msgid "Завершённые"
+msgstr "Завершённые"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:48
+#: .\features\internal_time\forms.py:24
+#: .\features\internal_time\templates\internal_time\list.html:11
+#: .\features\work_catalog\models.py:49
+msgid "Направление"
+msgstr "Направление"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:50
+#: .\features\project_media\forms.py:39
+msgid "Все типы"
+msgstr "Все типы"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:51
+msgid "Только AC"
+msgstr "Только AC"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:52
+msgid "Только DC"
+msgstr "Только DC"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:56
+#: .\features\customer_portal\templates\customer_portal\objects.html:38
+#: .\features\customer_portal\templates\customer_portal\works.html:44
+#: .\features\mbg_reports\templates\mbg_reports\list.html:48
+#: .\features\project_media\templates\project_media\list.html:28
+#: .\features\projects\templates\projects\list.html:38
+#: .\features\projects\templates\projects\objects.html:51
+msgid "Применить"
+msgstr "Применить"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:58
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:18
+#: .\features\customer_portal\templates\customer_portal\works.html:46
+#: .\features\internal_time\templates\internal_time\list.html:16
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:25
+#: .\features\mbg_reports\templates\mbg_reports\list.html:49
+#: .\features\project_media\templates\project_media\list.html:29
+#: .\features\projects\templates\projects\list.html:40
+#: .\features\projects\templates\projects\objects.html:53
+msgid "Сбросить"
+msgstr "Сбросить"
+
+#: .\features\customer_portal\templates\customer_portal\home.html:68
+msgid "Доступные проекты не найдены."
+msgstr "Доступные проекты не найдены."
+
+#: .\features\customer_portal\templates\customer_portal\includes\_group_card.html:16
+msgid "Объектов"
+msgstr "Объектов"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_group_card.html:25
+#: .\features\projects\templates\projects\list.html:72
+msgid "Детали"
+msgstr "Детали"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_group_card.html:27
+msgid "Изменить"
+msgstr "Изменить"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_pagination.html:5
+msgid "Страница"
+msgstr "Страница"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_pagination.html:5
+msgid "из"
+msgstr "из"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_pagination.html:5
+msgid "всего"
+msgstr "всего"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_pagination.html:9
+msgid "Предыдущая страница"
+msgstr "Предыдущая страница"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_pagination.html:23
+msgid "Следующая страница"
+msgstr "Следующая страница"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_site_card.html:16
+#: .\features\projects\templates\projects\objects.html:83
+msgid "Принятый план"
+msgstr "Принятый план"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_site_card.html:21
+#: .\features\customer_portal\templates\customer_portal\reviews.html:28
+#: .\features\projects\templates\projects\objects.html:88
+msgid "Fotos vorhanden"
+msgstr "Есть фотографии"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_site_card.html:23
+#: .\features\customer_portal\templates\customer_portal\reviews.html:30
+#: .\features\projects\templates\projects\objects.html:90
+msgid "Keine Fotos"
+msgstr "Нет фотографий"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_site_card.html:26
+#: .\features\customer_portal\templates\customer_portal\reviews.html:33
+#: .\features\projects\templates\projects\objects.html:93
+msgid "Fotospeicher nicht erreichbar"
+msgstr "Хранилище фотографий недоступно"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_site_card.html:26
+#: .\features\customer_portal\templates\customer_portal\reviews.html:33
+#: .\features\projects\templates\projects\objects.html:93
+msgid "Недоступно"
+msgstr "Недоступно"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_site_card.html:29
+#: .\features\customer_portal\templates\customer_portal\reviews.html:36
+msgid "Fotospeicher nicht synchronisiert"
+msgstr "Хранилище фотографий не синхронизировано"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_site_card.html:35
+msgid "Подробнее"
+msgstr "Подробнее"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_site_card.html:37
+msgid "Скачать акт XLSX"
+msgstr "Скачать акт XLSX"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:4
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:17
+msgid "Поиск документов"
+msgstr "Поиск документов"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:8
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:19
+msgid "Поиск проектов (Anlagen)"
+msgstr "Поиск проектов"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:12
+msgid "Поиск PDF документов"
+msgstr "Поиск PDF документов"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:13
+msgid "Имя файла или описание"
+msgstr "Имя файла или описание"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:16
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:23
+msgid "Найти"
+msgstr "Найти"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:26
+msgid "Проектные документы (PDF)"
+msgstr "Проектные документы (PDF)"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:31
+#: .\features\project_media\models.py:22
+msgid "Документ"
+msgstr "Документ"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:32
+#: .\features\customer_portal\templates\customer_portal\objects.html:48
+#: .\features\customer_portal\templates\customer_portal\works.html:18
+#: .\features\customer_portal\views.py:428
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:56
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:250
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:283
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:73
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:267
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:300
+#: .\features\projects\templates\projects\objects.html:61
+msgid "Anlage"
+msgstr "Проект"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:34
+msgid "Загружено"
+msgstr "Загружено"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_partial.html:51
+msgid "Нет доступных PDF-документов."
+msgstr "Нет доступных PDF-документов."
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:4
+msgid "Клиентские ведомости и акты (XLSX)"
+msgstr "Клиентские ведомости и акты (XLSX)"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:16
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:18
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:72
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:127
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:131
+msgid "Отчёт для выставления счёта"
+msgstr "Отчёт для выставления счёта"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:17
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:37
+msgid "URL действия не подключён интегратором"
+msgstr "URL действия не подключён интегратором"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:21
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:41
+msgid "URL действия не подключён"
+msgstr "URL действия не подключён"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:27
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:82
+msgid "Оплаченный объект не включается в новый счёт"
+msgstr "Оплаченный объект не включается в новый счёт"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:28
+msgid "Оплаченный объект (включён явно)"
+msgstr "Оплаченный объект (включён явно)"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:29
+msgid "Включить оплаченные"
+msgstr "Включить оплаченные"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:49
+msgid "Сводный табель (XLSX)"
+msgstr "Сводный табель (XLSX)"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:60
+msgid "Выбрать все к оплате"
+msgstr "Выбрать все к оплате"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:64
+msgid "Projektnummer"
+msgstr "Номер проекта"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:65
+msgid "Status"
+msgstr "Статус"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:67
+msgid "Оплата"
+msgstr "Оплата"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:69
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:115
+msgid "Акт"
+msgstr "Акт"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:70
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:120
+msgid "Табель часов"
+msgstr "Табель часов"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:93
+#: .\features\mbg_reports\views.py:299
+msgid "Оплачено"
+msgstr "Оплачено"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:97
+msgid "Снять отметку оплаты"
+msgstr "Снять отметку оплаты"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:102
+#: .\features\mbg_reports\views.py:299
+msgid "К оплате"
+msgstr "К оплате"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:106
+msgid "Отметить оплаченным"
+msgstr "Отметить оплаченным"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:130
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:21
+msgid "URL действия не настроен"
+msgstr "URL действия не настроен"
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:139
+msgid "В этой Anlage пока нет Standorte."
+msgstr "В этом проекте пока нет объектов."
+
+#: .\features\customer_portal\templates\customer_portal\includes\_unified_documents_table.html:148
+msgid "Доступных проектов пока нет."
+msgstr "Доступных проектов пока нет."
+
+#: .\features\customer_portal\templates\customer_portal\memberships.html:7
+msgid "Доступ заказчиков"
+msgstr "Доступ заказчиков"
+
+#: .\features\customer_portal\templates\customer_portal\memberships.html:8
+msgid "Права назначаются вручную; совпадение адреса электронной почты не даёт доступа."
+msgstr "Права назначаются вручную; совпадение адреса электронной почты не даёт доступа."
+
+#: .\features\customer_portal\templates\customer_portal\memberships.html:11
+msgid "Назначить пользователя"
+msgstr "Назначить пользователя"
+
+#: .\features\customer_portal\templates\customer_portal\memberships.html:20
+msgid "Пользователь"
+msgstr "Пользователь"
+
+#: .\features\customer_portal\templates\customer_portal\memberships.html:22
+#: .\features\projects\forms.py:80 .\features\projects\forms.py:183
+#: .\features\projects\models\group.py:77
+#: .\features\projects\models\project.py:18
+#: .\features\projects\models\project.py:55
+#: .\features\work_catalog\models.py:61 .\features\work_catalog\models.py:108
+#: .\features\work_catalog\models.py:128
+msgid "Активен"
+msgstr "Активен"
+
+#: .\features\customer_portal\templates\customer_portal\memberships.html:23
+msgid "Создаёт проекты"
+msgstr "Создаёт проекты"
+
+#: .\features\customer_portal\templates\customer_portal\memberships.html:31
+#: .\features\customer_portal\templates\customer_portal\memberships.html:32
+msgid "Да,Нет"
+msgstr "Да,Нет"
+
+#: .\features\customer_portal\templates\customer_portal\memberships.html:36
+msgid "Назначений пока нет."
+msgstr "Назначений пока нет."
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:8
+msgid "Standorte вашей компании, статус готовности и фотофиксация."
+msgstr "Объекты вашей компании, статус готовности и фотофиксация."
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:12
+#: .\features\projects\templates\projects\objects.html:19
+msgid "Фильтры объектов"
+msgstr "Фильтры объектов"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:18
+#: .\features\projects\templates\projects\objects.html:22
+msgid "Название, адрес или P/Nr"
+msgstr "Название, адрес или P/Nr"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:21
+msgid "Состояние"
+msgstr "Состояние"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:23
+#: .\features\projects\templates\projects\objects.html:36
+msgid "В работе (по умолчанию)"
+msgstr "В работе (по умолчанию)"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:25
+msgid "Все состояния"
+msgstr "Все состояния"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:26
+#: .\features\projects\models\group.py:31
+#: .\features\projects\models\group.py:37
+#: .\features\projects\models\project.py:39
+#: .\features\projects\templates\projects\object_detail.html:67
+#: .\features\projects\templates\projects\object_detail.html:131
+#: .\features\projects\templates\projects\objects.html:39
+msgid "Не начато"
+msgstr "Не начато"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:27
+#: .\features\projects\models\group.py:31
+#: .\features\projects\models\group.py:37
+#: .\features\projects\models\project.py:40
+#: .\features\projects\templates\projects\objects.html:40
+msgid "Начато"
+msgstr "Начато"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:31
+#: .\features\projects\templates\projects\objects.html:44
+msgid "Сортировка"
+msgstr "Сортировка"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:33
+msgid "По недавней активности"
+msgstr "По недавней активности"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:34
+#: .\features\projects\templates\projects\objects.html:47
+msgid "По названию"
+msgstr "По названию"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:40
+msgid "Сбросить всё"
+msgstr "Сбросить всё"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:49
+msgid "Убрать фильтр по группе"
+msgstr "Убрать фильтр по группе"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:49
+msgid "Убрать фильтр"
+msgstr "Убрать фильтр"
+
+#: .\features\customer_portal\templates\customer_portal\objects.html:59
+#: .\features\projects\templates\projects\objects.html:109
+msgid "Подходящих Standorte не найдено."
+msgstr "Подходящих объектов не найдено."
+
+#: .\features\customer_portal\templates\customer_portal\proposal.html:8
+msgid "Предложить план работ"
+msgstr "Предложить план работ"
+
+#: .\features\customer_portal\templates\customer_portal\proposal.html:9
+msgid "Предложение не меняет подтверждённые работы. Администратор отдельно проверит каждую позицию."
+msgstr "Предложение не меняет подтверждённые работы. Администратор отдельно проверит каждую позицию."
+
+#: .\features\customer_portal\templates\customer_portal\proposal.html:25
+msgid "Показать позиции"
+msgstr "Показать позиции"
+
+#: .\features\customer_portal\templates\customer_portal\proposal.html:28
+msgid "Проверьте состав и плановый объём"
+msgstr "Проверьте состав и плановый объём"
+
+#: .\features\customer_portal\templates\customer_portal\proposal.html:33
+#: .\features\projects\templates\projects\typical_work_plan.html:24
+#: .\features\projects\templates\projects\typical_work_plan.html:26
+msgid "Включить"
+msgstr "Включить"
+
+#: .\features\customer_portal\templates\customer_portal\proposal.html:34
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:5
+#: .\features\projects\templates\projects\object_detail.html:103
+#: .\features\projects\templates\projects\typical_work_plan.html:24
+msgid "Позиция"
+msgstr "Позиция"
+
+#: .\features\customer_portal\templates\customer_portal\proposal.html:35
+#: .\features\projects\templates\projects\includes\_object_common_top.html:104
+#: .\features\projects\templates\projects\includes\_object_common_top.html:153
+msgid "Объём"
+msgstr "Объём"
+
+#: .\features\customer_portal\templates\customer_portal\proposal.html:54
+msgid "Отправить предложение"
+msgstr "Отправить предложение"
+
+#: .\features\customer_portal\templates\customer_portal\reviews.html:8
+msgid "Объекты, отправленные на клиентскую приёмку. Приёмка заказчика фиксирует результат текущего этапа без изменения статуса объекта."
+msgstr "Объекты, отправленные на клиентскую приёмку. Приёмка заказчика фиксирует результат текущего этапа без изменения статуса объекта."
+
+#: .\features\customer_portal\templates\customer_portal\reviews.html:41
+msgid "Отправлено"
+msgstr "Отправлено"
+
+#: .\features\customer_portal\templates\customer_portal\reviews.html:46
+msgid "Замечание"
+msgstr "Замечание"
+
+#: .\features\customer_portal\templates\customer_portal\reviews.html:51
+msgid "Решение"
+msgstr "Решение"
+
+#: .\features\customer_portal\templates\customer_portal\reviews.html:57
+msgid "Перейти к приёмке"
+msgstr "Перейти к приёмке"
+
+#: .\features\customer_portal\templates\customer_portal\reviews.html:63
+msgid "Пока нет проверок. Когда руководитель сдаст текущий этап работ, здесь появится запрос на проверку."
+msgstr "Пока нет проверок. Когда руководитель сдаст текущий этап работ, здесь появится запрос на проверку."
+
+#: .\features\customer_portal\templates\customer_portal\site.html:6
+msgid "Акт выполненных работ (XLSX)"
+msgstr "Акт выполненных работ (XLSX)"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:9
+msgid "Изменить Standort"
+msgstr "Изменить объект"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:10
+msgid "Предложить план"
+msgstr "Предложить план"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:11
+msgid "Предложить отдельную работу"
+msgstr "Предложить отдельную работу"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:18
+msgid "Выбранная дата"
+msgstr "Выбранная дата"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:19
+msgid "Показать все даты"
+msgstr "Показать все даты"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:29
+msgid "Проверка заказчиком"
+msgstr "Проверка заказчиком"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:31
+msgid "Попозиционная приёмка работ заказчиком (Emil) пока не реализована — действует общая проверка объекта."
+msgstr "Попозиционная приёмка работ заказчиком (Emil) пока не реализована — действует общая проверка объекта."
+
+#: .\features\customer_portal\templates\customer_portal\site.html:39
+msgid "Работы изменились, требуется повторная отправка"
+msgstr "Работы изменились, требуется повторная отправка"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:47
+msgid "Отправить на проверку"
+msgstr "Отправить на проверку"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:52
+msgid "Принять без замечаний"
+msgstr "Принять без замечаний"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:53
+msgid "Замечание для возврата"
+msgstr "Замечание для возврата"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:54
+msgid "Вернуть с замечанием"
+msgstr "Вернуть с замечанием"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:62
+msgid "Предложения плана"
+msgstr "Предложения плана"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:65
+msgid "позиций"
+msgstr "позиций"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:74
+msgid "Причина решения"
+msgstr "Причина решения"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:75
+msgid "Утвердить позиции"
+msgstr "Утвердить позиции"
+
+#: .\features\customer_portal\templates\customer_portal\site.html:76
+msgid "Отклонить"
+msgstr "Отклонить"
+
+#: .\features\customer_portal\templates\customer_portal\works.html:8
+msgid "Только текущие принятые дневные отчёты по уникальным дням. Паузы исключены, отображается фактическое количество строк работ."
+msgstr "Только текущие принятые дневные отчёты по уникальным дням. Паузы исключены, отображается фактическое количество строк работ."
+
+#: .\features\customer_portal\templates\customer_portal\works.html:16
+msgid "Фильтры журнала работ"
+msgstr "Фильтры журнала работ"
+
+#: .\features\customer_portal\templates\customer_portal\works.html:29
+#: .\features\mbg_reports\forms.py:136 .\features\mbg_reports\forms.py:172
+#: .\features\project_media\forms.py:46
+msgid "Все объекты"
+msgstr "Все объекты"
+
+#: .\features\customer_portal\templates\customer_portal\works.html:36
+#: .\features\mbg_reports\forms.py:150
+msgid "Дата с"
+msgstr "Дата с"
+
+#: .\features\customer_portal\templates\customer_portal\works.html:40
+#: .\features\mbg_reports\forms.py:155
+msgid "Дата по"
+msgstr "Дата по"
+
+#: .\features\customer_portal\templates\customer_portal\works.html:55
+msgid "Принятые отчёты"
+msgstr "Принятые отчёты"
+
+#: .\features\customer_portal\templates\customer_portal\works.html:69
+msgid "строк работ"
+msgstr "строк работ"
+
+#: .\features\customer_portal\templates\customer_portal\works.html:75
+msgid "Детали за дату"
+msgstr "Детали за дату"
+
+#: .\features\customer_portal\templates\customer_portal\works.html:84
+msgid "Принятых работ за выбранный период не найдено."
+msgstr "Принятых работ за выбранный период не найдено."
+
+#: .\features\customer_portal\views.py:64
+msgid "Jahr und Kalenderwoche müssen gemeinsam angegeben werden."
+msgstr "Год и календарную неделю нужно указать вместе."
+
+#: .\features\customer_portal\views.py:72
+#: .\features\customer_portal\views.py:645
+#: .\features\customer_portal\views.py:685
+#: .\features\customer_portal\views.py:709
+msgid "Ungültige Kalenderwoche oder ungültiges Jahr."
+msgstr "Некорректная календарная неделя или год."
+
+#: .\features\customer_portal\views.py:88
+msgid "Aktuelles Passwort"
+msgstr "Текущий пароль"
+
+#: .\features\customer_portal\views.py:89
+msgid "Neues Passwort"
+msgstr "Новый пароль"
+
+#: .\features\customer_portal\views.py:90
+msgid "Neues Passwort bestätigen"
+msgstr "Подтвердите новый пароль"
+
+#: .\features\customer_portal\views.py:94
+msgid "Ihr Passwort wurde geändert."
+msgstr "Ваш пароль изменён."
+
+#: .\features\customer_portal\views.py:107
+#: .\features\customer_portal\views.py:109
+msgid "Некорректный фильтр."
+msgstr "Некорректный фильтр."
+
+#: .\features\customer_portal\views.py:197
+msgid "Ungültiger Dateiname."
+msgstr "Некорректное имя файла."
+
+#: .\features\customer_portal\views.py:205
+msgid "Foto nicht gefunden."
+msgstr "Фотография не найдена."
+
+#: .\features\customer_portal\views.py:207
+msgid "Ungültiges Dateiformat oder Inhalt."
+msgstr "Некорректный формат или содержимое файла."
+
+#: .\features\customer_portal\views.py:236
+msgid "Неверный формат начальной даты."
+msgstr "Неверный формат начальной даты."
+
+#: .\features\customer_portal\views.py:241
+msgid "Неверный формат конечной даты."
+msgstr "Неверный формат конечной даты."
+
+#: .\features\customer_portal\views.py:518
+msgid "Отдельная работа из каталога"
+msgstr "Отдельная работа из каталога"
+
+#: .\features\customer_portal\views.py:758
+msgid "Доступ заказчика"
+msgstr "Доступ заказчика"
+
+#: .\features\internal_time\apps.py:8
+msgid "Internal time tracking"
+msgstr "Внутренний учёт времени"
+
+#: .\features\internal_time\calculations.py:19
+#, python-format
+msgid "%(hours)d ч %(minutes)02d мин"
+msgstr "%(hours)d ч %(minutes)02d мин"
+
+#: .\features\internal_time\forms.py:22 .\features\mbg_reports\forms.py:86
+#: .\features\projects\templates\projects\includes\_object_common_top.html:151
+msgid "Дата"
+msgstr "Дата"
+
+#: .\features\internal_time\forms.py:26
+#: .\features\internal_time\templates\internal_time\_editor.html:19
+#: .\features\internal_time\templates\internal_time\list.html:13
+#: .\features\mbg_reports\forms.py:58 .\features\mbg_reports\forms.py:121
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:130
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:147
+msgid "Проект"
+msgstr "Проект"
+
+#: .\features\internal_time\forms.py:32 .\features\mbg_reports\forms.py:64
+msgid "Начните вводить название, адрес или заказчика"
+msgstr "Начните вводить название, адрес или заказчика"
+
+#: .\features\internal_time\forms.py:36 .\features\mbg_reports\forms.py:189
+#: .\features\projects\templates\projects\detail.html:10
+msgid "Начало"
+msgstr "Начало"
+
+#: .\features\internal_time\forms.py:39 .\features\mbg_reports\forms.py:190
+msgid "Окончание"
+msgstr "Окончание"
+
+#: .\features\internal_time\forms.py:41
+msgid "Обед, минут"
+msgstr "Обед, минут"
+
+#: .\features\internal_time\forms.py:43
+msgid "Вид работы (необязательно)"
+msgstr "Вид работы (необязательно)"
+
+#: .\features\internal_time\forms.py:48
+#: .\features\internal_time\templates\internal_time\detail.html:24
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:8
+msgid "Комментарий"
+msgstr "Комментарий"
+
+#: .\features\internal_time\forms.py:51
+msgid "Причина исправления администратором"
+msgstr "Причина исправления администратором"
+
+#: .\features\internal_time\forms.py:53
+msgid "Что и почему исправлено"
+msgstr "Что и почему исправлено"
+
+#: .\features\internal_time\forms.py:66
+#: .\features\internal_time\templates\internal_time\_editor.html:46
+#: .\features\internal_time\templates\internal_time\list.html:14
+#: .\features\staff\templates\staff\employees.html:3
+msgid "Сотрудник"
+msgstr "Сотрудник"
+
+#: .\features\internal_time\forms.py:68
+#: .\features\internal_time\templates\internal_time\_editor.html:47
+msgid "Уменьшить на, минут"
+msgstr "Уменьшить на, минут"
+
+#: .\features\internal_time\forms.py:84
+#: .\features\internal_time\templates\internal_time\_editor.html:24
+msgid "Название проекта"
+msgstr "Название проекта"
+
+#: .\features\internal_time\historical_imports.py:61
+msgid "Историческая запись содержит неизвестное направление."
+msgstr "Историческая запись содержит неизвестное направление."
+
+#: .\features\internal_time\models\time_entry.py:19
+msgid "вид работы"
+msgstr "вид работы"
+
+#: .\features\internal_time\models\time_entry.py:30
+#: .\features\mbg_reports\models.py:27
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:31
+msgid "Черновик"
+msgstr "Черновик"
+
+#: .\features\internal_time\models\time_entry.py:31
+#: .\features\mbg_reports\models.py:28
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:29
+msgid "Отправлен"
+msgstr "Отправлен"
+
+#: .\features\internal_time\models\time_entry.py:32
+#: .\features\mbg_reports\models.py:29
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:28
+msgid "Принят"
+msgstr "Принят"
+
+#: .\features\internal_time\models\time_entry.py:33
+msgid "На исправлении"
+msgstr "На исправлении"
+
+#: .\features\internal_time\models\time_entry.py:59
+msgid "Проверять и исправлять все внутренние отчёты"
+msgstr "Проверять и исправлять все внутренние отчёты"
+
+#: .\features\internal_time\models\time_entry.py:60
+msgid "Заполнять внутренние отчёты"
+msgstr "Заполнять внутренние отчёты"
+
+#: .\features\internal_time\models\time_entry.py:61
+msgid "Заполнять отчёты AC"
+msgstr "Заполнять отчёты AC"
+
+#: .\features\internal_time\models\time_entry.py:62
+msgid "Заполнять отчёты DC"
+msgstr "Заполнять отчёты DC"
+
+#: .\features\internal_time\models\time_entry.py:67
+msgid "отчёт команды"
+msgstr "отчёт команды"
+
+#: .\features\internal_time\services.py:65
+msgid "Отчёт уже изменён. Обновите страницу перед сохранением."
+msgstr "Отчёт уже изменён. Обновите страницу перед сохранением."
+
+#: .\features\internal_time\services.py:67
+msgid "Укажите причину исправления для истории отчёта."
+msgstr "Укажите причину исправления для истории отчёта."
+
+#: .\features\internal_time\services.py:72
+msgid "Проект недоступен для выбранного направления."
+msgstr "Проект недоступен для выбранного направления."
+
+#: .\features\internal_time\services.py:75
+msgid "Укажите корректное время начала и окончания с точностью до минут."
+msgstr "Укажите корректное время начала и окончания с точностью до минут."
+
+#: .\features\internal_time\services.py:77
+msgid "Нельзя отправить отчёт за будущий день."
+msgstr "Нельзя отправить отчёт за будущий день."
+
+#: .\features\internal_time\services.py:79
+msgid "Обед не может быть длиннее рабочего дня."
+msgstr "Обед не может быть длиннее рабочего дня."
+
+#: .\features\internal_time\services.py:81
+msgid "Добавьте хотя бы одного сотрудника."
+msgstr "Добавьте хотя бы одного сотрудника."
+
+#: .\features\internal_time\services.py:84
+msgid "Сотрудник указан дважды."
+msgstr "Сотрудник указан дважды."
+
+#: .\features\internal_time\services.py:89
+msgid "Выбран недоступный сотрудник."
+msgstr "Выбран недоступный сотрудник."
+
+#: .\features\internal_time\services.py:92
+msgid "Уменьшение должно быть меньше рабочего дня. Не работавшего сотрудника уберите."
+msgstr "Уменьшение должно быть меньше рабочего дня. Не работавшего сотрудника уберите."
+
+#: .\features\internal_time\services.py:102
+msgid "У одного из сотрудников уже есть отчёт в этом интервале. Укажите разные интервалы для разных объектов; уменьшение часов не задаёт время ухода."
+msgstr "У одного из сотрудников уже есть отчёт в этом интервале. Укажите разные интервалы для разных объектов; уменьшение часов не задаёт время ухода."
+
+#: .\features\internal_time\services.py:148
+#: .\features\mbg_reports\services.py:127
+msgid "Отчёт уже изменён. Обновите страницу."
+msgstr "Отчёт уже изменён. Обновите страницу."
+
+#: .\features\internal_time\services.py:150
+msgid "Проверять можно только отправленный отчёт."
+msgstr "Проверять можно только отправленный отчёт."
+
+#: .\features\internal_time\services.py:152
+#: .\features\mbg_reports\services.py:306
+msgid "Неизвестное действие."
+msgstr "Неизвестное действие."
+
+#: .\features\internal_time\services.py:154
+msgid "Напишите, что нужно исправить."
+msgstr "Напишите, что нужно исправить."
+
+#: .\features\internal_time\templates\internal_time\_editor.html:2
+msgid "ч"
+msgstr "ч"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:2
+#: .\features\internal_time\templates\internal_time\detail.html:13
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:6
+msgid "мин"
+msgstr "мин"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:2
+msgid "Не удалось выполнить запрос. Данные формы остались на странице. Попробуйте ещё раз."
+msgstr "Не удалось выполнить запрос. Данные формы остались на странице. Попробуйте ещё раз."
+
+#: .\features\internal_time\templates\internal_time\_editor.html:4
+msgid "ПЕРСОНАЛ / РАБОЧИЙ ДЕНЬ"
+msgstr "ПЕРСОНАЛ / РАБОЧИЙ ДЕНЬ"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:5
+#: .\features\internal_time\templates\internal_time\detail.html:19
+msgid "Изменить отчёт"
+msgstr "Изменить отчёт"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:5
+#: .\features\internal_time\templates\internal_time\editor.html:3
+msgid "Отчёт команды"
+msgstr "Отчёт команды"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:6
+msgid "Один рабочий день для всей команды. Индивидуальные изменения — рядом с именем."
+msgstr "Один рабочий день для всей команды. Индивидуальные изменения — рядом с именем."
+
+#: .\features\internal_time\templates\internal_time\_editor.html:7
+msgid "Новый отчёт"
+msgstr "Новый отчёт"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:15
+msgid "01 · Где работали"
+msgstr "01 · Где работали"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:22
+msgid "Проекта ещё нет?"
+msgstr "Проекта ещё нет?"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:23
+msgid "Достаточно названия. Остальные данные можно заполнить позже."
+msgstr "Достаточно названия. Остальные данные можно заполнить позже."
+
+#: .\features\internal_time\templates\internal_time\_editor.html:24
+msgid "Новый проект"
+msgstr "Новый проект"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:28
+msgid "02 · Рабочий день команды"
+msgstr "02 · Рабочий день команды"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:34
+msgid "Дорога уже входит в указанное время. Обед отмечается, но не вычитается."
+msgstr "Дорога уже входит в указанное время. Обед отмечается, но не вычитается."
+
+#: .\features\internal_time\templates\internal_time\_editor.html:35
+msgid "Общее время на человека"
+msgstr "Общее время на человека"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:38
+msgid "03 · Кто работал"
+msgstr "03 · Кто работал"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:38
+msgid "Мои команды ↗"
+msgstr "Мои команды ↗"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:39
+msgid "Сохранённая команда"
+msgstr "Сохранённая команда"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:39
+msgid "Выбрать сохранённую команду"
+msgstr "Выбрать сохранённую команду"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:41
+msgid "Добавить команду"
+msgstr "Добавить команду"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:42
+msgid "Можно добавить людей по одному. Кнопка «−1 ч» уменьшает время только выбранного сотрудника."
+msgstr "Можно добавить людей по одному. Кнопка «−1 ч» уменьшает время только выбранного сотрудника."
+
+#: .\features\internal_time\templates\internal_time\_editor.html:48
+msgid "−1 ч"
+msgstr "−1 ч"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:51
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:213
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:230
+msgid "Убрать"
+msgstr "Убрать"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:55
+msgid "＋ Добавить сотрудника"
+msgstr "＋ Добавить сотрудника"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:58
+msgid "04 · Дополнительно"
+msgstr "04 · Дополнительно"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:61
+msgid "Выберите сохранённый вариант или напишите свой — он появится в списке после сохранения."
+msgstr "Выберите сохранённый вариант или напишите свой — он появится в списке после сохранения."
+
+#: .\features\internal_time\templates\internal_time\_editor.html:65
+msgid "человеко-часов суммарно"
+msgstr "человеко-часов суммарно"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:67
+msgid "Сохранить изменения"
+msgstr "Сохранить изменения"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:67
+msgid "Сохранить черновик"
+msgstr "Сохранить черновик"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:68
+msgid "Отправить отчёт"
+msgstr "Отправить отчёт"
+
+#: .\features\internal_time\templates\internal_time\_editor.html:69
+msgid "После отправки правка доступна 7 дней, пока администратор не примет отчёт."
+msgstr "После отправки правка доступна 7 дней, пока администратор не примет отчёт."
+
+#: .\features\internal_time\templates\internal_time\detail.html:3
+#: .\features\internal_time\templates\internal_time\detail.html:7
+msgid "Отчёт №"
+msgstr "Отчёт №"
+
+#: .\features\internal_time\templates\internal_time\detail.html:10
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:6
+msgid "Рабочий день"
+msgstr "Рабочий день"
+
+#: .\features\internal_time\templates\internal_time\detail.html:11
+msgid "Общее время"
+msgstr "Общее время"
+
+#: .\features\internal_time\templates\internal_time\detail.html:12
+msgid "На человека"
+msgstr "На человека"
+
+#: .\features\internal_time\templates\internal_time\detail.html:13
+msgid "Обед · не вычитается"
+msgstr "Обед · не вычитается"
+
+#: .\features\internal_time\templates\internal_time\detail.html:14
+msgid "Команда"
+msgstr "Команда"
+
+#: .\features\internal_time\templates\internal_time\detail.html:16
+msgid "мин ·"
+msgstr "мин ·"
+
+#: .\features\internal_time\templates\internal_time\detail.html:17
+msgid "Всего человеко-часов"
+msgstr "Всего человеко-часов"
+
+#: .\features\internal_time\templates\internal_time\detail.html:18
+msgid "Примечания"
+msgstr "Примечания"
+
+#: .\features\internal_time\templates\internal_time\detail.html:20
+msgid "Правка закрыта: отчёт принят или истёк срок редактирования. Обратитесь к администратору."
+msgstr "Правка закрыта: отчёт принят или истёк срок редактирования. Обратитесь к администратору."
+
+#: .\features\internal_time\templates\internal_time\detail.html:24
+msgid "Проверка администратором"
+msgstr "Проверка администратором"
+
+#: .\features\internal_time\templates\internal_time\detail.html:24
+msgid "Что нужно исправить, если возвращаете отчёт"
+msgstr "Что нужно исправить, если возвращаете отчёт"
+
+#: .\features\internal_time\templates\internal_time\detail.html:25
+msgid "Принять отчёт"
+msgstr "Принять отчёт"
+
+#: .\features\internal_time\templates\internal_time\detail.html:26
+msgid "Вернуть на исправление"
+msgstr "Вернуть на исправление"
+
+#: .\features\internal_time\templates\internal_time\detail.html:27
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:10
+msgid "История изменений"
+msgstr "История изменений"
+
+#: .\features\internal_time\templates\internal_time\detail.html:29
+msgid "· версия"
+msgstr "· версия"
+
+#: .\features\internal_time\templates\internal_time\list.html:5
+msgid "ПЕРСОНАЛ / УЧЁТ ВРЕМЕНИ"
+msgstr "ПЕРСОНАЛ / УЧЁТ ВРЕМЕНИ"
+
+#: .\features\internal_time\templates\internal_time\list.html:6
+msgid "Рабочие дни команд: просмотр, проверка и подтверждение."
+msgstr "Рабочие дни команд: просмотр, проверка и подтверждение."
+
+#: .\features\internal_time\templates\internal_time\list.html:6
+msgid "Ваши рабочие дни и отчёты команды."
+msgstr "Ваши рабочие дни и отчёты команды."
+
+#: .\features\internal_time\templates\internal_time\list.html:7
+msgid "＋ Создать отчёт"
+msgstr "＋ Создать отчёт"
+
+#: .\features\internal_time\templates\internal_time\list.html:9
+msgid "С даты"
+msgstr "С даты"
+
+#: .\features\internal_time\templates\internal_time\list.html:10
+msgid "По дату"
+msgstr "По дату"
+
+#: .\features\internal_time\templates\internal_time\list.html:11
+msgid "AC и DC"
+msgstr "AC и DC"
+
+#: .\features\internal_time\templates\internal_time\list.html:12
+#: .\features\mbg_reports\forms.py:147
+#: .\features\projects\templates\projects\objects.html:38
+msgid "Все статусы"
+msgstr "Все статусы"
+
+#: .\features\internal_time\templates\internal_time\list.html:14
+msgid "Все сотрудники"
+msgstr "Все сотрудники"
+
+#: .\features\internal_time\templates\internal_time\list.html:15
+msgid "Автор"
+msgstr "Автор"
+
+#: .\features\internal_time\templates\internal_time\list.html:15
+msgid "Все авторы"
+msgstr "Все авторы"
+
+#: .\features\internal_time\templates\internal_time\list.html:16
+#: .\features\management_reports\templates\management_reports\month.html:3
+msgid "Показать"
+msgstr "Показать"
+
+#: .\features\internal_time\templates\internal_time\list.html:21
+msgid "чел. ·"
+msgstr "чел. ·"
+
+#: .\features\internal_time\templates\internal_time\list.html:22
+msgid "Отчётов пока нет"
+msgstr "Отчётов пока нет"
+
+#: .\features\internal_time\templates\internal_time\list.html:22
+msgid "Создайте первый отчёт или измените фильтры."
+msgstr "Создайте первый отчёт или измените фильтры."
+
+#: .\features\internal_time\templates\internal_time\list.html:23
+msgid "Сотрудников добавляет администратор. Команды можно собрать из уже заведённых сотрудников."
+msgstr "Сотрудников добавляет администратор. Команды можно собрать из уже заведённых сотрудников."
+
+#: .\features\internal_time\templates\internal_time\list.html:24
+msgid "Настроить команды"
+msgstr "Настроить команды"
+
+#: .\features\internal_time\templates\internal_time\list.html:25
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:49
+#: .\features\staff\templates\staff\employees.html:2
+msgid "Добавить сотрудника"
+msgstr "Добавить сотрудника"
+
+#: .\features\internal_time\templates\internal_time\list.html:26
+msgid "Страницы отчётов"
+msgstr "Страницы отчётов"
+
+#: .\features\internal_time\templates\internal_time\list.html:27
+msgid "← Назад"
+msgstr "← Назад"
+
+#: .\features\internal_time\templates\internal_time\list.html:29
+msgid "Далее →"
+msgstr "Далее →"
+
+#: .\features\internal_time\views.py:126
+msgid "Выберите доступную команду."
+msgstr "Выберите доступную команду."
+
+#: .\features\internal_time\views.py:131
+msgid "Строка уже удалена."
+msgstr "Строка уже удалена."
+
+#: .\features\internal_time\views.py:146
+msgid "Укажите название нового проекта."
+msgstr "Укажите название нового проекта."
+
+#: .\features\internal_time\views.py:224
+msgid "Некорректная версия отчёта."
+msgstr "Некорректная версия отчёта."
+
+#: .\features\main\apps.py:8
+msgid "Main"
+msgstr "Главное"
+
+#: .\features\management_reports\forms.py:9
+msgid "Месяц"
+msgstr "Месяц"
+
+#: .\features\management_reports\forms.py:15
+msgid "Укажите корректный месяц."
+msgstr "Укажите корректный месяц."
+
+#: .\features\management_reports\templates\management_reports\month.html:2
+msgid "Внутренние часы за месяц"
+msgstr "Внутренние часы за месяц"
+
+#: .\features\management_reports\templates\management_reports\month.html:2
+msgid "Только внутренние отчёты. MBG-время здесь не учитывается."
+msgstr "Только внутренние отчёты. MBG-время здесь не учитывается."
+
+#: .\features\management_reports\templates\management_reports\month.html:4
+msgid "Черновики"
+msgstr "Черновики"
+
+#: .\features\management_reports\templates\management_reports\month.html:4
+msgid "Возвращено"
+msgstr "Возвращено"
+
+#: .\features\management_reports\templates\management_reports\month.html:5
+msgid "€ brutto"
+msgstr "€ брутто"
+
+#: .\features\management_reports\templates\management_reports\month.html:5
+msgid "Записей пока нет."
+msgstr "Записей пока нет."
+
+#: .\features\mbg_reports\accepted_revisions.py:64
+#, python-format
+msgid "Отчёт %(id)s не утверждён (текущий статус: %(status)s)."
+msgstr "Отчёт %(id)s не утверждён (текущий статус: %(status)s)."
+
+#: .\features\mbg_reports\accepted_revisions.py:75
+#, python-format
+msgid "Отсутствует сохранённая ревизия версии %(version)s для отчёта %(id)s."
+msgstr "Отсутствует сохранённая ревизия версии %(version)s для отчёта %(id)s."
+
+#: .\features\mbg_reports\accepted_revisions.py:85
+#, python-format
+msgid "Снимок версии %(version)s отчёта %(id)s не находится в статусе accepted."
+msgstr "Снимок версии %(version)s отчёта %(id)s не находится в статусе accepted."
+
+#: .\features\mbg_reports\export_services.py:47
+msgid "Выберите один проект или один объект."
+msgstr "Выберите один проект или один объект."
+
+#: .\features\mbg_reports\export_services.py:52
+msgid "Проект не найден или не относится к направлению AC."
+msgstr "Проект не найден или не относится к направлению AC."
+
+#: .\features\mbg_reports\export_services.py:61
+msgid "Объект не найден или не относится к направлению AC."
+msgstr "Объект не найден или не относится к направлению AC."
+
+#: .\features\mbg_reports\export_services.py:68
+msgid "Для выбранной области нет отчётов MBG."
+msgstr "Для выбранной области нет отчётов MBG."
+
+#: .\features\mbg_reports\export_services.py:71
+#: .\features\mbg_reports\export_services.py:74
+msgid "Нет текущих принятых снимков MBG для выбранной области."
+msgstr "Нет текущих принятых снимков MBG для выбранной области."
+
+#: .\features\mbg_reports\export_services.py:72
+msgid "Для выбранной области нет принятых отчётов MBG."
+msgstr "Для выбранной области нет принятых отчётов MBG."
+
+#: .\features\mbg_reports\export_services.py:131
+msgid "Некорректная календарная неделя."
+msgstr "Некорректная календарная неделя."
+
+#: .\features\mbg_reports\export_services.py:138
+msgid "Для выгрузки нужны принятые отчёты. Проверьте все записи этой недели."
+msgstr "Для выгрузки нужны принятые отчёты. Проверьте все записи этой недели."
+
+#: .\features\mbg_reports\export_services.py:179
+#: .\features\mbg_reports\export_services.py:254
+msgid "Anlage не найдена или не имеет направления AC."
+msgstr "Проект не найден или не имеет направления AC."
+
+#: .\features\mbg_reports\export_services.py:183
+msgid "Итоговый почасовой отчёт доступен, когда завершены все активные Standorte Anlage."
+msgstr "Итоговый почасовой отчёт доступен, когда завершены все активные объекты проекта."
+
+#: .\features\mbg_reports\export_services.py:189
+msgid "Для каждого Standort должен быть сохранён хотя бы один отчёт MBG."
+msgstr "Для каждого объекта должен быть сохранён хотя бы один отчёт MBG."
+
+#: .\features\mbg_reports\export_services.py:191
+msgid "Для итогового почасового отчёта все отчёты Anlage должны быть приняты."
+msgstr "Для итогового почасового отчёта все отчёты проекта должны быть приняты."
+
+#: .\features\mbg_reports\export_services.py:196
+msgid "В отчётах отсутствуют адрес или P/Nr. Заполните данные Standort."
+msgstr "В отчётах отсутствуют адрес или P/Nr. Заполните данные объекта."
+
+#: .\features\mbg_reports\export_services.py:260
+msgid "Не выбрано ни одной Anlage с направлением AC."
+msgstr "Не выбран ни один проект с направлением AC."
+
+#: .\features\mbg_reports\export_services.py:288
+msgid "Выберите хотя бы один Standort с принятыми отчётами для промежуточного отчёта."
+msgstr "Выберите хотя бы один объект с принятыми отчётами для промежуточного отчёта."
+
+#: .\features\mbg_reports\export_services.py:306
+msgid "Для Zwischennachweis все отчёты выбранных Standorte должны быть приняты."
+msgstr "Для промежуточного акта все отчёты выбранных объектов должны быть приняты."
+
+#: .\features\mbg_reports\export_services.py:307
+msgid "Для Leistungsnachweis все отчёты завершённых Standorte должны быть приняты."
+msgstr "Для акта выполненных работ все отчёты завершённых объектов должны быть приняты."
+
+#: .\features\mbg_reports\export_services.py:310
+msgid "Для выгрузки заполните адрес и P/Nr всех выбранных Standorte."
+msgstr "Для выгрузки заполните адрес и P/Nr всех выбранных объектов."
+
+#: .\features\mbg_reports\forms.py:81
+msgid "Начните вводить Standort, адрес или P/Nr"
+msgstr "Начните вводить объект, адрес или P/Nr"
+
+#: .\features\mbg_reports\forms.py:91
+msgid "Состав рабочего дня"
+msgstr "Состав рабочего дня"
+
+#: .\features\mbg_reports\forms.py:98
+msgid "Причина исправления / комментарий"
+msgstr "Причина исправления / комментарий"
+
+#: .\features\mbg_reports\forms.py:100 .\features\mbg_reports\services.py:129
+msgid "Укажите причину исправления принятого отчёта."
+msgstr "Укажите причину исправления принятого отчёта."
+
+#: .\features\mbg_reports\forms.py:129
+msgid "Все проекты — начните вводить для поиска"
+msgstr "Все проекты — начните вводить для поиска"
+
+#: .\features\mbg_reports\forms.py:141
+msgid "Все объекты — выберите проект или введите адрес"
+msgstr "Все объекты — выберите проект или введите адрес"
+
+#: .\features\mbg_reports\forms.py:179
+msgid "Конечная дата не может быть раньше начальной."
+msgstr "Конечная дата не может быть раньше начальной."
+
+#: .\features\mbg_reports\forms.py:185
+msgid "Кто выполнял"
+msgstr "Кто выполнял"
+
+#: .\features\mbg_reports\forms.py:197
+msgid "Позиция плана Standort"
+msgstr "Позиция плана объекта"
+
+#: .\features\mbg_reports\forms.py:203
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:4
+msgid "Прирост выполненного объёма"
+msgstr "Прирост выполненного объёма"
+
+#: .\features\mbg_reports\forms.py:209
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:5
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:89
+#: .\features\projects\templates\projects\object_detail.html:190
+msgid "Количество"
+msgstr "Количество"
+
+#: .\features\mbg_reports\forms.py:214
+msgid "Обычные подключения"
+msgstr "Обычные подключения"
+
+#: .\features\mbg_reports\forms.py:215
+msgid "Тяжёлые подключения"
+msgstr "Тяжёлые подключения"
+
+#: .\features\mbg_reports\forms.py:216 .\features\projects\forms.py:101
+msgid "С монтажной конструкцией"
+msgstr "С монтажной конструкцией"
+
+#: .\features\mbg_reports\forms.py:217
+msgid "Свой текст на немецком"
+msgstr "Свой текст на немецком"
+
+#: .\features\mbg_reports\forms.py:219
+msgid "Только внутренний учёт / Nur interne Zeiterfassung"
+msgstr "Только внутренний учёт / Nur interne Zeiterfassung"
+
+#: .\features\mbg_reports\forms.py:233
+msgid "Позиция плана и прирост объёма вводятся вместе."
+msgstr "Позиция плана и прирост объёма вводятся вместе."
+
+#: .\features\mbg_reports\forms.py:243
+msgid "Год"
+msgstr "Год"
+
+#: .\features\mbg_reports\forms.py:244
+msgid "Календарная неделя"
+msgstr "Календарная неделя"
+
+#: .\features\mbg_reports\google_sync.py:39
+msgid "Google Service Account ist nicht konfiguriert."
+msgstr "Сервисный аккаунт Google не настроен."
+
+#: .\features\mbg_reports\google_sync.py:51
+msgid "GOOGLE_SHEET_ID ist nicht konfiguriert."
+msgstr "GOOGLE_SHEET_ID не настроен."
+
+#: .\features\mbg_reports\models.py:30
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:30
+msgid "Возвращён"
+msgstr "Возвращён"
+
+#: .\features\mbg_reports\services.py:117
+msgid "Выберите действующий AC-объект."
+msgstr "Выберите действующий AC-объект."
+
+#: .\features\mbg_reports\services.py:119
+msgid "Нельзя заполнить будущий день."
+msgstr "Нельзя заполнить будущий день."
+
+#: .\features\mbg_reports\services.py:121
+msgid "Добавьте от 1 до 100 строк."
+msgstr "Добавьте от 1 до 100 строк."
+
+#: .\features\mbg_reports\services.py:124
+msgid "Standort завершён. Сначала верните его в работу."
+msgstr "Объект завершён. Сначала верните его в работу."
+
+#: .\features\mbg_reports\services.py:136
+msgid "Добавьте сотрудников в состав рабочего дня."
+msgstr "Добавьте сотрудников в состав рабочего дня."
+
+#: .\features\mbg_reports\services.py:139
+msgid "В составе рабочего дня могут быть только действующие сотрудники AC."
+msgstr "В составе рабочего дня могут быть только действующие сотрудники AC."
+
+#: .\features\mbg_reports\services.py:144
+msgid "Окончание должно быть позже начала, время вводится шагом 15 минут."
+msgstr "Окончание должно быть позже начала, время вводится шагом 15 минут."
+
+#: .\features\mbg_reports\services.py:147
+msgid "Укажите хотя бы одного сотрудника."
+msgstr "Укажите хотя бы одного сотрудника."
+
+#: .\features\mbg_reports\services.py:149
+msgid "Для работы можно выбрать только сотрудников из состава рабочего дня."
+msgstr "Для работы можно выбрать только сотрудников из состава рабочего дня."
+
+#: .\features\mbg_reports\services.py:152
+msgid "Выберите вид работ."
+msgstr "Выберите вид работ."
+
+#: .\features\mbg_reports\services.py:155
+msgid "Выберите активный вид работ AC."
+msgstr "Выберите активный вид работ AC."
+
+#: .\features\mbg_reports\services.py:158
+msgid "Количество должно быть больше нуля."
+msgstr "Количество должно быть больше нуля."
+
+#: .\features\mbg_reports\services.py:162
+msgid "Для выбранной работы укажите путь."
+msgstr "Для выбранной работы укажите путь."
+
+#: .\features\mbg_reports\services.py:164
+msgid "Для прокладки выберите тип кабеля."
+msgstr "Для прокладки выберите тип кабеля."
+
+#: .\features\mbg_reports\services.py:166
+msgid "Тип кабеля доступен только для позиции прокладки."
+msgstr "Тип кабеля доступен только для позиции прокладки."
+
+#: .\features\mbg_reports\services.py:170
+msgid "Позиция Standort и прирост объёма должны быть указаны вместе."
+msgstr "Позиция объекта и прирост объёма должны быть указаны вместе."
+
+#: .\features\mbg_reports\services.py:176
+msgid "Укажите корректный прирост объёма."
+msgstr "Укажите корректный прирост объёма."
+
+#: .\features\mbg_reports\services.py:178
+msgid "Прирост объёма не может быть отрицательным."
+msgstr "Прирост объёма не может быть отрицательным."
+
+#: .\features\mbg_reports\services.py:183 .\features\projects\services.py:220
+msgid "Почасовые работы пока нельзя связывать с физической позицией."
+msgstr "Почасовые работы пока нельзя связывать с физической позицией."
+
+#: .\features\mbg_reports\services.py:191
+msgid "Позиция Standort не соответствует объекту или параметрам работы."
+msgstr "Позиция объекта не соответствует объекту или параметрам работы."
+
+#: .\features\mbg_reports\services.py:233
+msgid "У сотрудника пересекаются строки MBG."
+msgstr "У сотрудника пересекаются строки MBG."
+
+#: .\features\mbg_reports\services.py:245
+msgid "У сотрудника уже есть работа MBG в это время на другом объекте."
+msgstr "У сотрудника уже есть работа MBG в это время на другом объекте."
+
+#: .\features\mbg_reports\services.py:250
+msgid "Сохраните привязки позиций Standort при редактировании отчёта."
+msgstr "Сохраните привязки позиций объекта при редактировании отчёта."
+
+#: .\features\mbg_reports\services.py:304
+msgid "Отчёт уже изменён или не отправлен на проверку."
+msgstr "Отчёт уже изменён или не отправлен на проверку."
+
+#: .\features\mbg_reports\services.py:308
+msgid "Укажите, что исправить."
+msgstr "Укажите, что исправить."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:5
+#: .\features\mbg_reports\templates\mbg_reports\list.html:14
+msgid "AC · MBG"
+msgstr "AC · MBG"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:7
+msgid "Сначала выберите состав дня, затем распределите выполненные работы."
+msgstr "Сначала выберите состав дня, затем распределите выполненные работы."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:9
+msgid "К списку"
+msgstr "К списку"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:18
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:55
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:122
+msgid "Выберите дату и сотрудников."
+msgstr "Выберите дату и сотрудников."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:19
+msgid "Проверяем сохранённые интервалы…"
+msgstr "Проверяем сохранённые интервалы…"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:20
+msgid "Пересечений с сохранёнными MBG-отчётами нет."
+msgstr "Пересечений с сохранёнными MBG-отчётами нет."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:21
+msgid "Найдено пересечение с другим MBG-отчётом."
+msgstr "Найдено пересечение с другим MBG-отчётом."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:22
+msgid "Не удалось проверить сохранённые интервалы."
+msgstr "Не удалось проверить сохранённые интервалы."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:23
+msgid "Нет других сохранённых интервалов MBG."
+msgstr "Нет других сохранённых интервалов MBG."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:24
+msgid "Не удалось загрузить историю работ."
+msgstr "Не удалось загрузить историю работ."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:25
+msgid "выберите путь"
+msgstr "выберите путь"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:26
+msgid "выберите тип кабеля"
+msgstr "выберите тип кабеля"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:33
+msgid "Отчёт не сохранён"
+msgstr "Отчёт не сохранён"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:34
+msgid "Проверьте отмеченные поля и повторите сохранение."
+msgstr "Проверьте отмеченные поля и повторите сохранение."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:38
+msgid "Закрыть уведомление"
+msgstr "Закрыть уведомление"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:43
+msgid "1. Рабочий день"
+msgstr "1. Рабочий день"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:49
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:93
+msgid "Удалить сотрудника"
+msgstr "Удалить сотрудника"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:54
+msgid "Занятость сотрудников"
+msgstr "Занятость сотрудников"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:69
+msgid "2. Выполненные работы"
+msgstr "2. Выполненные работы"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:69
+msgid "Каждая карточка станет строкой отчёта."
+msgstr "Каждая карточка станет строкой отчёта."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:75
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:117
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:89
+#: .\features\projects\templates\projects\includes\_object_common_top.html:103
+#: .\features\projects\templates\projects\includes\_object_common_top.html:152
+#: .\features\projects\templates\projects\object_detail.html:189
+msgid "Работа"
+msgstr "Работа"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:77
+msgid "Переместить выше"
+msgstr "Переместить выше"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:78
+msgid "Переместить ниже"
+msgstr "Переместить ниже"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:79
+msgid "Удалить"
+msgstr "Удалить"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:84
+msgid "Выберите физическую позицию этого Standort. Оставьте пустым для почасовой работы или ещё не разобранной записи."
+msgstr "Выберите физическую позицию этого объекта. Оставьте пустым для почасовой работы или ещё не разобранной записи."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:86
+msgid "0 — продолжение без новой физической единицы. Укажите прирост только вместе с позицией плана."
+msgstr "0 — продолжение без новой физической единицы. Укажите прирост только вместе с позицией плана."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:91
+msgid "Количество для расчёта этой дневной строки; это не подтверждённый прирост по плану."
+msgstr "Количество для расчёта этой дневной строки; это не подтверждённый прирост по плану."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:93
+msgid "Добавить из состава дня"
+msgstr "Добавить из состава дня"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:97
+msgid "Работа и часы остаются в DLC; строка не попадает в счёт, акт и кабинет заказчика."
+msgstr "Работа и часы остаются в DLC; строка не попадает в счёт, акт и кабинет заказчика."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:100
+msgid "Кабель, путь и дополнительные параметры"
+msgstr "Кабель, путь и дополнительные параметры"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:115
+msgid "3. Строки отчёта"
+msgstr "3. Строки отчёта"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:116
+msgid "Одна работа с несколькими людьми остаётся одной строкой; Mont показывает сумму человеко-часов."
+msgstr "Одна работа с несколькими людьми остаётся одной строкой; Mont показывает сумму человеко-часов."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:117
+msgid "Время"
+msgstr "Время"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:117
+msgid "Mont"
+msgstr "Монтажники"
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:118
+msgid "Добавьте первую выполненную работу."
+msgstr "Добавьте первую выполненную работу."
+
+#: .\features\mbg_reports\templates\mbg_reports\_editor.html:124
+msgid "Добавить работу"
+msgstr "Добавить работу"
+
+#: .\features\mbg_reports\templates\mbg_reports\_section_nav.html:2
+msgid "Раздел MBG"
+msgstr "Раздел MBG"
+
+#: .\features\mbg_reports\templates\mbg_reports\_site_field.html:5
+msgid "В выбранном проекте нет активных AC-объектов."
+msgstr "В выбранном проекте нет активных AC-объектов."
+
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:5
+msgid "STANDORT ·"
+msgstr "ОБЪЕКТ ·"
+
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:5
+msgid "КОНТЕКСТ"
+msgstr "КОНТЕКСТ"
+
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:6
+msgid "Уже внесено по Standort"
+msgstr "Уже внесено по объекту"
+
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:9
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:26
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:40
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:3
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:40
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:57
+#: .\features\projects\templates\projects\detail.html:41
+#: .\features\projects\templates\projects\object_detail.html:181
+#: .\features\projects\templates\projects\object_detail.html:225
+msgid "чел.-ч"
+msgstr "чел.-ч"
+
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:14
+msgid "Выберите Standort — здесь появятся уже сохранённые работы."
+msgstr "Выберите объект — здесь появятся уже сохранённые работы."
+
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:17
+msgid "По этому Standort ещё нет других сохранённых работ."
+msgstr "По этому объекту ещё нет других сохранённых работ."
+
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:19
+msgid "поз."
+msgstr "поз."
+
+#: .\features\mbg_reports\templates\mbg_reports\_site_history.html:39
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:3
+#: .\features\projects\templates\projects\includes\_object_common_top.html:161
+msgid "Только внутренний учёт"
+msgstr "Только внутренний учёт"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:2
+#: .\features\mbg_reports\templates\mbg_reports\list.html:71
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:43
+#: .\features\projects\templates\projects\detail.html:37
+#: .\features\projects\templates\projects\includes\_object_common_top.html:13
+msgid "· P/Nr"
+msgstr "· P/Nr"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:2
+#: .\features\mbg_reports\templates\mbg_reports\list.html:83
+#: .\features\projects\templates\projects\object_detail.html:18
+#: .\features\projects\templates\projects\object_detail.html:138
+#: .\features\staff\templates\staff\employees.html:3
+msgid "Редактировать"
+msgstr "Редактировать"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:3
+msgid "Норма"
+msgstr "Норма"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:3
+msgid "Факт"
+msgstr "Факт"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:4
+msgid "Нулевой прирост означает продолжение без добавления новой физической единицы. В итог плана входят только принятые отчёты."
+msgstr "Нулевой прирост означает продолжение без добавления новой физической единицы. В итог плана входят только принятые отчёты."
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:6
+msgid "Фактическое время всех участников"
+msgstr "Фактическое время всех участников"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:7
+msgid "Продолжить заполнение"
+msgstr "Продолжить заполнение"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:7
+msgid "Добавить следующий день"
+msgstr "Добавить следующий день"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:7
+msgid "Другой объект в этот день"
+msgstr "Другой объект в этот день"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:8
+msgid "Принять"
+msgstr "Принять"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:8
+msgid "Вернуть"
+msgstr "Вернуть"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:9
+msgid "Недельная выгрузка Excel"
+msgstr "Недельная выгрузка Excel"
+
+#: .\features\mbg_reports\templates\mbg_reports\detail.html:10
+msgid "v"
+msgstr "в."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:11
+msgid "AC · MBG · ADMIN"
+msgstr "AC · MBG · АДМИНИСТРАТОР"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:13
+msgid "Четыре независимых документа: недельные часы, выполненные работы без цен, итоговые часы и сдельный отчёт с ценами."
+msgstr "Четыре независимых документа: недельные часы, выполненные работы без цен, итоговые часы и сдельный отчёт с ценами."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:31
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:48
+msgid "Недельный Stundennachweis"
+msgstr "Недельный табель часов"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:31
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:48
+msgid "Одна книга на календарную неделю сразу по всей AC-части."
+msgstr "Одна книга на календарную неделю сразу по всей AC-части."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:38
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:55
+msgid "KW"
+msgstr "КН"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:39
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:56
+#, python-format
+msgid "Календарная неделя %(week)s"
+msgstr "Календарная неделя %(week)s"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:40
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:57
+#, python-format
+msgid "%(reports)s отчёт"
+msgid_plural "%(reports)s отчётов"
+msgstr[0] "%(reports)s отчёт"
+msgstr[1] "%(reports)s отчёта"
+msgstr[2] "%(reports)s отчётов"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:44
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:61
+msgid "Скачать Excel"
+msgstr "Скачать Excel"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:47
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:64
+msgid "Сформировать заново"
+msgstr "Сформировать заново"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:47
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:64
+msgid "Создать Stundennachweis"
+msgstr "Создать табель часов"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:52
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:69
+#, python-format
+msgid "Нужно принять %(pending)s отчёт перед выгрузкой"
+msgid_plural "Нужно принять %(pending)s отчётов перед выгрузкой"
+msgstr[0] "Нужно принять %(pending)s отчёт перед выгрузкой"
+msgstr[1] "Нужно принять %(pending)s отчёта перед выгрузкой"
+msgstr[2] "Нужно принять %(pending)s отчётов перед выгрузкой"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:57
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:63
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:74
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:80
+msgid "Сотрудников"
+msgstr "Сотрудников"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:58
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:75
+msgid "Человеко-часов"
+msgstr "Человеко-часов"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:71
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:88
+msgid "Недельных отчётов пока нет"
+msgstr "Недельных отчётов пока нет"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:72
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:89
+msgid "Карточка недели появится после сохранения первого отчёта MBG."
+msgstr "Карточка недели появится после сохранения первого отчёта MBG."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:79
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:96
+msgid "Отчёт о выполненных работах"
+msgstr "Отчёт о выполненных работах"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:79
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:96
+msgid "Клиентский документ по всем принятым данным за весь период: без цен, ставок, сумм и нормативных часов."
+msgstr "Клиентский документ по всем принятым данным за весь период: без цен, ставок, сумм и нормативных часов."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:86
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:103
+msgid "ANLAGE · LEISTUNGSNACHWEIS"
+msgstr "ПРОЕКТ · АКТ ВЫПОЛНЕННЫХ РАБОТ"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:88
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:105
+msgid "Объекты с принятыми отчётами"
+msgstr "Объекты с принятыми отчётами"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:95
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:112
+msgid "Скачать по проекту"
+msgstr "Скачать по проекту"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:98
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:115
+msgid "Выбрать объект"
+msgstr "Выбрать объект"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:114
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:131
+msgid "Нет объектов с актуальными принятыми данными"
+msgstr "Нет объектов с актуальными принятыми данными"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:115
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:132
+msgid "Документ появится после принятия MBG-отчёта для объекта в работе или завершённого объекта."
+msgstr "Документ появится после принятия MBG-отчёта для объекта в работе или завершённого объекта."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:122
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:139
+msgid "Последние отчёты о выполненных работах"
+msgstr "Последние отчёты о выполненных работах"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:123
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:140
+msgid "Только документы без цен. История содержит последние десять сформированных файлов."
+msgstr "Только документы без цен. История содержит последние десять сформированных файлов."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:135
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:152
+msgid "Отчёты о выполненных работах ещё не формировались."
+msgstr "Отчёты о выполненных работах ещё не формировались."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:141
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:158
+msgid "Промежуточный Zwischennachweis с ценами (В работе)"
+msgstr "Промежуточный акт с ценами (в работе)"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:141
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:158
+msgid "Предварительный срез с ценами по объектам в работе. Доступен как общий срез по всем проектам, так и выбор отдельных групп и объектов."
+msgstr "Предварительный срез с ценами по объектам в работе. Доступен как общий срез по всем проектам, так и выбор отдельных групп и объектов."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:148
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:165
+msgid "AC · GESAMT · ВСЕ ПРОЕКТЫ"
+msgstr "AC · GESAMT · ВСЕ ПРОЕКТЫ"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:149
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:166
+msgid "Общий Zwischennachweis (Все проекты в работе)"
+msgstr "Общий промежуточный акт (все проекты в работе)"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:151
+#, python-format
+msgid ""
+"\n"
+"          Единая книга Excel сразу по всем %(groups)s активным проектам (%(sites)s Standorte · %(reports)s принятых отчётов). Сводная таблица + лист каждого объекта.\n"
+"          "
+msgstr ""
+"\n"
+"Единая книга Excel сразу по всем %(groups)s активным проектам (%(sites)s объектов · %(reports)s принятых отчётов). Сводная таблица + лист каждого объекта."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:162
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:179
+msgid "Сформировать общий Zwischennachweis"
+msgstr "Сформировать общий промежуточный акт"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:166
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:183
+msgid "Выбрать конкретные объекты"
+msgstr "Выбрать конкретные объекты"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:172
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:189
+msgid "Добавьте группу и отметьте хотя бы один объект для формирования отчёта."
+msgstr "Добавьте группу и отметьте хотя бы один объект для формирования отчёта."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:180
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:197
+msgid "Добавить проект в отчёт:"
+msgstr "Добавить проект в отчёт:"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:183
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:200
+msgid "Выберите Anlage..."
+msgstr "Выберите проект..."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:186
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:203
+msgid "объектов"
+msgstr "объектов"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:191
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:208
+msgid "Добавить группу"
+msgstr "Добавить группу"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:195
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:212
+msgid "Добавить все группы"
+msgstr "Добавить все группы"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:200
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:217
+msgid "Группы ещё не добавлены"
+msgstr "Группы ещё не добавлены"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:201
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:218
+msgid "Выберите нужную Anlage в списке выше и нажмите «Добавить группу», чтобы настроить состав отчёта."
+msgstr "Выберите нужный проект в списке выше и нажмите «Добавить группу», чтобы настроить состав отчёта."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:212
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:229
+msgid "Убрать эту группу"
+msgstr "Убрать эту группу"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:220
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:237
+msgid "отч."
+msgstr "отч."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:223
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:240
+msgid "Нет принятых отчётов"
+msgstr "Нет принятых отчётов"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:231
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:248
+msgid "Сформировать Zwischennachweis для выбранных"
+msgstr "Сформировать промежуточный акт для выбранных"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:232
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:249
+msgid "Очистить список"
+msgstr "Очистить список"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:243
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:268
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:260
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:285
+#: .\features\projects\templates\projects\detail.html:4
+msgid "ANLAGE ·"
+msgstr "ПРОЕКТ ·"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:243
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:260
+msgid "В РАБОТЕ"
+msgstr "В РАБОТЕ"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:245
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:262
+#, python-format
+msgid "Отчётов MBG: %(reports)s · Standorte: %(completed)s/%(total)s завершено"
+msgstr "Отчётов MBG: %(reports)s · Объектов завершено: %(completed)s/%(total)s"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:248
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:265
+msgid "Zwischennachweis Anlage"
+msgstr "Промежуточный акт проекта"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:249
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:282
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:266
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:299
+msgid "Сводка"
+msgstr "Сводка"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:255
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:272
+msgid "Нет активных проектов с отчётами MBG"
+msgstr "Нет активных проектов с отчётами MBG"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:256
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:273
+msgid "Проекты появятся здесь сразу после внесения первого отчёта MBG."
+msgstr "Проекты появятся здесь сразу после внесения первого отчёта MBG."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:262
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:279
+msgid "Итоговый почасовой отчёт и Итоговый Leistungsnachweis с ценами"
+msgstr "Итоговый почасовой отчёт и итоговый акт выполненных работ с ценами"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:262
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:279
+msgid "Полный почасовой Stundennachweis за весь период и сдельный Leistungsnachweis с ценами."
+msgstr "Полный табель часов за весь период и сдельный акт выполненных работ с ценами."
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:268
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:285
+msgid "ГОТОВО К СДАЧЕ"
+msgstr "ГОТОВО К СДАЧЕ"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:270
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:287
+#, python-format
+msgid "Завершено Standort: %(sites)s · выпущенных книг: %(exports)s"
+msgstr "Завершено объектов: %(sites)s · выпущенных книг: %(exports)s"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:276
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:293
+msgid "Итоговый почасовой отчёт"
+msgstr "Итоговый почасовой отчёт"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:279
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:296
+msgid "Итоговые часы — после завершения всех Standorte"
+msgstr "Итоговые часы — после завершения всех объектов"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:281
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:298
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:100
+msgid "Выпустить Leistungsnachweis"
+msgstr "Выпустить акт выполненных работ"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:288
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:305
+msgid "Нет завершённых проектов"
+msgstr "Нет завершённых проектов"
+
+#: .\features\mbg_reports\templates\mbg_reports\export_hub.html:289
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:306
+msgid "Итоговый Leistungsnachweis станет доступен, когда хотя бы один Standort в Anlage будет переведён в статус «Завершено»."
+msgstr "Итоговый акт выполненных работ станет доступен, когда хотя бы один объект проекта будет переведён в статус «Завершено»."
+
+#: .\features\mbg_reports\templates\mbg_reports\exports.html:9
+msgid "AC · MBG · EXCEL"
+msgstr "AC · MBG · EXCEL"
+
+#: .\features\mbg_reports\templates\mbg_reports\exports.html:10
+msgid "Недельный Stundennachweis AC"
+msgstr "Недельный табель часов AC"
+
+#: .\features\mbg_reports\templates\mbg_reports\exports.html:11
+msgid "Одна книга за календарную неделю: общая сводка и отдельный лист каждого Standort."
+msgstr "Одна книга за календарную неделю: общая сводка и отдельный лист каждого объекта."
+
+#: .\features\mbg_reports\templates\mbg_reports\exports.html:20
+msgid "Новая недельная книга"
+msgstr "Новая недельная книга"
+
+#: .\features\mbg_reports\templates\mbg_reports\exports.html:21
+msgid "Выберите календарную неделю. Готовый файл загрузится автоматически."
+msgstr "Выберите календарную неделю. Готовый файл загрузится автоматически."
+
+#: .\features\mbg_reports\templates\mbg_reports\exports.html:28
+msgid "Сформировать и скачать"
+msgstr "Сформировать и скачать"
+
+#: .\features\mbg_reports\templates\mbg_reports\exports.html:33
+msgid "Ранее сформированные книги"
+msgstr "Ранее сформированные книги"
+
+#: .\features\mbg_reports\templates\mbg_reports\exports.html:34
+msgid "Файлы сохраняются как снимки и не меняются задним числом."
+msgstr "Файлы сохраняются как снимки и не меняются задним числом."
+
+#: .\features\mbg_reports\templates\mbg_reports\exports.html:43
+msgid "Недельные книги ещё не создавались."
+msgstr "Недельные книги ещё не создавались."
+
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:4
+msgid "AC · MBG · ANLAGE"
+msgstr "AC · MBG · ПРОЕКТ"
+
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:4
+msgid "Сводка выполненных и ещё не выполненных позиций по всем объектам."
+msgstr "Сводка выполненных и ещё не выполненных позиций по всем объектам."
+
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:4
+msgid "Добавить рабочий день"
+msgstr "Добавить рабочий день"
+
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:5
+#: .\features\projects\templates\projects\object_detail.html:191
+#: .\features\work_catalog\models.py:55
+msgid "Норма, чел.-ч"
+msgstr "Норма, чел.-ч"
+
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:5
+#: .\features\projects\templates\projects\object_detail.html:192
+msgid "Факт, чел.-ч"
+msgstr "Факт, чел.-ч"
+
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:5
+msgid "Стоимость"
+msgstr "Стоимость"
+
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:5
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:91
+#: .\features\projects\templates\projects\object_detail.html:200
+msgid "Menge ungeklärt"
+msgstr "Объём не определён"
+
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:5
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:91
+#: .\features\projects\templates\projects\object_detail.html:203
+msgid "Preis nicht vereinbart"
+msgstr "Цена не согласована"
+
+#: .\features\mbg_reports\templates\mbg_reports\group_overview.html:6
+msgid "Leistungsnachweis Anlage"
+msgstr "Акт выполненных работ проекта"
+
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:5
+msgid "Сводная ведомость по проектам"
+msgstr "Сводная ведомость по проектам"
+
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:6
+msgid "Единая сводная книга по всем проектам и объектам с актуальными данными и объёмами."
+msgstr "Единая сводная книга по всем проектам и объектам с актуальными данными и объёмами."
+
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:11
+msgid "Скачать сводную ведомость (Excel)"
+msgstr "Скачать сводную ведомость (Excel)"
+
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:17
+msgid "Сформировать сводную ведомость (Excel)"
+msgstr "Сформировать сводную ведомость (Excel)"
+
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:22
+msgid "Сводная ведомость (Excel)"
+msgstr "Сводная ведомость (Excel)"
+
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:24
+msgid "URL скачивания не настроен"
+msgstr "URL скачивания не настроен"
+
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:30
+msgid "Интеграция с Google Таблицей"
+msgstr "Интеграция с Google Таблицей"
+
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:32
+msgid "Синхронизация фиксированных данных в Google Таблицу выполняется только вручную по нажатию кнопки ниже. При открытии страницы или навигации по вкладкам сетевые запросы не отправляются."
+msgstr "Синхронизация фиксированных данных в Google Таблицу выполняется только вручную по нажатию кнопки ниже. При открытии страницы или навигации по вкладкам сетевые запросы не отправляются."
+
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:38
+msgid "Обновить Google Таблицу"
+msgstr "Обновить Google Таблицу"
+
+#: .\features\mbg_reports\templates\mbg_reports\includes\_master_settlement_tab.html:168
+#, python-format
+msgid ""
+"\n"
+"            Единая книга Excel сразу по всем %(groups)s активным проектам (%(sites)s Standorte · %(reports)s принятых отчётов). Сводная таблица + лист каждого объекта.\n"
+"            "
+msgstr ""
+"\n"
+"Единая книга Excel сразу по всем %(groups)s активным проектам (%(sites)s объектов · %(reports)s принятых отчётов). Сводная таблица + лист каждого объекта."
+
+#: .\features\mbg_reports\templates\mbg_reports\list.html:15
+msgid "Отчёты для заказчика"
+msgstr "Отчёты для заказчика"
+
+#: .\features\mbg_reports\templates\mbg_reports\list.html:16
+msgid "Рабочие дни по отдельным Standort. Время MBG не связано с внутренними сменами."
+msgstr "Рабочие дни по отдельным объектам. Время MBG не связано с внутренними сменами."
+
+#: .\features\mbg_reports\templates\mbg_reports\list.html:26
+msgid "Фильтры отчётов"
+msgstr "Фильтры отчётов"
+
+#: .\features\mbg_reports\templates\mbg_reports\list.html:58
+#, python-format
+msgid "%(count)s отчёт"
+msgid_plural "%(count)s отчётов"
+msgstr[0] "%(count)s отчёт"
+msgstr[1] "%(count)s отчёта"
+msgstr[2] "%(count)s отчётов"
+
+#: .\features\mbg_reports\templates\mbg_reports\list.html:75
+msgid "сотр."
+msgstr "сотр."
+
+#: .\features\mbg_reports\templates\mbg_reports\list.html:92
+msgid "По выбранным фильтрам отчётов нет"
+msgstr "По выбранным фильтрам отчётов нет"
+
+#: .\features\mbg_reports\templates\mbg_reports\list.html:93
+msgid "Измените фильтры или создайте новый рабочий день."
+msgstr "Измените фильтры или создайте новый рабочий день."
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:9
+msgid "ДОКУМЕНТЫ СДЕЛЬЩИНЫ (LEISTUNG / MBG)"
+msgstr "ДОКУМЕНТЫ СДЕЛЬЩИНЫ (LEISTUNG / MBG)"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:9
+msgid "· ANLAGE"
+msgstr "· ПРОЕКТ"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:11
+msgid "Выгрузка актов сдачи (Leistungsnachweis) и промежуточных срезов (Zwischennachweis)."
+msgstr "Выгрузка актов выполненных работ и промежуточных актов."
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:13
+msgid "Все документы"
+msgstr "Все документы"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:21
+msgid "Промежуточный срез"
+msgstr "Промежуточный срез"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:22
+msgid "1. Сформировать Zwischennachweis"
+msgstr "1. Сформировать промежуточный акт"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:23
+msgid "Выберите Standorte (в том числе в работе), по которым нужно выгрузить сдельщину на текущий момент."
+msgstr "Выберите объекты (в том числе в работе), по которым нужно выгрузить сдельщину на текущий момент."
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:32
+msgid "Объекты для выгрузки:"
+msgstr "Объекты для выгрузки:"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:33
+msgid "Выбрать все"
+msgstr "Выбрать все"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:34
+msgid "Снять все"
+msgstr "Снять все"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:48
+msgid "принятых отч."
+msgstr "принятых отч."
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:48
+msgid "нет отчётов"
+msgstr "нет отчётов"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:50
+msgid "Teilbetrag"
+msgstr "Промежуточная сумма"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:54
+msgid "В проекте пока нет Standorte."
+msgstr "В проекте пока нет объектов."
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:60
+msgid "Сформировать Zwischennachweis"
+msgstr "Сформировать промежуточный акт"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:70
+msgid "Официальная сдача"
+msgstr "Официальная сдача"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:71
+msgid "2. Финальный Leistungsnachweis"
+msgstr "2. Финальный акт выполненных работ"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:72
+msgid "Формируется строго по завершённым (Abgeschlossen) Standorte с принятыми отчётами."
+msgstr "Формируется строго по завершённым объектам с принятыми отчётами."
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:77
+#, python-format
+msgid "Завершено объектов: %(count)s"
+msgstr "Завершено объектов: %(count)s"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:82
+msgid "Пока нет объектов в статусе «Завершено»."
+msgstr "Пока нет объектов в статусе «Завершено»."
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:89
+msgid "Сумма"
+msgstr "Сумма"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:108
+msgid "История сформированных документов"
+msgstr "История сформированных документов"
+
+#: .\features\mbg_reports\templates\mbg_reports\performance_exports.html:120
+msgid "Документы по этому объекту ещё не создавались."
+msgstr "Документы по этому объекту ещё не создавались."
+
+#: .\features\mbg_reports\templates\mbg_reports\unified_documents.html:17
+msgid "AC · MBG ·"
+msgstr "AC · MBG ·"
+
+#: .\features\mbg_reports\templates\mbg_reports\unified_documents.html:17
+msgid "ADMIN"
+msgstr "АДМИНИСТРАТОР"
+
+#: .\features\mbg_reports\templates\mbg_reports\unified_documents.html:17
+msgid "INTERN"
+msgstr "ВНУТРЕННЕЕ"
+
+#: .\features\mbg_reports\templates\mbg_reports\unified_documents.html:19
+msgid "Клиентские ведомости, табели MBG, проектная документация и отчёты для выставления счетов."
+msgstr "Клиентские ведомости, табели MBG, проектная документация и отчёты для выставления счетов."
+
+#: .\features\mbg_reports\templates\mbg_reports\unified_documents.html:24
+msgid "Разделы документов"
+msgstr "Разделы документов"
+
+#: .\features\mbg_reports\templates\mbg_reports\unified_documents.html:31
+msgid "Акты и табели"
+msgstr "Акты и табели"
+
+#: .\features\mbg_reports\templates\mbg_reports\unified_documents.html:39
+msgid "Сводная ведомость"
+msgstr "Сводная ведомость"
+
+#: .\features\mbg_reports\views.py:202
+msgid "Выберите хотя бы один объект для формирования счёта."
+msgstr "Выберите хотя бы один объект для формирования счёта."
+
+#: .\features\mbg_reports\views.py:207
+msgid "Некоторые из выбранных объектов не найдены."
+msgstr "Некоторые из выбранных объектов не найдены."
+
+#: .\features\mbg_reports\views.py:211
+msgid "Все выбранные объекты должны относиться к направлению AC."
+msgstr "Все выбранные объекты должны относиться к направлению AC."
+
+#: .\features\mbg_reports\views.py:215
+msgid "Оплаченные объекты исключены из нового счёта."
+msgstr "Оплаченные объекты исключены из нового счёта."
+
+#: .\features\mbg_reports\views.py:261
+#, python-brace-format
+msgid "Лист Übersicht Google Таблицы успешно обновлён ({count} объектов)."
+msgstr "Лист «Обзор» Google Таблицы успешно обновлён ({count} объектов)."
+
+#: .\features\mbg_reports\views.py:267
+#, python-brace-format
+msgid "Ошибка синхронизации с Google Таблицей: {error}"
+msgstr "Ошибка синхронизации с Google Таблицей: {error}"
+
+#: .\features\mbg_reports\views.py:283 .\features\mbg_reports\views.py:768
+msgid "Объект не относится к направлению AC."
+msgstr "Объект не относится к направлению AC."
+
+#: .\features\mbg_reports\views.py:302
+#, python-brace-format
+msgid "Статус оплаты Standort '{name}' изменён: {status}."
+msgstr "Статус оплаты объекта '{name}' изменён: {status}."
+
+#: .\features\mbg_reports\views.py:331
+msgid "Выберите хотя бы один объект для формирования акта."
+msgstr "Выберите хотя бы один объект для формирования акта."
+
+#: .\features\mbg_reports\views.py:356
+msgid "Выберите проект или объект для отчёта о выполненных работах."
+msgstr "Выберите проект или объект для отчёта о выполненных работах."
+
+#: .\features\mbg_reports\views.py:645
+msgid "Некорректная версия."
+msgstr "Некорректная версия."
+
+#: .\features\mbg_reports\views.py:729
+msgid "Выберите хотя бы один Standort для промежуточного отчёта."
+msgstr "Выберите хотя бы один объект для промежуточного отчёта."
+
+#: .\features\project_media\forms.py:13
+msgid "Файл"
+msgstr "Файл"
+
+#: .\features\project_media\forms.py:16
+msgid "Назначение"
+msgstr "Назначение"
+
+#: .\features\project_media\forms.py:17
+msgid "Подпись"
+msgstr "Подпись"
+
+#: .\features\project_media\forms.py:22 .\features\projects\views.py:140
+msgid "AC-объект"
+msgstr "AC-объект"
+
+#: .\features\project_media\forms.py:25
+msgid "Общий проект / DC"
+msgstr "Общий проект / DC"
+
+#: .\features\project_media\forms.py:30
+msgid "Общий проект или поиск Standort"
+msgstr "Общий проект или поиск объекта"
+
+#: .\features\project_media\forms.py:37
+msgid "Тип файла"
+msgstr "Тип файла"
+
+#: .\features\project_media\forms.py:47
+msgid "Общие файлы проекта"
+msgstr "Общие файлы проекта"
+
+#: .\features\project_media\forms.py:54
+msgid "Все объекты — начните вводить для поиска"
+msgstr "Все объекты — начните вводить для поиска"
+
+#: .\features\project_media\models.py:22
+msgid "Итоговое фото"
+msgstr "Итоговое фото"
+
+#: .\features\project_media\models.py:22
+#: .\features\projects\templates\projects\object_detail.html:104
+msgid "План"
+msgstr "План"
+
+#: .\features\project_media\services.py:20
+msgid "Файл должен быть непустым и не больше 20 МБ."
+msgstr "Файл должен быть непустым и не больше 20 МБ."
+
+#: .\features\project_media\services.py:31
+msgid "Изображение слишком большое: максимум 40 мегапикселей."
+msgstr "Изображение слишком большое: максимум 40 мегапикселей."
+
+#: .\features\project_media\services.py:34
+msgid "Не удалось прочитать изображение."
+msgstr "Не удалось прочитать изображение."
+
+#: .\features\project_media\services.py:37
+msgid "Разрешены JPEG, PNG, WebP и PDF; итоговое фото должно быть изображением."
+msgstr "Разрешены JPEG, PNG, WebP и PDF; итоговое фото должно быть изображением."
+
+#: .\features\project_media\services.py:40
+msgid "Содержимое файла не соответствует расширению."
+msgstr "Содержимое файла не соответствует расширению."
+
+#: .\features\project_media\services.py:50
+msgid "Загрузка доступна только в активный проект."
+msgstr "Загрузка доступна только в активный проект."
+
+#: .\features\project_media\services.py:52
+msgid "Выберите действующий AC-объект этого проекта."
+msgstr "Выберите действующий AC-объект этого проекта."
+
+#: .\features\project_media\services.py:54
+msgid "Выберите тип вложения."
+msgstr "Выберите тип вложения."
+
+#: .\features\project_media\services.py:84
+msgid "Для будущего сайта можно отметить только итоговую фотографию."
+msgstr "Для будущего сайта можно отметить только итоговую фотографию."
+
+#: .\features\project_media\templates\project_media\groups.html:4
+#: .\features\project_media\templates\project_media\groups.html:15
+#: .\features\projects\templates\projects\detail.html:26
+msgid "Файлы и фотографии"
+msgstr "Файлы и фотографии"
+
+#: .\features\project_media\templates\project_media\groups.html:14
+msgid "AC · PROJEKTDOKUMENTATION"
+msgstr "AC · ДОКУМЕНТАЦИЯ ПРОЕКТА"
+
+#: .\features\project_media\templates\project_media\groups.html:16
+msgid "Выберите проект для просмотра и загрузки файлов."
+msgstr "Выберите проект для просмотра и загрузки файлов."
+
+#: .\features\project_media\templates\project_media\groups.html:33
+msgid "Открыть файлы"
+msgstr "Открыть файлы"
+
+#: .\features\project_media\templates\project_media\groups.html:39
+msgid "Нет доступных проектов."
+msgstr "Нет доступных проектов."
+
+#: .\features\project_media\templates\project_media\list.html:8
+msgid "Документация проекта"
+msgstr "Документация проекта"
+
+#: .\features\project_media\templates\project_media\list.html:10
+msgid "Фотографии, планы и документы доступны только участникам проекта."
+msgstr "Фотографии, планы и документы доступны только участникам проекта."
+
+#: .\features\project_media\templates\project_media\list.html:12
+msgid "К проекту"
+msgstr "К проекту"
+
+#: .\features\project_media\templates\project_media\list.html:16
+msgid "Загрузить файл"
+msgstr "Загрузить файл"
+
+#: .\features\project_media\templates\project_media\list.html:20
+msgid "Загрузить"
+msgstr "Загрузить"
+
+#: .\features\project_media\templates\project_media\list.html:21
+msgid "JPEG, PNG, WebP или PDF, до 20 МБ. Загрузка не публикует файл на сайте."
+msgstr "JPEG, PNG, WebP или PDF, до 20 МБ. Загрузка не публикует файл на сайте."
+
+#: .\features\project_media\templates\project_media\list.html:32
+msgid "Файлы проекта"
+msgstr "Файлы проекта"
+
+#: .\features\project_media\templates\project_media\list.html:56
+msgid "Просмотреть"
+msgstr "Просмотреть"
+
+#: .\features\project_media\templates\project_media\list.html:57
+msgid "Скачать"
+msgstr "Скачать"
+
+#: .\features\project_media\templates\project_media\list.html:61
+msgid "Для будущего сайта"
+msgstr "Для будущего сайта"
+
+#: .\features\project_media\templates\project_media\list.html:68
+msgid "По выбранным фильтрам файлов нет."
+msgstr "По выбранным фильтрам файлов нет."
+
+#: .\features\project_media\templates\project_media\list.html:79
+msgid "Предварительный просмотр PDF"
+msgstr "Предварительный просмотр PDF"
+
+#: .\features\projects\apps.py:8
+msgid "Projects"
+msgstr "Проекты"
+
+#: .\features\projects\forms.py:21
+msgid "Название проекта (Anlage)"
+msgstr "Название проекта"
+
+#: .\features\projects\forms.py:23 .\features\projects\models\group.py:20
+msgid "Мощность, кВт"
+msgstr "Мощность, кВт"
+
+#: .\features\projects\forms.py:24
+msgid "Основной адрес"
+msgstr "Основной адрес"
+
+#: .\features\projects\forms.py:25
+msgid "Дополнительные адреса (Standorte / подъезды)"
+msgstr "Дополнительные адреса (объекты / подъезды)"
+
+#: .\features\projects\forms.py:26
+msgid "Ссылка на Google Maps"
+msgstr "Ссылка на Google Maps"
+
+#: .\features\projects\forms.py:27
+msgid "Дата начала работ"
+msgstr "Дата начала работ"
+
+#: .\features\projects\forms.py:28
+msgid "Дата завершения работ"
+msgstr "Дата завершения работ"
+
+#: .\features\projects\forms.py:29 .\features\projects\models\group.py:34
+msgid "Готовность DC"
+msgstr "Готовность DC"
+
+#: .\features\projects\forms.py:30 .\features\projects\models\group.py:39
+msgid "Работы AC"
+msgstr "Работы AC"
+
+#: .\features\projects\forms.py:31 .\features\projects\models\group.py:40
+msgid "Работы DC"
+msgstr "Работы DC"
+
+#: .\features\projects\forms.py:32
+msgid "Главный ответственный"
+msgstr "Главный ответственный"
+
+#: .\features\projects\forms.py:33 .\features\projects\models\group.py:54
+#: .\features\projects\templates\projects\detail.html:11
+msgid "Заместитель"
+msgstr "Заместитель"
+
+#: .\features\projects\forms.py:34 .\features\projects\models\group.py:62
+msgid "Ответственный AC"
+msgstr "Ответственный AC"
+
+#: .\features\projects\forms.py:35 .\features\projects\models\group.py:70
+msgid "Ответственный DC"
+msgstr "Ответственный DC"
+
+#: .\features\projects\forms.py:36
+msgid "Статус проекта"
+msgstr "Статус проекта"
+
+#: .\features\projects\forms.py:37 .\features\projects\models\group.py:85
+msgid "Кто может редактировать"
+msgstr "Кто может редактировать"
+
+#: .\features\projects\forms.py:45
+msgid "Например:\\nRomanshorner Weg 206\\nRomanshorner Weg 208\\nRomanshorner Weg 210"
+msgstr ""
+"Например:\n"
+"Romanshorner Weg 206\n"
+"Romanshorner Weg 208\n"
+"Romanshorner Weg 210"
+
+#: .\features\projects\forms.py:48
+msgid "Город, улица, номер дома"
+msgstr "Город, улица, номер дома"
+
+#: .\features\projects\forms.py:50
+msgid "кВт"
+msgstr "кВт"
+
+#: .\features\projects\forms.py:76
+msgid "Дом / подъезд (Standort)"
+msgstr "Дом / подъезд"
+
+#: .\features\projects\forms.py:78 .\features\projects\models\project.py:33
+msgid "Номер проекта заказчика (P/Nr)"
+msgstr "Номер проекта заказчика (P/Nr)"
+
+#: .\features\projects\forms.py:79 .\features\projects\models\project.py:35
+msgid "Готовность Standort"
+msgstr "Готовность объекта"
+
+#: .\features\projects\forms.py:83
+msgid "Например: Romanshorner Weg 206"
+msgstr "Например: Romanshorner Weg 206"
+
+#: .\features\projects\forms.py:85
+msgid "Например: P-12345"
+msgstr "Например: P-12345"
+
+#: .\features\projects\forms.py:96
+msgid "Название позиции на немецком"
+msgstr "Название позиции на немецком"
+
+#: .\features\projects\forms.py:119
+msgid "Количество Wechselrichter"
+msgstr "Количество инверторов"
+
+#: .\features\projects\forms.py:120
+msgid "Новый NH-Verteiler"
+msgstr "Новый распределитель NH"
+
+#: .\features\projects\forms.py:121
+msgid "Кабель NH-Verteiler → HV"
+msgstr "Кабель от распределителя NH к HV"
+
+#: .\features\projects\forms.py:122
+msgid "Конструкция для Wechselrichter"
+msgstr "Конструкция для инвертора"
+
+#: .\features\projects\forms.py:123
+msgid "Конструкция для UV-PV"
+msgstr "Конструкция для UV-PV"
+
+#: .\features\projects\forms.py:124
+msgid "Конструкция для NH-Verteiler"
+msgstr "Конструкция для распределителя NH"
+
+#: .\features\projects\forms.py:125
+msgid "Управление к наружному Schlüsselschalter"
+msgstr "Управление к наружному ключевому выключателю"
+
+#: .\features\projects\forms.py:126
+msgid "Добавить отдельные Kabeltrassen"
+msgstr "Добавить отдельные кабельные трассы"
+
+#: .\features\projects\forms.py:127
+msgid "Добавить подключение к HPAS"
+msgstr "Добавить подключение к HPAS"
+
+#: .\features\projects\forms.py:128
+msgid "Силовой кабель WR → UV-PV"
+msgstr "Силовой кабель WR → UV-PV"
+
+#: .\features\projects\forms.py:129
+msgid "Кабель данных WR → UV-PV"
+msgstr "Кабель данных WR → UV-PV"
+
+#: .\features\projects\forms.py:130
+msgid "Силовой кабель UV-PV → NH/HV"
+msgstr "Силовой кабель UV-PV → NH/HV"
+
+#: .\features\projects\forms.py:131
+msgid "Силовой кабель NH → HV"
+msgstr "Силовой кабель NH → HV"
+
+#: .\features\projects\forms.py:133
+msgid "Кабель Schlüsselschalter"
+msgstr "Кабель ключевого выключателя"
+
+#: .\features\projects\forms.py:134
+msgid "Путь PE-Leitung к HPAS"
+msgstr "Путь защитного проводника PE к HPAS"
+
+#: .\features\projects\forms.py:164
+msgid "Для кабеля NH → HV сначала выберите NH-Verteiler."
+msgstr "Для кабеля NH → HV сначала выберите распределитель NH."
+
+#: .\features\projects\forms.py:170
+msgid "Форма типового плана не проверена."
+msgstr "Форма типового плана не проверена."
+
+#: .\features\projects\forms.py:179
+msgid "Название компании"
+msgstr "Название компании"
+
+#: .\features\projects\forms.py:180 .\features\projects\models\project.py:15
+msgid "Контактное лицо"
+msgstr "Контактное лицо"
+
+#: .\features\projects\forms.py:181 .\features\projects\models\project.py:16
+#: .\features\staff\forms.py:31
+msgid "Электронная почта"
+msgstr "Электронная почта"
+
+#: .\features\projects\forms.py:182 .\features\projects\models\project.py:17
+#: .\features\staff\forms.py:30
+msgid "Телефон"
+msgstr "Телефон"
+
+#: .\features\projects\forms.py:186
+msgid "Например: MBG Solid Solution GmbH"
+msgstr "Например: MBG Solid Solution GmbH"
+
+#: .\features\projects\forms.py:187
+msgid "Имя Фамилия"
+msgstr "Имя Фамилия"
+
+#: .\features\projects\group_services.py:21
+msgid "Укажите название проекта длиной до 255 символов."
+msgstr "Укажите название проекта длиной до 255 символов."
+
+#: .\features\projects\group_services.py:23
+msgid "Такой проект уже есть. Выберите его в списке."
+msgstr "Такой проект уже есть. Выберите его в списке."
+
+#: .\features\projects\models\group.py:15
+#: .\features\projects\models\project.py:14
+msgid "Название"
+msgstr "Название"
+
+#: .\features\projects\models\group.py:23
+msgid "Дополнительные адреса"
+msgstr "Дополнительные адреса"
+
+#: .\features\projects\models\group.py:24
+msgid "Ссылка Google Maps"
+msgstr "Ссылка Google Maps"
+
+#: .\features\projects\models\group.py:25
+msgid "Начало работ"
+msgstr "Начало работ"
+
+#: .\features\projects\models\group.py:26
+msgid "Завершение работ"
+msgstr "Завершение работ"
+
+#: .\features\projects\models\group.py:28
+msgid "Готовность AC"
+msgstr "Готовность AC"
+
+#: .\features\projects\models\group.py:46
+#: .\features\projects\templates\projects\detail.html:11
+msgid "Ответственный"
+msgstr "Ответственный"
+
+#: .\features\projects\models\group.py:78
+msgid "Завершён"
+msgstr "Завершён"
+
+#: .\features\projects\models\group.py:79
+msgid "Отменён"
+msgstr "Отменён"
+
+#: .\features\projects\models\group.py:80
+msgid "Архив"
+msgstr "Архив"
+
+#: .\features\projects\models\group.py:81
+msgid "Удалён"
+msgstr "Удалён"
+
+#: .\features\projects\models\group.py:88
+msgid "Администратор"
+msgstr "Администратор"
+
+#: .\features\projects\models\group.py:88
+msgid "Назначенный бригадир"
+msgstr "Назначенный бригадир"
+
+#: .\features\projects\models\group.py:94
+msgid "группа проектов"
+msgstr "группа проектов"
+
+#: .\features\projects\models\group.py:96
+msgid "Создавать минимальные группы проектов"
+msgstr "Создавать минимальные группы проектов"
+
+#: .\features\projects\models\group.py:103
+msgid "Завершение не может быть раньше начала."
+msgstr "Завершение не может быть раньше начала."
+
+#: .\features\projects\models\group.py:105
+msgid "Выберите хотя бы одно направление."
+msgstr "Выберите хотя бы одно направление."
+
+#: .\features\projects\models\group.py:108
+msgid "Проекты не удаляются физически. Используйте статус «Удалён»."
+msgstr "Проекты не удаляются физически. Используйте статус «Удалён»."
+
+#: .\features\projects\models\project.py:31
+msgid "Дом / подъезд"
+msgstr "Дом / подъезд"
+
+#: .\features\projects\models\project.py:44
+msgid "Zahlungsstatus Bezahlt"
+msgstr "Отметка «Оплачено»"
+
+#: .\features\projects\models\project.py:45
+msgid "Bezahlt am"
+msgstr "Дата оплаты"
+
+#: .\features\projects\models\project.py:52
+msgid "Bezahlt von"
+msgstr "Кто отметил оплату"
+
+#: .\features\projects\models\project.py:54
+msgid "Zahlungsnotiz"
+msgstr "Примечание об оплате"
+
+#: .\features\projects\models\project.py:69
+msgid "Объект сохраняется в истории. Отметьте его неактивным."
+msgstr "Объект сохраняется в истории. Отметьте его неактивным."
+
+#: .\features\projects\models\work_item.py:54
+msgid "Позиция Standort сохраняется в истории; удаление запрещено."
+msgstr "Позиция объекта сохраняется в истории; удаление запрещено."
+
+#: .\features\projects\read_models.py:132
+msgid "В типовом плане отсутствует активный вид работы, путь или тип кабеля."
+msgstr "В типовом плане отсутствует активный вид работы, путь или тип кабеля."
+
+#: .\features\projects\services.py:210 .\features\projects\services.py:287
+msgid "Выберите действующий AC-Standort."
+msgstr "Выберите действующий объект AC."
+
+#: .\features\projects\services.py:215
+msgid "Выберите активный AC-вид работ."
+msgstr "Выберите активный AC-вид работ."
+
+#: .\features\projects\services.py:222
+msgid "Выберите действующие маршрут и тип кабеля."
+msgstr "Выберите действующие маршрут и тип кабеля."
+
+#: .\features\projects\services.py:226
+msgid "Для этой работы нужен тип кабеля."
+msgstr "Для этой работы нужен тип кабеля."
+
+#: .\features\projects\services.py:228
+msgid "Тип кабеля доступен только для прокладки."
+msgstr "Тип кабеля доступен только для прокладки."
+
+#: .\features\projects\services.py:234
+msgid "Укажите корректный плановый объём."
+msgstr "Укажите корректный плановый объём."
+
+#: .\features\projects\services.py:236
+msgid "Плановый объём должен быть больше нуля."
+msgstr "Плановый объём должен быть больше нуля."
+
+#: .\features\projects\services.py:254
+msgid "Нельзя менять параметры позиции, уже использованной в отчёте."
+msgstr "Нельзя менять параметры позиции, уже использованной в отчёте."
+
+#: .\features\projects\services.py:285
+msgid "Для Standort уже есть план. Измените его существующие позиции."
+msgstr "Для объекта уже есть план. Измените его существующие позиции."
+
+#: .\features\projects\services.py:293
+msgid "Выберите существующие позиции типового плана."
+msgstr "Выберите существующие позиции типового плана."
+
+#: .\features\projects\services.py:306
+#, python-format
+msgid "Выберите действующий тип кабеля для %(field)s."
+msgstr "Выберите действующий тип кабеля для %(field)s."
+
+#: .\features\projects\services.py:308
+msgid "Выберите путь PE-Leitung к HPAS."
+msgstr "Выберите путь защитного проводника PE к HPAS."
+
+#: .\features\projects\services.py:318
+msgid "Типовой план ссылается на отсутствующий или неактивный справочник."
+msgstr "Типовой план ссылается на отсутствующий или неактивный справочник."
+
+#: .\features\projects\services.py:325
+msgid "Укажите корректный объём каждой выбранной позиции."
+msgstr "Укажите корректный объём каждой выбранной позиции."
+
+#: .\features\projects\services.py:327
+msgid "Объём выбранной позиции должен быть больше нуля."
+msgstr "Объём выбранной позиции должен быть больше нуля."
+
+#: .\features\projects\templates\projects\detail.html:5
+msgid "Редактировать Anlage"
+msgstr "Редактировать проект"
+
+#: .\features\projects\templates\projects\detail.html:8
+#: .\features\projects\templates\projects\list.html:60
+msgid "kW"
+msgstr "кВт"
+
+#: .\features\projects\templates\projects\detail.html:9
+#: .\features\projects\templates\projects\detail.html:12
+msgid "AC:"
+msgstr "AC:"
+
+#: .\features\projects\templates\projects\detail.html:9
+#: .\features\projects\templates\projects\detail.html:12
+msgid "DC:"
+msgstr "DC:"
+
+#: .\features\projects\templates\projects\detail.html:10
+msgid "Завершение"
+msgstr "Завершение"
+
+#: .\features\projects\templates\projects\detail.html:17
+msgid "Standorte завершено"
+msgstr "Объектов завершено"
+
+#: .\features\projects\templates\projects\detail.html:18
+msgid "человеко-часов MBG"
+msgstr "человеко-часов MBG"
+
+#: .\features\projects\templates\projects\detail.html:19
+#: .\features\projects\templates\projects\object_detail.html:178
+msgid "Teilbetrag · цены не согласованы"
+msgstr "Промежуточная сумма · цены не согласованы"
+
+#: .\features\projects\templates\projects\detail.html:19
+#: .\features\projects\templates\projects\object_detail.html:178
+msgid "Подтверждённая сумма"
+msgstr "Подтверждённая сумма"
+
+#: .\features\projects\templates\projects\detail.html:20
+msgid "последняя работа"
+msgstr "последняя работа"
+
+#: .\features\projects\templates\projects\detail.html:24
+msgid "Внутренний отчёт"
+msgstr "Внутренний отчёт"
+
+#: .\features\projects\templates\projects\detail.html:28
+msgid "Экспорт Excel (Акты)"
+msgstr "Экспорт Excel (Акты)"
+
+#: .\features\projects\templates\projects\detail.html:29
+msgid "Сводка работ"
+msgstr "Сводка работ"
+
+#: .\features\projects\templates\projects\detail.html:42
+#: .\features\projects\templates\projects\object_detail.html:176
+#: .\features\projects\templates\projects\object_detail.html:225
+msgid "сотрудников"
+msgstr "сотрудников"
+
+#: .\features\projects\templates\projects\detail.html:47
+#: .\features\projects\templates\projects\objects.html:103
+msgid "Отчёт"
+msgstr "Отчёт"
+
+#: .\features\projects\templates\projects\detail.html:50
+msgid "AC-объектов пока нет."
+msgstr "AC-объектов пока нет."
+
+#: .\features\projects\templates\projects\group_form.html:7
+msgid "ПРОЕКТ (ANLAGE)"
+msgstr "ПРОЕКТ (ANLAGE)"
+
+#: .\features\projects\templates\projects\group_form.html:8
+#: .\features\projects\views.py:120
+msgid "Карточка проекта"
+msgstr "Карточка проекта"
+
+#: .\features\projects\templates\projects\group_form.html:8
+msgid "Новый проект (Anlage)"
+msgstr "Новый проект"
+
+#: .\features\projects\templates\projects\group_form.html:12
+msgid "Назад к проекту"
+msgstr "Назад к проекту"
+
+#: .\features\projects\templates\projects\group_form.html:24
+msgid "1. Основные данные проекта"
+msgstr "1. Основные данные проекта"
+
+#: .\features\projects\templates\projects\group_form.html:46
+msgid "2. Адрес и локация"
+msgstr "2. Адрес и локация"
+
+#: .\features\projects\templates\projects\group_form.html:69
+msgid "3. Сроки и направления работ"
+msgstr "3. Сроки и направления работ"
+
+#: .\features\projects\templates\projects\group_form.html:83
+msgid "Активные направления работ"
+msgstr "Активные направления работ"
+
+#: .\features\projects\templates\projects\group_form.html:89
+msgid "Направление AC"
+msgstr "Направление AC"
+
+#: .\features\projects\templates\projects\group_form.html:90
+msgid "Монтаж переменного тока, Standorte, MBG отчёты"
+msgstr "Монтаж переменного тока, объекты, отчёты MBG"
+
+#: .\features\projects\templates\projects\group_form.html:98
+msgid "Направление DC"
+msgstr "Направление DC"
+
+#: .\features\projects\templates\projects\group_form.html:99
+msgid "Монтаж модулей и конструкций постоянного тока"
+msgstr "Монтаж модулей и конструкций постоянного тока"
+
+#: .\features\projects\templates\projects\group_form.html:119
+msgid "4. Команда и ответственные"
+msgstr "4. Команда и ответственные"
+
+#: .\features\projects\templates\projects\group_form.html:156
+msgid "5. Статус и уровень доступа"
+msgstr "5. Статус и уровень доступа"
+
+#: .\features\projects\templates\projects\group_form.html:178
+msgid "Сохранить проект"
+msgstr "Сохранить проект"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:7
+#: .\features\projects\templates\projects\includes\_object_common_top.html:9
+msgid "· STANDORT"
+msgstr "· ОБЪЕКТ"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:20
+msgid "Fotos der Baustelle"
+msgstr "Фотографии стройплощадки"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:23
+#, python-format
+msgid "%(count)s Foto vorhanden"
+msgid_plural "%(count)s Fotos vorhanden"
+msgstr[0] "%(count)s фотография"
+msgstr[1] "%(count)s фотографии"
+msgstr[2] "%(count)s фотографий"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:25
+msgid "⏳ Keine Fotos"
+msgstr "⏳ Нет фотографий"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:28
+msgid "⚠️ Fotospeicher vorübergehend nicht erreichbar"
+msgstr "⚠️ Хранилище фотографий временно недоступно"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:33
+msgid "Das Nextcloud-Speichersystem ist derzeit nicht erreichbar. Bitte versuchen Sie es später erneut."
+msgstr "Хранилище Nextcloud сейчас недоступно. Попробуйте позже."
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:35
+msgid "Für diesen Standort wurden noch keine Fotos im MBG-Speicher abgelegt."
+msgstr "Для этого объекта в хранилище MBG ещё нет фотографий."
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:37
+msgid "Fotos des Standorts"
+msgstr "Фотографии объекта"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:49
+msgid "Foto öffnen:"
+msgstr "Открыть фотографию:"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:60
+msgid "· Standort-Foto"
+msgstr "· Фото объекта"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:67
+msgid "Ansehen"
+msgstr "Посмотреть"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:81
+msgid "Документы Standort (PDF)"
+msgstr "Документы объекта (PDF)"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:98
+msgid "Выполненные работы · принятые итоги"
+msgstr "Выполненные работы · принятые итоги"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:105
+msgid "Единица"
+msgstr "Единица"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:106
+#: .\features\projects\templates\projects\includes\_object_common_top.html:154
+msgid "Чел.-ч"
+msgstr "Чел.-ч"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:107
+msgid "Основание"
+msgstr "Основание"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:119
+msgid "Связано с планом"
+msgstr "Связано с планом"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:121
+msgid "Почасовая работа"
+msgstr "Почасовая работа"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:123
+msgid "Паушаль"
+msgstr "Паушаль"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:125
+msgid "Объём не разобран"
+msgstr "Объём не разобран"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:131
+msgid "Принятых выполненных работ пока нет."
+msgstr "Принятых выполненных работ пока нет."
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:143
+msgid "Принятые дневные работы"
+msgstr "Принятые дневные работы"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:145
+msgid "нажмите, чтобы развернуть"
+msgstr "нажмите, чтобы развернуть"
+
+#: .\features\projects\templates\projects\includes\_object_common_top.html:167
+msgid "Принятых дневных работ пока нет."
+msgstr "Принятых дневных работ пока нет."
+
+#: .\features\projects\templates\projects\list.html:13
+msgid "AC ·"
+msgstr "AC ·"
+
+#: .\features\projects\templates\projects\list.html:13
+msgid "DC ·"
+msgstr "DC ·"
+
+#: .\features\projects\templates\projects\list.html:13
+msgid "ANLAGEN"
+msgstr "ПРОЕКТЫ"
+
+#: .\features\projects\templates\projects\list.html:15
+msgid "Управление проектными группами и строительными площадками."
+msgstr "Управление проектными группами и строительными площадками."
+
+#: .\features\projects\templates\projects\list.html:27
+msgid "Название, адрес или заказчик"
+msgstr "Название, адрес или заказчик"
+
+#: .\features\projects\templates\projects\list.html:73
+msgid "Акты и срез"
+msgstr "Акты и срез"
+
+#: .\features\projects\templates\projects\list.html:73
+msgid "Акты"
+msgstr "Акты"
+
+#: .\features\projects\templates\projects\list.html:81
+msgid "Проектов пока нет."
+msgstr "Проектов пока нет."
+
+#: .\features\projects\templates\projects\object_detail.html:15
+msgid "Добавить отчёт"
+msgstr "Добавить отчёт"
+
+#: .\features\projects\templates\projects\object_detail.html:21
+msgid "Фото и файлы"
+msgstr "Фото и файлы"
+
+#: .\features\projects\templates\projects\object_detail.html:25
+msgid "📄 Leistungsnachweis"
+msgstr "📄 Акт выполненных работ"
+
+#: .\features\projects\templates\projects\object_detail.html:27
+msgid "📋 Zwischennachweis"
+msgstr "📋 Промежуточный акт"
+
+#: .\features\projects\templates\projects\object_detail.html:39
+msgid "Акты Anlage →"
+msgstr "Акты проекта →"
+
+#: .\features\projects\templates\projects\object_detail.html:50
+msgid "DLC MANAGER · ВНУТРЕННИЙ БЛОК"
+msgstr "DLC MANAGER · ВНУТРЕННИЙ БЛОК"
+
+#: .\features\projects\templates\projects\object_detail.html:51
+msgid "Управление планом и внутренние метрики"
+msgstr "Управление планом и внутренние метрики"
+
+#: .\features\projects\templates\projects\object_detail.html:52
+msgid "Этот блок виден только сотрудникам DLC и никогда не отображается заказчику."
+msgstr "Этот блок виден только сотрудникам DLC и никогда не отображается заказчику."
+
+#: .\features\projects\templates\projects\object_detail.html:61
+msgid "Быстрая смена статуса объекта"
+msgstr "Быстрая смена статуса объекта"
+
+#: .\features\projects\templates\projects\object_detail.html:62
+msgid "Смена статуса пересчитывает агрегаты Anlage."
+msgstr "Смена статуса пересчитывает показатели проекта."
+
+#: .\features\projects\templates\projects\object_detail.html:66
+msgid "Быстрая смена статуса"
+msgstr "Быстрая смена статуса"
+
+#: .\features\projects\templates\projects\object_detail.html:68
+msgid "В работе (Начато)"
+msgstr "В работе (Начато)"
+
+#: .\features\projects\templates\projects\object_detail.html:69
+msgid "Завершено (Сдано)"
+msgstr "Завершено (Сдано)"
+
+#: .\features\projects\templates\projects\object_detail.html:79
+msgid "План работ Standort"
+msgstr "План работ объекта"
+
+#: .\features\projects\templates\projects\object_detail.html:83
+#: .\features\projects\templates\projects\typical_work_plan.html:6
+msgid "Составить типовой AC-план"
+msgstr "Составить типовой AC-план"
+
+#: .\features\projects\templates\projects\object_detail.html:85
+msgid "Добавить позицию"
+msgstr "Добавить позицию"
+
+#: .\features\projects\templates\projects\object_detail.html:89
+msgid "Плановый объём и подтверждённый прирост показаны отдельно. Ноль означает, что по позиции ещё нет принятого прироста."
+msgstr "Плановый объём и подтверждённый прирост показаны отдельно. Ноль означает, что по позиции ещё нет принятого прироста."
+
+#: .\features\projects\templates\projects\object_detail.html:91
+msgid "План не ведётся; готовность по позициям не отслеживается."
+msgstr "План не ведётся; готовность по позициям не отслеживается."
+
+#: .\features\projects\templates\projects\object_detail.html:93
+msgid "Все обязательные позиции закрыты. Standort готов к подтверждению завершения."
+msgstr "Все обязательные позиции закрыты. Объект готов к подтверждению завершения."
+
+#: .\features\projects\templates\projects\object_detail.html:95
+msgid "Обязательные позиции ещё не закрыты."
+msgstr "Обязательные позиции ещё не закрыты."
+
+#: .\features\projects\templates\projects\object_detail.html:105
+msgid "Подтверждено"
+msgstr "Подтверждено"
+
+#: .\features\projects\templates\projects\object_detail.html:106
+msgid "Осталось"
+msgstr "Осталось"
+
+#: .\features\projects\templates\projects\object_detail.html:108
+msgid "Человеко-часы"
+msgstr "Человеко-часы"
+
+#: .\features\projects\templates\projects\object_detail.html:126
+msgid "Не требуется"
+msgstr "Не требуется"
+
+#: .\features\projects\templates\projects\object_detail.html:142
+msgid "Подтвердить"
+msgstr "Подтвердить"
+
+#: .\features\projects\templates\projects\object_detail.html:164
+msgid "План пока пуст. Дневной отчёт можно сохранить без плана."
+msgstr "План пока пуст. Дневной отчёт можно сохранить без плана."
+
+#: .\features\projects\templates\projects\object_detail.html:167
+msgid "Неразобранных принятых строк"
+msgstr "Неразобранных принятых строк"
+
+#: .\features\projects\templates\projects\object_detail.html:167
+msgid "Принятых отчётов без актуального снимка"
+msgstr "Принятых отчётов без актуального снимка"
+
+#: .\features\projects\templates\projects\object_detail.html:167
+msgid "Их количество не засчитано как подтверждённое."
+msgstr "Их количество не засчитано как подтверждённое."
+
+#: .\features\projects\templates\projects\object_detail.html:173
+msgid "Обзор Standort"
+msgstr "Обзор объекта"
+
+#: .\features\projects\templates\projects\object_detail.html:175
+msgid "рабочих дней"
+msgstr "рабочих дней"
+
+#: .\features\projects\templates\projects\object_detail.html:177
+msgid "человеко-часов"
+msgstr "человеко-часов"
+
+#: .\features\projects\templates\projects\object_detail.html:181
+msgid "Принято администратором"
+msgstr "Принято администратором"
+
+#: .\features\projects\templates\projects\object_detail.html:181
+msgid "Teilbetrag, не итог к оплате"
+msgstr "Промежуточная сумма, не итог к оплате"
+
+#: .\features\projects\templates\projects\object_detail.html:193
+msgid "Предварительно"
+msgstr "Предварительно"
+
+#: .\features\projects\templates\projects\object_detail.html:216
+msgid "Все отчёты MBG по объекту"
+msgstr "Все отчёты MBG по объекту"
+
+#: .\features\projects\templates\projects\object_detail.html:218
+msgid "нажмите для просмотра списка"
+msgstr "нажмите для просмотра списка"
+
+#: .\features\projects\templates\projects\object_detail.html:230
+msgid "Отчётов пока нет."
+msgstr "Отчётов пока нет."
+
+#: .\features\projects\templates\projects\object_detail.html:239
+msgid "Schließen"
+msgstr "Закрыть"
+
+#: .\features\projects\templates\projects\object_detail.html:243
+msgid "Vorschau"
+msgstr "Предпросмотр"
+
+#: .\features\projects\templates\projects\objects.html:13
+msgid "AC · STANDORTE"
+msgstr "AC · ОБЪЕКТЫ"
+
+#: .\features\projects\templates\projects\objects.html:15
+msgid "Объекты AC-направления, статус готовности, план и отчёты."
+msgstr "Объекты AC-направления, статус готовности, план и отчёты."
+
+#: .\features\projects\templates\projects\objects.html:46
+msgid "По активности отчётов"
+msgstr "По активности отчётов"
+
+#: .\features\projects\templates\projects\objects.html:62
+msgid "Сбросить фильтр по проекту"
+msgstr "Сбросить фильтр по проекту"
+
+#: .\features\projects\templates\projects\objects.html:80
+msgid "P/Nr:"
+msgstr "P/Nr:"
+
+#: .\features\projects\templates\projects\typical_work_plan.html:7
+msgid "Выберите состав оборудования и кабелей. Затем проверьте каждую позицию и её плановый объём."
+msgstr "Выберите состав оборудования и кабелей. Затем проверьте каждую позицию и её плановый объём."
+
+#: .\features\projects\templates\projects\typical_work_plan.html:17
+msgid "Показать план"
+msgstr "Показать план"
+
+#: .\features\projects\templates\projects\typical_work_plan.html:21
+msgid "Проверьте позиции перед сохранением"
+msgstr "Проверьте позиции перед сохранением"
+
+#: .\features\projects\templates\projects\typical_work_plan.html:22
+msgid "Уберите ненужные строки и измените объём в единицах каталога. Для существующего плана используйте редактор позиции."
+msgstr "Уберите ненужные строки и измените объём в единицах каталога. Для существующего плана используйте редактор позиции."
+
+#: .\features\projects\templates\projects\typical_work_plan.html:31
+msgid "Сохранить выбранные позиции"
+msgstr "Сохранить выбранные позиции"
+
+#: .\features\projects\templates\projects\work_item_form.html:6
+msgid "Редактировать позицию плана"
+msgstr "Редактировать позицию плана"
+
+#: .\features\projects\templates\projects\work_item_form.html:6
+msgid "Новая позиция плана"
+msgstr "Новая позиция плана"
+
+#: .\features\projects\templates\projects\work_item_form.html:7
+msgid "Отдельные кабели и трассы создавайте отдельными позициями, даже если у них одинаковый путь."
+msgstr "Отдельные кабели и трассы создавайте отдельными позициями, даже если у них одинаковый путь."
+
+#: .\features\projects\templates\projects\work_item_form.html:16
+msgid "Плановый объём не означает выполненный. Выполнение подтверждается приростом в принятом дневном отчёте."
+msgstr "Плановый объём не означает выполненный. Выполнение подтверждается приростом в принятом дневном отчёте."
+
+#: .\features\projects\templates\projects\work_item_form.html:17
+msgid "Сохранить позицию"
+msgstr "Сохранить позицию"
+
+#: .\features\projects\templates\projects\work_item_form.html:17
+msgid "К Standort"
+msgstr "К объекту"
+
+#: .\features\projects\widgets.py:32
+msgid "Ничего не найдено"
+msgstr "Ничего не найдено"
+
+#: .\features\staff\forms.py:28
+msgid "Имя"
+msgstr "Имя"
+
+#: .\features\staff\forms.py:29
+msgid "Фамилия"
+msgstr "Фамилия"
+
+#: .\features\staff\forms.py:32 .\features\staff\models\employee.py:27
+msgid "Почасовая ставка brutto, €"
+msgstr "Почасовая ставка brutto, €"
+
+#: .\features\staff\forms.py:34
+#: .\features\staff\templates\staff\employees.html:3
+msgid "Бригадир"
+msgstr "Бригадир"
+
+#: .\features\staff\forms.py:35
+msgid "Доступ AC"
+msgstr "Доступ AC"
+
+#: .\features\staff\forms.py:36
+msgid "Доступ DC"
+msgstr "Доступ DC"
+
+#: .\features\staff\forms.py:37
+msgid "Учётная запись"
+msgstr "Учётная запись"
+
+#: .\features\staff\models\employee.py:15
+msgid "Active"
+msgstr "Активен"
+
+#: .\features\staff\models\employee.py:16
+msgid "Inactive"
+msgstr "Неактивен"
+
+#: .\features\staff\models\employee.py:17
+msgid "Absent"
+msgstr "Отсутствует"
+
+#: .\features\staff\models\employee.py:22
+msgid "first name"
+msgstr "имя"
+
+#: .\features\staff\models\employee.py:23
+msgid "last name"
+msgstr "фамилия"
+
+#: .\features\staff\models\employee.py:24
+msgid "phone"
+msgstr "телефон"
+
+#: .\features\staff\models\employee.py:25
+msgid "email"
+msgstr "электронная почта"
+
+#: .\features\staff\models\employee.py:35
+msgid "AC access"
+msgstr "доступ AC"
+
+#: .\features\staff\models\employee.py:36
+msgid "DC access"
+msgstr "доступ DC"
+
+#: .\features\staff\models\employee.py:37
+msgid "is foreman"
+msgstr "бригадир"
+
+#: .\features\staff\templates\staff\employees.html:2
+msgid "ПЕРСОНАЛ"
+msgstr "ПЕРСОНАЛ"
+
+#: .\features\staff\templates\staff\employees.html:3
+msgid "€/ч"
+msgstr "€/ч"
+
+#: .\features\staff\templates\staff\employees.html:3
+msgid "Сотрудники пока не добавлены."
+msgstr "Сотрудники пока не добавлены."
+
+#: .\features\staff\views.py:45
+msgid "Карточка сотрудника"
+msgstr "Карточка сотрудника"
+
+#: .\features\telegram_access\apps.py:8
+msgid "Telegram access"
+msgstr "доступ Telegram"
+
+#: .\features\telegram_access\services.py:22
+msgid "Ссылка Telegram недействительна или истекла."
+msgstr "Ссылка Telegram недействительна или истекла."
+
+#: .\features\telegram_access\services.py:49
+msgid "Ссылка должна действовать от одной секунды до семи суток."
+msgstr "Ссылка должна действовать от одной секунды до семи суток."
+
+#: .\features\telegram_access\services.py:53
+msgid "Telegram можно привязать только действующему сотруднику."
+msgstr "Telegram можно привязать только действующему сотруднику."
+
+#: .\features\telegram_access\services.py:88
+msgid "Некорректный идентификатор Telegram-чата."
+msgstr "Некорректный идентификатор Telegram-чата."
+
+#: .\features\telegram_access\services.py:101
+msgid "Доступ сотрудника отключён."
+msgstr "Доступ сотрудника отключён."
+
+#: .\features\telegram_access\services.py:105
+msgid "Этот Telegram-аккаунт уже связан с другим сотрудником."
+msgstr "Этот Telegram-аккаунт уже связан с другим сотрудником."
+
+#: .\features\telegram_access\services.py:109
+msgid "У сотрудника уже есть другая Telegram-привязка."
+msgstr "У сотрудника уже есть другая Telegram-привязка."
+
+#: .\features\work_catalog\models.py:25
+msgid "Stk."
+msgstr "шт."
+
+#: .\features\work_catalog\models.py:26
+msgid "Std."
+msgstr "ч"
+
+#: .\features\work_catalog\models.py:27
+msgid "kWp"
+msgstr "кВтп"
+
+#: .\features\work_catalog\models.py:28
+msgid "m"
+msgstr "м"
+
+#: .\features\work_catalog\models.py:29
+msgid "bis 5 m"
+msgstr "до 5 м"
+
+#: .\features\work_catalog\models.py:30
+msgid "bis 10 m"
+msgstr "до 10 м"
+
+#: .\features\work_catalog\models.py:31
+msgid "psch."
+msgstr "пауш."
+
+#: .\features\work_catalog\models.py:34
+msgid "Фиксированная норма"
+msgstr "Фиксированная норма"
+
+#: .\features\work_catalog\models.py:35
+msgid "По типу кабеля и участкам 10 м"
+msgstr "По типу кабеля и участкам 10 м"
+
+#: .\features\work_catalog\models.py:36
+msgid "По количеству подключений"
+msgstr "По количеству подключений"
+
+#: .\features\work_catalog\models.py:37
+msgid "По фактическим человеко-часам"
+msgstr "По фактическим человеко-часам"
+
+#: .\features\work_catalog\models.py:38
+msgid "Только учёт времени, цена 0"
+msgstr "Только учёт времени, цена 0"
+
+#: .\features\work_catalog\models.py:41
+msgid "За единицу"
+msgstr "За единицу"
+
+#: .\features\work_catalog\models.py:42
+msgid "За нормативный человеко-час"
+msgstr "За нормативный человеко-час"
+
+#: .\features\work_catalog\models.py:43
+msgid "За фактический человеко-час"
+msgstr "За фактический человеко-час"
+
+#: .\features\work_catalog\models.py:44
+msgid "Без оплаты"
+msgstr "Без оплаты"
+
+#: .\features\work_catalog\models.py:46 .\features\work_catalog\models.py:98
+#: .\features\work_catalog\models.py:125
+msgid "Код"
+msgstr "Код"
+
+#: .\features\work_catalog\models.py:47 .\features\work_catalog\models.py:99
+#: .\features\work_catalog\models.py:126
+msgid "Название на немецком"
+msgstr "Название на немецком"
+
+#: .\features\work_catalog\models.py:48 .\features\work_catalog\models.py:100
+#: .\features\work_catalog\models.py:127
+msgid "Название на русском"
+msgstr "Название на русском"
+
+#: .\features\work_catalog\models.py:50
+msgid "Единица измерения"
+msgstr "Единица измерения"
+
+#: .\features\work_catalog\models.py:52
+msgid "Правило расчёта"
+msgstr "Правило расчёта"
+
+#: .\features\work_catalog\models.py:54
+msgid "Способ цены"
+msgstr "Способ цены"
+
+#: .\features\work_catalog\models.py:56
+msgid "Предварительная цена, €"
+msgstr "Предварительная цена, €"
+
+#: .\features\work_catalog\models.py:58
+msgid "Доплата времени за конструкцию, чел.-ч"
+msgstr "Доплата времени за конструкцию, чел.-ч"
+
+#: .\features\work_catalog\models.py:60
+msgid "Перерыв, не рабочее время"
+msgstr "Перерыв, не рабочее время"
+
+#: .\features\work_catalog\models.py:62 .\features\work_catalog\models.py:109
+#: .\features\work_catalog\models.py:129
+msgid "Порядок"
+msgstr "Порядок"
+
+#: .\features\work_catalog\models.py:92
+msgid "Datenleitung"
+msgstr "Кабель данных"
+
+#: .\features\work_catalog\models.py:93
+msgid "Potentialausgleich"
+msgstr "Уравнивание потенциалов"
+
+#: .\features\work_catalog\models.py:94
+msgid "Steuerleitung"
+msgstr "Кабель управления"
+
+#: .\features\work_catalog\models.py:95
+msgid "Leistungskabel"
+msgstr "Силовой кабель"
+
+#: .\features\work_catalog\models.py:96
+msgid "Schweres Leistungskabel"
+msgstr "Тяжёлый силовой кабель"
+
+#: .\features\work_catalog\models.py:101
+msgid "Категория"
+msgstr "Категория"
+
+#: .\features\work_catalog\models.py:103
+msgid "Норма на начатые 10 м, чел.-ч"
+msgstr "Норма на начатые 10 м, чел.-ч"
+
+#: .\features\work_catalog\models.py:106
+msgid "Предварительная цена за начатые 10 м, €"
+msgstr "Предварительная цена за начатые 10 м, €"
+
+#: .\features\work_catalog\templates\work_catalog\list.html:1
+msgid "Неактивен"
+msgstr "Неактивен"
+
+#: .\system\admin\seo.py:19
+msgid "SEO Мета-теги"
+msgstr "SEO Мета-теги"
+
+#: .\system\admin\seo.py:22
+msgid "Системная информация"
+msgstr "Системная информация"
+
+#: .\system\admin\settings.py:17
+msgid "Основные контакты"
+msgstr "Основные контакты"
+
+#: .\system\admin\settings.py:23
+msgid "Гео-данные"
+msgstr "Гео-данные"
+
+#: .\system\admin\settings.py:27
+msgid "Социальные сети"
+msgstr "Социальные сети"
+
+#: .\system\admin\settings.py:35
+msgid "Маркетинг и аналитика"
+msgstr "Маркетинг и аналитика"
+
+#: .\system\admin\settings.py:42
+msgid "Технические настройки"
+msgstr "Технические настройки"
+
+#: .\system\admin\settings.py:45
+msgid "Почта (SMTP)"
+msgstr "Почта (SMTP)"
+
+#: .\system\admin\settings.py:52
+msgid "Юридическая информация"
+msgstr "Юридическая информация"
+
+#: .\system\admin\static.py:15
+msgid "Timestamps"
+msgstr "Время создания и изменения"
+
+#: .\system\apps.py:9
+msgid "Система"
+msgstr "Система"
+
+#: .\system\models\seo.py:19
+msgid "Главная страница"
+msgstr "Главная страница"
+
+#: .\system\models\seo.py:20
+msgid "Контакты"
+msgstr "Контакты"
+
+#: .\system\models\seo.py:21
+msgid "Impressum"
+msgstr "Правовая информация"
+
+#: .\system\models\seo.py:22
+msgid "Datenschutz"
+msgstr "Защита данных"
+
+#: .\system\models\seo.py:29
+msgid "ID Страницы"
+msgstr "ID Страницы"
+
+#: .\system\models\seo.py:33
+msgid "SEO статичной страницы"
+msgstr "SEO статичной страницы"
+
+#: .\system\models\seo.py:34
+msgid "SEO статичных страниц"
+msgstr "SEO статичных страниц"
+
+#: .\system\models\settings.py:28 .\system\models\settings.py:29
+msgid "Настройки сайта"
+msgstr "Настройки сайта"
+
+#: .\system\models\static.py:12
+msgid "Статический перевод"
+msgstr "Статический перевод"
+
+#: .\system\models\static.py:13
+msgid "Статические переводы"
+msgstr "Статические переводы"
+
+#: .\system\selectors\users.py:47
+msgid "Source"
+msgstr "Источник"
+
+#: .\system\selectors\users.py:49
+msgid "Staff Member"
+msgstr "Сотрудник"
+
+#: .\system\selectors\users.py:66
+msgid "Search users..."
+msgstr "Поиск пользователей..."
+
+#: .\system\selectors\users.py:67
+msgid "No users found"
+msgstr "Пользователи не найдены"
+
+#: .\system\services\client_profile.py:56
+msgid "Date of birth must use the YYYY-MM-DD format."
+msgstr "Дата рождения должна иметь формат ГГГГ-ММ-ДД."
+
+#: .\system\services\client_profile.py:62
+msgid "Profile updated successfully."
+msgstr "Профиль обновлён."
+
+#: .\templates\errors\404.html:4 .\templates\errors\404.html:11
+msgid "Page Not Found"
+msgstr "Страница не найдена"
+
+#: .\templates\errors\404.html:12
+msgid "The page you are looking for does not exist."
+msgstr "Запрашиваемая страница не существует."
+
+#: .\templates\errors\404.html:13 .\templates\errors\500.html:13
+msgid "Go Home"
+msgstr "На главную"
+
+#: .\templates\errors\500.html:4 .\templates\errors\500.html:11
+msgid "Server Error"
+msgstr "Ошибка сервера"
+
+#: .\templates\errors\500.html:12
+msgid "Something went wrong on our end. Please try again later."
+msgstr "Произошла ошибка. Попробуйте позже."
+
+#: .\templates\includes\_footer.html:24
+msgid "Navigation"
+msgstr "Навигация"
+
+#: .\templates\includes\_footer.html:26 .\templates\includes\_header.html:19
+#: .\templates\includes\_header.html:64 .\templates\main\home.html:5
+msgid "Home"
+msgstr "Главная"
+
+#: .\templates\includes\_footer.html:27 .\templates\includes\_header.html:20
+#: .\templates\includes\_header.html:65 .\templates\main\contacts.html:5
+msgid "Contacts"
+msgstr "Контакты"
+
+#: .\templates\includes\_footer.html:33 .\templates\main\contacts.html:12
+msgid "Contact Us"
+msgstr "Свяжитесь с нами"
+
+#: .\templates\includes\_footer.html:53
+msgid "Management"
+msgstr "Управление"
+
+#: .\templates\includes\_language_switcher.html:3
+msgid "Sprache"
+msgstr "Язык"
+
+#: .\templates\main\contacts.html:13
+msgid "We'd love to hear from you. Send us a message!"
+msgstr "Будем рады вашему сообщению!"
+
+#: .\templates\main\contacts.html:33
+msgid "Add your contact form here."
+msgstr "Добавьте сюда контактную форму."
+
+#: .\templates\main\home.html:13
+msgid "The public website is being prepared."
+msgstr "Публичный сайт готовится к запуску."

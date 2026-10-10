@@ -1,0 +1,15 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load static i18n %}
+{% block cabinet_content %}
+<link rel="stylesheet" href="{% static 'internal_time/css/reports.css' %}">
+<link rel="stylesheet" href="{% static 'customer_portal/css/portal.css' %}">
+<div class="customer-portal-shell time-page">
+  <nav class="time-inline customer-account-nav" aria-label="{% trans 'Mein Konto' %}">
+    <a class="time-button secondary" href="{% url 'customer_portal:home' %}">{% trans "Meine Übersicht" %}</a>
+    <a class="time-button secondary" href="{% url 'customer_portal:account' %}"{% if request.resolver_match.url_name == 'account' %} aria-current="page"{% endif %}>{% trans "Mein Konto" %}</a>
+  </nav>
+  {% for message in messages %}<div class="time-alert" role="alert">{{ message }}</div>{% endfor %}
+  {% block report_content %}{% endblock %}
+</div>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'projects/js/searchable_choice.js' %}" defer></script><script src="{% static 'internal_time/js/editor.js' %}" defer></script>{% endblock %}

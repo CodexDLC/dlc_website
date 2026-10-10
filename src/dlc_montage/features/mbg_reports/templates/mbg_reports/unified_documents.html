@@ -1,0 +1,56 @@
+{% extends "customer_portal/base.html" %}
+{% load i18n static %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'mbg_reports/js/export_hub.js' %}" defer></script>
+  <script src="{% static 'customer_portal/js/unified_documents.js' %}" defer></script>
+{% endblock %}
+
+{% block report_content %}
+<link rel="stylesheet" href="{% static 'mbg_reports/css/list.css' %}">
+<link rel="stylesheet" href="{% static 'customer_portal/css/unified_documents.css' %}">
+
+<div class="customer-documents-content unified-documents-content" style="max-width: 1200px;">
+  <div class="customer-header mbg-page-heading">
+    <div class="customer-header-title">
+      <p class="time-eyebrow">{% trans 'AC · MBG ·' %} {% if can_manage_settlement %}{% trans 'ADMIN' %}{% else %}{% trans 'INTERN' %}{% endif %}</p>
+      <h1>{% trans "Документы" %}</h1>
+      <p>{% trans "Клиентские ведомости, табели MBG, проектная документация и отчёты для выставления счетов." %}</p>
+    </div>
+  </div>
+
+  {% if can_manage_settlement %}
+    <nav class="unified-doc-tabs" role="tablist" aria-label="{% trans 'Разделы документов' %}">
+      <button type="button"
+              class="unified-doc-tab is-active"
+              role="tab"
+              aria-selected="true"
+              aria-controls="tab-documents"
+              data-unified-tab="tab-documents">
+        <i class="bi bi-file-earmark-text" aria-hidden="true"></i> {% trans "Акты и табели" %}
+      </button>
+      <button type="button"
+              class="unified-doc-tab"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tab-master-settlement"
+              data-unified-tab="tab-master-settlement">
+        <i class="bi bi-table" aria-hidden="true"></i> {% trans "Сводная ведомость" %}
+      </button>
+    </nav>
+
+    <div id="tab-documents" role="tabpanel" data-unified-tab-panel>
+      {% include "customer_portal/includes/_unified_documents_partial.html" %}
+    </div>
+
+    <div id="tab-master-settlement" role="tabpanel" data-unified-tab-panel hidden>
+      {% include "mbg_reports/includes/_master_settlement_tab.html" %}
+    </div>
+  {% else %}
+    <div id="tab-documents">
+      {% include "customer_portal/includes/_unified_documents_partial.html" with can_manage_settlement=False %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

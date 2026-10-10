@@ -1,50 +1,76 @@
-# === STAGE 1: Builder ===
-FROM python:3.13-slim AS builder
-WORKDIR /app
+# Multi-stage Dockerfile for DLC Montage Django Application
+# Python 3.13 slim, non-root user, frozen lock deterministic dependencies
 
-RUN apt-get update && apt-get install -y \
+# ==========================================
+# Stage 1: Build virtual environment
+# ==========================================
+FROM python:3.13-slim-bookworm AS builder
+
+ENV UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PROJECT_ENVIRONMENT=/opt/venv
+
+# Install system dependencies needed to compile native wheels
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
-    g++ \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install poetry poetry-plugin-export
+# Install uv pinned to exact version
+RUN pip install --no-cache-dir uv==0.11.8
 
-COPY pyproject.toml poetry.lock ./
-# Экспортируем основные зависимости + django + shared
-RUN poetry export --without-hashes --with django,shared --format=requirements.txt > requirements.txt
+WORKDIR /build
 
-RUN python -m venv /venv
-RUN /venv/bin/pip install --no-cache-dir -r requirements.txt
+# Copy dependency files only for layer caching
+COPY pyproject.toml uv.lock ./
 
-# === STAGE 2: Runtime ===
-FROM python:3.13-slim
-WORKDIR /app
+# Synchronize dependencies deterministically against lockfile
+RUN uv sync --frozen --no-dev --no-install-project
 
-RUN apt-get update && apt-get install -y \
+# ==========================================
+# Stage 2: Runtime image
+# ==========================================
+FROM python:3.13-slim-bookworm AS runner
+
+# Install only runtime shared libraries
+RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN useradd -m -u 1000 appuser
+# Create unprivileged runtime user and group
+RUN groupadd -g 10001 appgroup && \
+    useradd -u 10001 -g appgroup -s /bin/bash -m appuser
 
-COPY --from=builder /venv /venv
-COPY src/backend_django /app
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/opt/venv/bin:$PATH" \
+    PYTHONPATH="/app/src:/app/src/dlc_montage" \
+    PORT=8000 \
+    PRIVATE_MEDIA_ROOT="/app/data/private"
 
-RUN mkdir -p /app/staticfiles /app/mediafiles /app/logs/backend && \
-    chown -R appuser:appuser /app
+WORKDIR /app
 
+# Copy prepared virtual environment from builder stage
+COPY --from=builder --chown=appuser:appgroup /opt/venv /opt/venv
+
+# Create directories for staticfiles, media, and private files owned by unprivileged user
+RUN mkdir -p /app/staticfiles /app/media /app/data/private && \
+    chown -R appuser:appgroup /app
+
+# Copy application sources
+COPY --chown=appuser:appgroup src /app/src
+COPY --chown=appuser:appgroup pyproject.toml /app/pyproject.toml
+
+# Pre-collect static files during build as non-root user
 USER appuser
+RUN python src/dlc_montage/manage.py collectstatic --noinput --settings=dlc_montage.core.settings.dev
 
-ENV PATH="/venv/bin:$PATH"
-ENV PYTHONPATH="/app:$PYTHONPATH"
-ENV DJANGO_SETTINGS_MODULE="core.settings.prod"
+# Healthcheck probing health endpoint
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; request = urllib.request.Request('http://127.0.0.1:8000/health/', headers={'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(request).read()"
 
-HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-    CMD curl -f http://localhost:8000/api/v1/health || exit 1
+EXPOSE 8000
 
-# Entrypoint script will handle migrations and static
-COPY deploy/django/entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
-
-CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+# Default web runtime command (Gunicorn)
+CMD ["gunicorn", "dlc_montage.core.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--access-logfile", "-", "--error-logfile", "-"]

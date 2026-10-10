@@ -1,0 +1,53 @@
+name: Production Deploy Preparation & Manual Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_layer:
+        description: 'Deploy layer (infra, django, or full)'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - django
+          - infra
+      image_tag:
+        description: 'Immutable release tag or full commit SHA (e.g. v1.0.0 or 40-char SHA); "latest" is strictly forbidden'
+        required: true
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  validate-deployment-contract:
+    name: Validate Production Preconditions
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate deployment parameters safely
+        env:
+          TARGET_LAYER: ${{ github.event.inputs.target_layer }}
+          IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+        run: |
+          if [[ -z "$IMAGE_TAG" || "$IMAGE_TAG" == "latest" ]]; then
+            echo "::error::Deployment with mutable or empty tag ('latest') is strictly rejected. Specify an immutable tag or full commit SHA."
+            exit 1
+          fi
+          echo "Selected layer: $TARGET_LAYER"
+          echo "Target immutable image tag: $IMAGE_TAG"
+
+      - name: Check server and SSH infrastructure configuration
+        run: |
+          # Strict gate: Live cloud or production SSH execution is disallowed until explicitly
+          # provisioned, approved by coordinator/owner, and repository secrets are registered.
+          echo "::error title=Deployment Blocked::Production host, SSH keys, and secret storage have not yet been approved for automated execution."
+          echo "Per dlc-deployment-architecture: live deploy requires approved host environment, registered domains, and secret management."
+          echo "This workflow serves as the manual gating validation; execution will fail closed until configuration is finalized."
+          exit 1

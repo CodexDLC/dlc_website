@@ -1,0 +1,70 @@
+{% extends "customer_portal/base.html" %}
+{% load i18n %}
+
+{% block report_content %}
+<div class="customer-header">
+  <div class="customer-header-title">
+    <p class="time-eyebrow"><a href="{% url 'customer_portal:home' %}">{% trans "Кабинет заказчика" %}</a></p>
+    <h1>{{ group.name }}</h1>
+    {% if group.address %}<p>{{ group.address }}</p>{% endif %}
+  </div>
+</div>
+
+<p class="time-inline" style="margin-bottom: 24px;">
+  <a class="time-button secondary" href="{% url 'customer_portal:group_work_xlsx' group.pk %}">{% trans "Сводный акт (XLSX)" %}</a>
+  <a class="time-button secondary" href="{% url 'customer_portal:group_timesheet_xlsx' group.pk %}">{% trans "Табель MBG (XLSX)" %}</a>
+  <a class="time-button secondary" href="{% url 'customer_portal:objects' %}?group={{ group.pk }}">{% trans "Открыть в объектах" %}</a>
+  {% if membership.can_manage_projects and not manager %}
+    <a class="time-button secondary" href="{% url 'customer_portal:group_edit' group.pk %}">{% trans "Изменить Anlage" %}</a>
+    <a class="time-button" href="{% url 'customer_portal:site_new' group.pk %}">{% trans "Добавить Standort" %}</a>
+    <a class="time-button secondary" href="{% url 'customer_portal:file_upload' group.pk %}">{% trans "Прикрепить PDF" %}</a>
+  {% endif %}
+</p>
+
+<section class="time-card" style="margin-bottom: 24px;">
+  <h2>{% trans "Standorte" %}</h2>
+  <ul>
+    {% for site in sites %}
+      <li>
+        <a href="{% url 'customer_portal:site' site.pk %}">{{ site.name }}</a> · {{ site.get_status_display }}
+        {% if site.project_number %} · {{ site.project_number }}{% endif %}
+      </li>
+    {% empty %}
+      <li>{% trans "Пока нет Standorte." %}</li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="time-card" style="margin-bottom: 24px;">
+  <h2>{% trans "Документы заказчика" %}</h2>
+  <ul>
+    {% for file in files %}
+      <li>
+        <a href="{% url 'customer_portal:file_download' file.pk %}">{{ file.original_name }}</a>
+        {% if file.site %} · {{ file.site.name }}{% endif %}
+      </li>
+    {% empty %}
+      <li>{% trans "Нет доступных PDF." %}</li>
+    {% endfor %}
+  </ul>
+</section>
+
+{% if manager %}
+  <section class="time-card">
+    <h2>{% trans "Все PDF Anlage · управление видимостью" %}</h2>
+    {% for file in admin_files %}
+      <form method="post" action="{% url 'customer_portal:file_visibility' file.pk %}" class="time-inline" style="margin-bottom: 10px;">
+        {% csrf_token %}
+        <span>{{ file.original_name }} · {% if file.customer_visible %}{% trans "виден заказчику" %}{% else %}{% trans "закрыт" %}{% endif %}</span>
+        <input name="reason" required placeholder="{% trans 'Причина' %}">
+        <button class="time-button secondary" name="visible" value="{% if file.customer_visible %}0{% else %}1{% endif %}">
+          {% if file.customer_visible %}{% trans "Закрыть" %}{% else %}{% trans "Открыть" %}{% endif %}
+        </button>
+      </form>
+    {% empty %}
+      <p>{% trans "PDF нет." %}</p>
+    {% endfor %}
+  </section>
+{% endif %}
+
+{% endblock %}

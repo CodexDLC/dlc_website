@@ -1,0 +1,31 @@
+{% load i18n %}
+<article class="customer-card">
+  <div class="customer-card-body">
+    {% if group.client %}<div class="customer-card-eyebrow">{{ group.client.name }}</div>{% endif %}
+    <h2 class="customer-card-title">
+      <a href="{% url 'customer_portal:objects' %}?group={{ group.pk }}">{{ group.name }}</a>
+    </h2>
+    {% if group.address %}
+      <p class="customer-card-meta">{{ group.address }}</p>
+    {% endif %}
+    <div class="customer-card-badges">
+      <span class="cust-badge cust-badge--{{ group.status }}">{{ group.get_status_display }}</span>
+      {% if group.has_ac %}<span class="cust-badge">AC</span>{% endif %}
+      {% if group.has_dc %}<span class="cust-badge">DC</span>{% endif %}
+      <span class="cust-badge cust-badge--progress">
+        {% trans "Объектов" %}: {{ group.sites_count|default:group.ac_objects.count }}
+      </span>
+    </div>
+  </div>
+  <div class="customer-card-footer">
+    <a class="time-button secondary" href="{% url 'customer_portal:objects' %}?group={{ group.pk }}">
+      {% trans "Объекты" %} ({{ group.sites_count|default:group.ac_objects.count }})
+    </a>
+    <div class="time-inline">
+      <a class="time-button quiet" href="{% url 'customer_portal:group' group.pk %}">{% trans "Детали" %}</a>
+      {% if membership.can_manage_projects and not manager %}
+        <a class="time-button quiet" href="{% url 'customer_portal:group_edit' group.pk %}">{% trans "Изменить" %}</a>
+      {% endif %}
+    </div>
+  </div>
+</article>

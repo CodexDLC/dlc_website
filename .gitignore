@@ -1,90 +1,45 @@
-# ═══════════════════════════════════════════
-# Python
-# ═══════════════════════════════════════════
-__pycache__/
-*.py[cod]
-*.pyo
-*.egg-info/
-*.egg
-dist/
-build/
-
-# ═══════════════════════════════════════════
-# Virtual Environment
-# ═══════════════════════════════════════════
-.venv/
-venv/
-
-# ═══════════════════════════════════════════
-# Environment Variables
-# ═══════════════════════════════════════════
 .env
+.env.*
 !.env.example
-!src/backend_django/.env.example
-
-# ═══════════════════════════════════════════
-# IDE
-# ═══════════════════════════════════════════
+.venv/
+.uv-cache/
 .idea/
 .vscode/
-*.swp
-*.swo
-*~
-
-# ═══════════════════════════════════════════
-# OS
-# ═══════════════════════════════════════════
-.DS_Store
-Thumbs.db
-desktop.ini
-nul
-
-# ═══════════════════════════════════════════
-# Testing & Quality
-# ═══════════════════════════════════════════
+archive/
+staticfiles/
+*.egg-info/
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.log
+.coverage
+*.dump
+*.bak
+*.pem
+*.key
+data/
+media/
+logs/
+outputs/
+pdfs/
+scratch/
+tmp/
+.tmp/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-.coverage
-.coverage.*
-htmlcov/
 coverage.xml
+htmlcov/
 
-# ═══════════════════════════════════════════
-# Django
-# ═══════════════════════════════════════════
-*.log
-db.sqlite3
-db.sqlite3-journal
-staticfiles/
-mediafiles/
-
-# ═══════════════════════════════════════════
-# Poetry
-# ═══════════════════════════════════════════
-# poetry.lock — коммитим (reproducible builds)
-
-# ═══════════════════════════════════════════
-# Data (keep structure, ignore contents)
-# ═══════════════════════════════════════════
-data/logs/
-data/uploads/
-!data/logs/.gitkeep
-!data/uploads/.gitkeep
-
-# ═══════════════════════════════════════════
-# Docker & Deploy (local overrides)
-# ═══════════════════════════════════════════
-deploy/.env
-deploy/backend/
-deploy/bot/
-deploy/worker/
-deploy/nginx/
-deploy/docker-compose.yml
-deploy/docker-compose.prod.yml
-deploy/docker-compose.test.yml
-
-# ═══════════════════════════════════════════
-# Template installer artifacts
-# ═══════════════════════════════════════════
-.template_install_hash
+# Local business records and planning notes: never publish to the public repository.
+src/dlc_montage/features/internal_time/management/commands/import_whatsapp_history_2026.py
+scripts/weekly_completion_patch.py
+scripts/rebuild_chef_completion_overview.py
+scripts/sync_completion_week.py
+tests/test_weekly_completion_patch.py
+tests/test_chef_completion_overview.py
+docs/ideas-and-tasks/*
+!docs/ideas-and-tasks/28-test-server-preparation.md

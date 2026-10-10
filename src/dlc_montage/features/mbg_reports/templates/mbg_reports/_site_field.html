@@ -1,0 +1,7 @@
+{% load i18n %}
+<div id="mbg-site-field">
+  {{ site.label_tag }}{{ site }}{{ site.errors }}
+  {% if group_selected and not has_sites %}
+    <p class="time-hint">{% trans "В выбранном проекте нет активных AC-объектов." %}</p>
+  {% endif %}
+</div>

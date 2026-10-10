@@ -1,0 +1,35 @@
+# Local preparation overlay for an eventual test server. Requires a private env file.
+# Production web remains bound to host loopback; a separately approved HTTPS proxy is required.
+include:
+  - path: compose.prod.yml
+
+services:
+  web:
+    environment:
+      TEST_SITE_NOINDEX: "True"
+      SITE_BASE_URL: ${TEST_SITE_BASE_URL:?TEST_SITE_BASE_URL must be the approved HTTPS test URL}
+      CANONICAL_DOMAIN: ${TEST_CANONICAL_DOMAIN:?TEST_CANONICAL_DOMAIN must be the approved HTTPS test origin}
+      PRIVATE_STORAGE_BACKEND: ${PRIVATE_STORAGE_BACKEND:?Choose local or s3 explicitly for test server}
+      PRIVATE_S3_BUCKET: ${PRIVATE_S3_BUCKET:-}
+      PRIVATE_S3_ENDPOINT: ${PRIVATE_S3_ENDPOINT:-}
+      PRIVATE_S3_REGION: ${PRIVATE_S3_REGION:-}
+      PRIVATE_S3_ACCESS_KEY: ${PRIVATE_S3_ACCESS_KEY:-}
+      PRIVATE_S3_SECRET_KEY: ${PRIVATE_S3_SECRET_KEY:-}
+
+  migrate:
+    environment:
+      PRIVATE_STORAGE_BACKEND: ${PRIVATE_STORAGE_BACKEND:?Choose local or s3 explicitly for test server}
+      PRIVATE_S3_BUCKET: ${PRIVATE_S3_BUCKET:-}
+      PRIVATE_S3_ENDPOINT: ${PRIVATE_S3_ENDPOINT:-}
+      PRIVATE_S3_REGION: ${PRIVATE_S3_REGION:-}
+      PRIVATE_S3_ACCESS_KEY: ${PRIVATE_S3_ACCESS_KEY:-}
+      PRIVATE_S3_SECRET_KEY: ${PRIVATE_S3_SECRET_KEY:-}
+
+  collectstatic:
+    environment:
+      PRIVATE_STORAGE_BACKEND: ${PRIVATE_STORAGE_BACKEND:?Choose local or s3 explicitly for test server}
+      PRIVATE_S3_BUCKET: ${PRIVATE_S3_BUCKET:-}
+      PRIVATE_S3_ENDPOINT: ${PRIVATE_S3_ENDPOINT:-}
+      PRIVATE_S3_REGION: ${PRIVATE_S3_REGION:-}
+      PRIVATE_S3_ACCESS_KEY: ${PRIVATE_S3_ACCESS_KEY:-}
+      PRIVATE_S3_SECRET_KEY: ${PRIVATE_S3_SECRET_KEY:-}

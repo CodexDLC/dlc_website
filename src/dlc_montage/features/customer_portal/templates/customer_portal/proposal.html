@@ -1,0 +1,58 @@
+{% extends "customer_portal/base.html" %}
+{% load i18n %}
+
+{% block report_content %}
+<div class="customer-header">
+  <div class="customer-header-title">
+    <p class="time-eyebrow"><a href="{% url 'customer_portal:site' site.pk %}">{{ site.name }}</a></p>
+    <h1>{% trans "Предложить план работ" %}</h1>
+    <p>{% trans "Предложение не меняет подтверждённые работы. Администратор отдельно проверит каждую позицию." %}</p>
+  </div>
+</div>
+
+<form method="post" class="time-card">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="time-grid three">
+    {% for field in form.visible_fields %}
+      <div class="time-field">
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+  </div>
+  <button class="time-button secondary" name="step" value="preview">{% trans "Показать позиции" %}</button>
+
+  {% if rows %}
+    <h2 style="margin-top: 24px;">{% trans "Проверьте состав и плановый объём" %}</h2>
+    <div class="time-table-scroll">
+      <table class="time-table">
+        <thead>
+          <tr>
+            <th>{% trans "Включить" %}</th>
+            <th>{% trans "Позиция" %}</th>
+            <th>{% trans "Объём" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+            <tr>
+              <td><input type="checkbox" name="include-{{ row.spec.key }}"{% if row.selected %} checked{% endif %}></td>
+              <td>
+                {{ row.spec.label }} · {{ row.work_name }}
+                {% if row.route_name %} · {{ row.route_name }}{% endif %}
+                {% if row.cable_name %} · {{ row.cable_name }}{% endif %}
+              </td>
+              <td><input type="number" name="quantity-{{ row.spec.key }}" min="0.01" step="0.01" value="{{ row.quantity }}"> {{ row.unit }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top: 16px;">
+      <button class="time-button" name="step" value="submit">{% trans "Отправить предложение" %}</button>
+    </div>
+  {% endif %}
+</form>
+{% endblock %}

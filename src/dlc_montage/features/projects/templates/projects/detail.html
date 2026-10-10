@@ -1,0 +1,51 @@
+{% extends "customer_portal/base.html" %}{% load i18n %}
+{% block report_content %}
+<div class="time-heading">
+  <div><p class="time-eyebrow">{% trans 'ANLAGE ·' %} {{ group.get_status_display }}</p><h1>{{ group }}</h1><p>{{ group.address }}</p></div>
+  {% if editable %}<a class="time-button" href="{% url 'projects:edit' group.pk %}">{% trans "Редактировать Anlage" %}</a>{% endif %}
+</div>
+<div class="time-card time-grid">
+  <div>{% trans "Заказчик" %}: {{ group.client|default:"—" }}</div><div>{{ group.capacity_kw|default_if_none:"—" }} {% trans 'kW' %}</div>
+  <div>{% trans 'AC:' %} {{ group.get_ac_status_display }}</div><div>{% trans 'DC:' %} {{ group.get_dc_status_display }}</div>
+  <div>{% trans "Начало" %}: {{ group.starts_on|default:"—" }}</div><div>{% trans "Завершение" %}: {{ group.ends_on|default:"—" }}</div>
+  <div>{% trans "Ответственный" %}: {{ group.responsible|default:"—" }}</div><div>{% trans "Заместитель" %}: {{ group.deputy|default:"—" }}</div>
+  <div>{% trans 'AC:' %} {{ group.ac_responsible|default:"—" }}</div><div>{% trans 'DC:' %} {{ group.dc_responsible|default:"—" }}</div>
+  <div>{{ group.additional_addresses|linebreaksbr }}</div>{% if group.maps_url %}<a href="{{ group.maps_url }}" target="_blank" rel="noopener">Google Maps ↗</a>{% endif %}
+</div>
+{% if group.has_ac %}
+<div class="project-metrics">
+  <div><strong>{{ group_activity.completed_site_count }} / {{ group_activity.site_count }}</strong><small>{% trans "Standorte завершено" %}</small></div>
+  <div><strong>{{ group_activity.recorded_person_hours|floatformat:2 }}</strong><small>{% trans "человеко-часов MBG" %}</small></div>
+  <div><strong>{{ group_activity.known_subtotal|floatformat:2 }} €</strong><small>{% if group_activity.preliminary_amount == None %}{% trans "Teilbetrag · цены не согласованы" %}{% else %}{% trans "Подтверждённая сумма" %}{% endif %}</small></div>
+  <div><strong>{{ group_activity.last_work_date|date:"d.m.Y"|default:"—" }}</strong><small>{% trans "последняя работа" %}</small></div>
+</div>
+{% endif %}
+<div class="time-inline time-field">
+  <a class="time-button secondary" href="{% url 'internal_time:new' %}?project_group={{ group.pk }}">{% trans "Внутренний отчёт" %}</a>
+  {% if manager %}<a class="time-button secondary" href="{% url 'projects:object_new' group.pk %}">{% trans "Добавить Standort" %}</a>{% endif %}
+  {% if files_allowed %}<a class="time-button secondary" href="{% url 'project_media:list' group.pk %}">{% trans "Файлы и фотографии" %}</a>{% endif %}
+  {% if manager and group.has_ac %}<a class="time-button secondary" href="{% url 'mbg_reports:list' %}?group={{ group.pk }}">{% trans "Отчёты MBG" %}</a>{% endif %}
+  {% if export_allowed and group.has_ac %}<a class="time-button" href="{% url 'mbg_reports:performance_exports' group.pk %}">{% trans "Экспорт Excel (Акты)" %}</a>{% endif %}
+  {% if export_allowed and group.has_ac %}<a class="time-button secondary" href="{% url 'mbg_reports:group_overview' group.pk %}">{% trans "Сводка работ" %}</a>{% endif %}
+</div>
+
+<div class="time-heading section-heading"><div><p class="time-eyebrow">AC</p><h2>{% trans 'Standorte' %}</h2></div></div>
+{% for card in site_cards %}
+<article class="time-card site-card">
+  <div class="site-row-main">
+    <a class="project-title" href="{% url 'projects:site_detail' group.pk card.site.pk %}">{{ card.site }}</a>
+    <p>{{ card.site.address|default:"—" }} {% trans '· P/Nr' %} {{ card.site.project_number|default:"—" }}</p>
+  </div>
+  <div class="site-row-metrics">
+    <span class="time-badge">{{ card.site.get_status_display }}</span>
+    <span>{{ card.activity.recorded_person_hours|floatformat:2 }} {% trans "чел.-ч" %}</span>
+    <span>{{ card.activity.employee_count }} {% trans "сотрудников" %}</span>
+    <span>{{ card.activity.last_work_date|date:"d.m.Y"|default:"—" }}</span>
+  </div>
+  <div class="time-inline site-row-actions">
+    <a class="time-button secondary" href="{% url 'projects:site_detail' group.pk card.site.pk %}">{% trans "Открыть" %}</a>
+    {% if manager and card.site.is_active and group.status == "active" %}<a class="time-button quiet" href="{% url 'mbg_reports:new' %}?group={{ group.pk }}&site={{ card.site.pk }}">+ {% trans "Отчёт" %}</a>{% endif %}
+  </div>
+</article>
+{% empty %}<div class="time-card time-empty">{% trans "AC-объектов пока нет." %}</div>{% endfor %}
+{% endblock %}

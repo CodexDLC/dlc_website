@@ -1,0 +1,173 @@
+{% load i18n static %}
+
+<div class="customer-header">
+  <div class="customer-header-title">
+    <p class="time-eyebrow">
+      {% if is_customer_view %}
+        <a href="{% url 'customer_portal:group' site.group_id %}">{{ site.group.name }}</a> {% trans '· STANDORT' %}
+      {% else %}
+        <a href="{% url 'projects:detail' group.pk %}">{{ group.name }}</a> {% trans '· STANDORT' %}
+      {% endif %}
+    </p>
+    <h1>{{ site.name }}</h1>
+    <p>{{ site.address|default:"—" }} {% trans '· P/Nr' %} {{ site.project_number|default:"—" }} · <span class="cust-badge cust-badge--{{ site.status }}">{{ site.get_status_display }}</span></p>
+  </div>
+</div>
+
+<!-- Фотофиксация объекта -->
+<section class="time-card">
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+    <h2 style="margin:0;">{% trans 'Fotos der Baustelle' %}{% if photo_summary.is_available and photo_summary.count %} ({{ photo_summary.count }}){% endif %}</h2>
+    {% if photo_summary.status == "ok" %}
+      {% if photo_summary.count > 0 %}
+        <span class="cust-badge cust-badge--photo-ok">📸 {% blocktrans count count=photo_summary.count %}{{ count }} Foto vorhanden{% plural %}{{ count }} Fotos vorhanden{% endblocktrans %}</span>
+      {% else %}
+        <span class="cust-badge cust-badge--not_started">{% trans '⏳ Keine Fotos' %}</span>
+      {% endif %}
+    {% elif photo_summary.status == "unavailable" %}
+      <span class="cust-badge cust-badge--photo-unavail">{% trans '⚠️ Fotospeicher vorübergehend nicht erreichbar' %}</span>
+    {% endif %}
+  </div>
+
+  {% if photo_summary.status == "unavailable" %}
+    <p class="time-alert" role="alert">{% trans 'Das Nextcloud-Speichersystem ist derzeit nicht erreichbar. Bitte versuchen Sie es später erneut.' %}</p>
+  {% elif photo_summary.count == 0 %}
+    <p class="time-hint">{% trans 'Für diesen Standort wurden noch keine Fotos im MBG-Speicher abgelegt.' %}</p>
+  {% else %}
+    <div class="project-media-grid" aria-label="{% trans 'Fotos des Standorts' %}">
+      {% for photo in photo_summary.photos %}
+        <article class="project-media-card">
+          {% if photo.is_previewable %}
+            <button type="button" class="project-media-preview project-media-image"
+                    data-media-preview data-preview-kind="image"
+                    {% if is_customer_view %}
+                      data-preview-url="{% url 'customer_portal:site_photo' site.pk photo.name %}"
+                    {% else %}
+                      data-preview-url="{% url 'customer_portal:site_photo' site.pk photo.name %}"
+                    {% endif %}
+                    data-preview-title="{{ photo.name }}"
+                    aria-label="{% trans 'Foto öffnen:' %} {{ photo.name }}">
+              <img src="{% url 'customer_portal:site_photo' site.pk photo.name %}" alt="{{ photo.name }}" loading="lazy">
+            </button>
+          {% else %}
+            <div class="project-media-preview project-media-document">
+              <i class="bi bi-file-earmark-image" aria-hidden="true"></i>
+              <span>{{ photo.extension|upper|slice:"1:" }}</span>
+            </div>
+          {% endif %}
+          <div class="project-media-info">
+            <h3 style="margin:0 0 4px; font-size:15px; overflow-wrap:anywhere;">{{ photo.name }}</h3>
+            <p class="time-hint">{{ photo.extension|upper|slice:"1:" }} {% trans '· Standort-Foto' %}</p>
+            {% if photo.is_previewable %}
+              <div class="project-media-actions">
+                <button type="button" class="time-button secondary sm"
+                        data-media-preview data-preview-kind="image"
+                        data-preview-url="{% url 'customer_portal:site_photo' site.pk photo.name %}"
+                        data-preview-title="{{ photo.name }}">
+                  {% trans 'Ansehen' %}
+                </button>
+              </div>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+
+<!-- Клиентские безопасные документы (PDF) -->
+{% if files %}
+  <section class="time-card">
+    <h2>{% trans "Документы Standort (PDF)" %}</h2>
+    <ul style="margin: 0; padding-left: 20px;">
+      {% for file in files %}
+        <li style="margin-bottom: 6px;">
+          {% if is_customer_view %}
+            <a href="{% url 'customer_portal:file_download' file.pk %}" target="_blank">{{ file.original_name }}</a>
+          {% else %}
+            <a href="{% url 'project_media:download' file.pk %}" target="_blank">{{ file.original_name }}</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endif %}
+
+<!-- ЕДИНАЯ СВОДНАЯ ТАБЛИЦА ВЫПОЛНЕННЫХ РАБОТ (ONE AGGREGATED TABLE) -->
+<section class="time-card">
+  <h2>{% trans "Выполненные работы · принятые итоги" %}</h2>
+  <div class="time-table-scroll">
+    <table class="time-table">
+      <thead>
+        <tr>
+          <th>{% trans "Работа" %}</th>
+          <th>{% trans "Объём" %}</th>
+          <th>{% trans "Единица" %}</th>
+          <th>{% trans "Чел.-ч" %}</th>
+          <th>{% trans "Основание" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in completed_rows %}
+          <tr>
+            <td>{{ row.name }}</td>
+            <td>{{ row.quantity|default_if_none:"не подтверждено" }}</td>
+            <td>{% trans row.unit %}</td>
+            <td>{{ row.actual_person_hours }}</td>
+            <td>
+              {% if row.kind == 'linked' %}
+                {% trans "Связано с планом" %}
+              {% elif row.kind == 'hourly' %}
+                {% trans "Почасовая работа" %}
+              {% elif row.kind == 'flat' %}
+                {% trans "Паушаль" %}
+              {% else %}
+                {% trans "Объём не разобран" %}
+              {% endif %}
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5">{% trans "Принятых выполненных работ пока нет." %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- СВЁРНУТАЯ ИСТОРИЯ ДНЕВНЫХ РАБОТ (COLLAPSIBLE DAILY HISTORY) -->
+<details class="time-card customer-daily-history" {% if chosen_date %}open{% endif %}>
+  <summary style="cursor: pointer; padding: 4px 0;">
+    <h2 style="display: inline; margin: 0; font-size: 18px;">
+      {% trans "Принятые дневные работы" %}{% if daily_work %} ({{ daily_work|length }}){% endif %}
+    </h2>
+    <span class="time-hint" style="margin-left: 8px;">({% trans "нажмите, чтобы развернуть" %})</span>
+  </summary>
+  <div class="time-table-scroll" style="margin-top: 14px;">
+    <table class="time-table">
+      <thead>
+        <tr>
+          <th>{% trans "Дата" %}</th>
+          <th>{% trans "Работа" %}</th>
+          <th>{% trans "Объём" %}</th>
+          <th>{% trans "Чел.-ч" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in daily_work %}
+          <tr{% if chosen_date and row.work_date == chosen_date %} class="customer-row-highlighted"{% endif %}>
+            <td>{{ row.work_date }}</td>
+            <td>{{ row.description }}{% if not is_customer_view and row.internal_only %} <span class="cust-badge">{% trans "Только внутренний учёт" %}</span>{% endif %}</td>
+            <td>{{ row.quantity }} {% trans row.unit %}</td>
+            <td>{{ row.actual_person_hours }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">{% trans "Принятых дневных работ пока нет." %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</details>

@@ -1,0 +1,61 @@
+{% extends "internal_time/base.html" %}
+{% load i18n %}
+{% block report_content %}
+<div class="time-heading">
+  <div>
+    <p class="time-eyebrow">{% trans "КАБИНЕТ" %}</p>
+    <h1>{% trans title %}</h1>
+  </div>
+  {% if back %}<a class="time-button secondary" href="{{ back }}">← {% trans "Назад" %}</a>{% endif %}
+</div>
+
+<form method="post" class="entity-form" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+    <div class="time-alert">{{ form.non_field_errors }}</div>
+  {% endif %}
+  <div class="time-card">
+    <div class="time-grid">
+      {% for field in form %}
+        <div class="time-field{% if field.field.widget.input_type == 'checkbox' %} time-field-checkbox{% endif %}{% if field.name == 'address' or field.name == 'additional_addresses' or field.name == 'maps_url' %} time-wide{% endif %}">
+          {% if field.field.widget.input_type == 'checkbox' %}
+            <label class="checkbox-inline-label">
+              {{ field }}
+              <span>{{ field.label }}</span>
+            </label>
+          {% else %}
+            {{ field.label_tag }}
+            {{ field }}
+          {% endif %}
+          {{ field.errors }}
+          {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="time-save">
+    <div class="time-inline">
+      <button class="time-button" type="submit">{% trans "Сохранить" %}</button>
+      {% if back %}<a class="time-button secondary" href="{{ back }}">{% trans "Отмена" %}</a>{% endif %}
+    </div>
+  </div>
+</form>
+
+<style>
+.checkbox-inline-label {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: 500;
+}
+.checkbox-inline-label input[type=checkbox] {
+  width: 18px !important;
+  height: 18px !important;
+  accent-color: var(--cab-primary);
+  margin: 0 !important;
+}
+</style>
+{% endblock %}
+

@@ -1,0 +1,76 @@
+/* ===================================================
+   Header
+   =================================================== */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-height);
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo */
+.logo-link { display: flex; align-items: center; gap: var(--spacing-sm); text-decoration: none; }
+.logo-img { height: 40px; width: auto; }
+.logo-text { font-size: 20px; font-weight: 700; color: var(--text-main); }
+
+/* Desktop Nav */
+.nav-desktop { display: flex; align-items: center; gap: var(--spacing-lg); }
+.nav-link { color: var(--text-muted); font-weight: 500; transition: color var(--transition-fast); }
+.nav-link:hover, .nav-link.active { color: var(--primary-color); }
+
+/* Header Actions */
+.header-actions { display: flex; align-items: center; gap: var(--spacing-md); }
+
+/* Language Switcher */
+.lang-switcher { position: relative; }
+.lang-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--bg-white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm);
+    min-width: 80px;
+    box-shadow: var(--shadow-md);
+}
+.lang-option {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-sm);
+    text-align: center;
+    font-size: 14px;
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+}
+.lang-option:hover { background: var(--bg-body); }
+
+/* Burger */
+.burger-btn { display: none; padding: var(--spacing-sm); color: var(--text-main); }
+
+/* Mobile Menu */
+.mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg-white);
+    z-index: 200;
+    padding: 80px var(--spacing-xl) var(--spacing-xl);
+    flex-direction: column;
+}
+.mobile-menu.active { display: flex; }
+.mobile-nav-link { font-size: 24px; font-weight: 600; color: var(--text-main); padding: var(--spacing-md) 0; }
+
+@media (max-width: 768px) {
+    .nav-desktop { display: none; }
+    .burger-btn { display: flex; }
+}

@@ -1,0 +1,38 @@
+<style>
+    /* Critical CSS: Minimal styles for first paint */
+    :root {
+        --bg-body: #f9fafb;
+        --text-main: #111827;
+        --header-height: 80px;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        font-family: sans-serif;
+        overflow-x: hidden;
+    }
+
+    .site-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .header {
+        height: var(--header-height);
+        background: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    [x-cloak] { display: none !important; }
+</style>

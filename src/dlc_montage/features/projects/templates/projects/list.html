@@ -1,0 +1,90 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Проекты" %} {% trans '— DLC Montage' %}{% endblock %}
+
+{% block cabinet_content %}
+<link rel="stylesheet" href="{% static 'internal_time/css/reports.css' %}">
+<link rel="stylesheet" href="{% static 'customer_portal/css/portal.css' %}">
+
+<div class="customer-portal-shell time-page">
+  <div class="customer-header">
+    <div class="customer-header-title">
+      <p class="time-eyebrow">{% if direction == 'ac' %}{% trans 'AC ·' %} {% elif direction == 'dc' %}{% trans 'DC ·' %} {% endif %}{% trans 'ANLAGEN' %}</p>
+      <h1>{% trans "Проекты" %}</h1>
+      <p>{% trans "Управление проектными группами и строительными площадками." %}</p>
+    </div>
+    {% if manager %}
+      <div class="customer-header-actions">
+        <a class="time-button" href="{% url 'projects:new' %}">+ {% trans "Создать проект" %}</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <form method="get" class="customer-filter-bar" aria-label="{% trans 'Фильтры проектов' %}">
+    <div class="customer-filter-item">
+      <label for="id_group_search">{% trans "Поиск" %}</label>
+      <input id="id_group_search" type="search" name="q" value="{{ query }}" placeholder="{% trans 'Название, адрес или заказчик' %}">
+    </div>
+    <div class="customer-filter-item">
+      <label for="id_group_status">{% trans "Статус" %}</label>
+      <select id="id_group_status" name="status">
+        <option value="active"{% if status == 'active' %} selected{% endif %}>{% trans "Активные (по умолчанию)" %}</option>
+        <option value="completed"{% if status == 'completed' %} selected{% endif %}>{% trans "Завершённые" %}</option>
+        <option value="all"{% if status == 'all' %} selected{% endif %}>{% trans "Все" %}</option>
+      </select>
+    </div>
+    <div class="customer-filter-actions">
+      <button type="submit" class="time-button secondary">{% trans "Применить" %}</button>
+      {% if query or status != 'active' %}
+        <a href="?status=active" class="time-button quiet">{% trans "Сбросить" %}</a>
+      {% endif %}
+    </div>
+  </form>
+
+  <div class="customer-grid">
+    {% for group in groups %}
+      <article class="customer-card">
+        <div class="customer-card-body">
+          {% if group.client %}<div class="customer-card-eyebrow">{{ group.client.name }}</div>{% endif %}
+          <h2 class="customer-card-title">
+            <a href="{% if direction == 'ac' %}{% url 'cabinet:workspace_page' 'ac' 'objects' %}?group={{ group.pk }}&status=all{% else %}{% url 'projects:detail' group.pk %}{% endif %}">{{ group.name }}</a>
+          </h2>
+          {% if group.address %}
+            <p class="customer-card-meta">{{ group.address }}</p>
+          {% endif %}
+          <div class="customer-card-badges">
+            <span class="cust-badge cust-badge--{{ group.status }}">{{ group.get_status_display }}</span>
+            {% if group.has_ac %}<span class="cust-badge">AC</span>{% endif %}
+            {% if group.has_dc %}<span class="cust-badge">DC</span>{% endif %}
+            {% if group.capacity_kw %}<span class="cust-badge">{{ group.capacity_kw }} {% trans 'kW' %}</span>{% endif %}
+            <span class="cust-badge cust-badge--progress">
+              {{ group.ac_objects.count }} {% trans 'Standorte' %}
+            </span>
+          </div>
+        </div>
+        <div class="customer-card-footer">
+          <a class="time-button secondary" href="{% if direction == 'ac' %}{% url 'cabinet:workspace_page' 'ac' 'objects' %}?group={{ group.pk }}&status=all{% else %}{% url 'projects:detail' group.pk %}{% endif %}">
+            {% trans "Открыть" %}
+          </a>
+          {% if group.has_ac %}
+            <div class="time-inline" style="gap: 6px;">
+              <a class="time-button quiet sm" href="{% url 'projects:detail' group.pk %}">{% trans "Детали" %}</a>
+              <a class="time-button quiet sm" href="{% url 'mbg_reports:performance_exports' group.pk %}" title="{% trans 'Акты и срез' %}">📄 {% trans "Акты" %}</a>
+              <a class="time-button quiet sm" href="{% url 'mbg_reports:list' %}?group={{ group.pk }}" title="{% trans 'Отчёты MBG' %}">📋 {% trans "Отчёты" %}</a>
+            </div>
+          {% endif %}
+        </div>
+      </article>
+    {% empty %}
+      <div class="customer-empty-card" style="grid-column: 1 / -1;">
+        <p>{% trans "Проектов пока нет." %}</p>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if groups_page and groups_page.paginator.num_pages > 1 %}
+    {% include "customer_portal/includes/_pagination.html" with page_obj=groups_page extra_params="q="|add:query|add:"&status="|add:status %}
+  {% endif %}
+</div>
+{% endblock %}

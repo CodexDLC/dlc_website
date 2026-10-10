@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}500 — {% trans "Server Error" %}{% endblock title %}
+{% block meta_robots %}<meta name="robots" content="noindex, nofollow">{% endblock meta_robots %}
+
+{% block content %}
+<section class="section">
+    <div class="container text-center">
+        <h1 class="error-code">500</h1>
+        <h2>{% trans "Server Error" %}</h2>
+        <p class="text-muted">{% trans "Something went wrong on our end. Please try again later." %}</p>
+        <a href="{% url 'home' %}" class="btn btn-primary">{% trans "Go Home" %}</a>
+    </div>
+</section>
+{% endblock content %}

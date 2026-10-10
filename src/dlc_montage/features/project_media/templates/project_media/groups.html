@@ -1,0 +1,45 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Файлы и фотографии" %} {% trans '— DLC Montage' %}{% endblock %}
+
+{% block cabinet_content %}
+<link rel="stylesheet" href="{% static 'internal_time/css/reports.css' %}">
+<link rel="stylesheet" href="{% static 'customer_portal/css/portal.css' %}">
+
+<div class="customer-portal-shell time-page">
+  <div class="customer-documents-content">
+    <div class="customer-header">
+      <div class="customer-header-title">
+        <p class="time-eyebrow">{% trans 'AC · PROJEKTDOKUMENTATION' %}</p>
+        <h1>{% trans "Файлы и фотографии" %}</h1>
+        <p>{% trans "Выберите проект для просмотра и загрузки файлов." %}</p>
+      </div>
+    </div>
+
+    <div class="customer-grid">
+      {% for group in groups %}
+        <article class="customer-card">
+          <div class="customer-card-body">
+            <h2 class="customer-card-title">
+              <a href="{% url 'project_media:list' group.pk %}">{{ group.name }}</a>
+            </h2>
+            {% if group.address %}
+              <p class="customer-card-meta">{{ group.address }}</p>
+            {% endif %}
+          </div>
+          <div class="customer-card-footer">
+            <a class="time-button secondary" href="{% url 'project_media:list' group.pk %}">
+              {% trans "Открыть файлы" %} →
+            </a>
+          </div>
+        </article>
+      {% empty %}
+        <div class="customer-empty-card" style="grid-column: 1 / -1;">
+          <p>{% trans "Нет доступных проектов." %}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

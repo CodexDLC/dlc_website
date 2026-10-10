@@ -1,0 +1,31 @@
+/* CODEX_DJANGO_CLI BLUEPRINT STATUS: MOVE_TO_CLI_BLUEPRINT. Reason: generated cabinet app asset source for codex-django-cli blueprints. */
+:root {
+  /* Brand */
+  --cab-primary:          #3b82f6;
+  --cab-primary-dark:     #2563eb;
+
+  /* Sidebar */
+  --cab-sidebar-bg:       #1e293b;
+  --cab-sidebar-text:     #94a3b8;
+  --cab-sidebar-active:   #ffffff;
+  --cab-sidebar-hover-bg: #334155;
+  --cab-sidebar-width:    260px;
+  --cab-sidebar-width-sm: 60px;
+
+  /* Topbar */
+  --cab-topbar-height:    60px;
+  --cab-topbar-bg:        #ffffff;
+  --cab-topbar-border:    #e2e8f0;
+
+  /* Content */
+  --cab-content-bg:       #f8fafc;
+  --cab-border:           #e2e8f0;
+
+  /* Text */
+  --cab-text:             #1e293b;
+  --cab-text-muted:       #64748b;
+
+  /* Misc */
+  --cab-radius:           8px;
+  --cab-font:             'Inter', system-ui, sans-serif;
+}

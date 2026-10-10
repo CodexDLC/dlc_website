@@ -1,0 +1,15 @@
+{
+    "js": {
+        "app/cabinet.js": {
+            "strategy": "dependency_graph",
+            "entry": [
+                "app/cabinet.entry.js"
+            ],
+            "roots": [
+                "core",
+                "widgets",
+                "builders"
+            ]
+        }
+    }
+}

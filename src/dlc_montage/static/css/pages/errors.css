@@ -1,0 +1,11 @@
+/* ===================================================
+   Error Pages Styles (404, 500)
+   =================================================== */
+
+.error-code {
+    font-size: 120px;
+    font-weight: 900;
+    margin: 0 0 var(--spacing-md);
+    opacity: 0.1;
+    line-height: 1;
+}

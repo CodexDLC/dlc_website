@@ -1,0 +1,7 @@
+{% load i18n %}
+<nav class="mbg-section-nav" aria-label="{% trans 'Раздел MBG' %}">
+  <a class="{% if active_section == 'reports' %}is-active{% endif %}" href="{% url 'mbg_reports:list' %}">{% trans "Отчёты MBG" %}</a>
+  {% if can_export or request.user.is_superuser %}
+    <a class="{% if active_section == 'exports' %}is-active{% endif %}" href="{% url 'mbg_reports:export_hub' %}">{% trans "Экспорт Excel" %}</a>
+  {% endif %}
+</nav>

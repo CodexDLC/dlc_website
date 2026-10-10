@@ -1,0 +1,25 @@
+# Local preproduction copy; never shares volumes with readiness tests or SQLite.
+# Run with -p dlc-preprod --env-file .env. Bind only to this machine.
+include:
+  - path: compose.local.yml
+
+services:
+  db:
+    ports: !override
+      - "127.0.0.1:55434:5432"
+  redis:
+    ports: !override
+      - "127.0.0.1:56380:6379"
+  web:
+    ports: !override []
+    environment:
+      DJANGO_SETTINGS_MODULE: dlc_montage.core.settings.container_local
+      DEBUG: "False"
+      SITE_BASE_URL: http://127.0.0.1:8000/
+      CSRF_TRUSTED_ORIGINS: "http://127.0.0.1:8000,http://localhost:8000"
+      NEXTCLOUD_WEBDAV_URL: ${NEXTCLOUD_WEBDAV_URL:-}
+      NEXTCLOUD_USER: ${NEXTCLOUD_USER:-}
+      NEXTCLOUD_PASSWORD: ${NEXTCLOUD_PASSWORD:-}
+  nginx:
+    ports: !override
+      - "127.0.0.1:8000:80"

@@ -1,0 +1,95 @@
+{% extends "customer_portal/base.html" %}{% load static i18n %}
+{% block report_content %}
+<link rel="stylesheet" href="{% static 'project_media/css/gallery.css' %}">
+
+<p class="time-inline" style="margin-bottom: 20px;">
+  <a class="time-button secondary" href="{% url 'customer_portal:accepted_work_xlsx' site.pk %}">{% trans "Акт выполненных работ (XLSX)" %}</a>
+  <a class="time-button secondary" href="{% url 'customer_portal:site_timesheet_xlsx' site.pk %}">{% trans "Табель MBG (XLSX)" %}</a>
+  {% if not manager and request.user.client_membership.can_manage_projects %}
+    <a class="time-button secondary" href="{% url 'customer_portal:site_edit' site.pk site.group_id %}">{% trans "Изменить Standort" %}</a>
+    <a class="time-button secondary" href="{% url 'customer_portal:plan_proposal' site.pk %}">{% trans "Предложить план" %}</a>
+    <a class="time-button secondary" href="{% url 'customer_portal:manual_item_proposal' site.pk %}">{% trans "Предложить отдельную работу" %}</a>
+  {% endif %}
+</p>
+
+{% if chosen_date %}
+  <div class="customer-chips" style="margin-bottom: 16px;">
+    <span class="customer-chip">
+      {% trans "Выбранная дата" %}: {{ chosen_date }}
+      <a href="{% url 'customer_portal:site' site.pk %}" class="customer-chip-clear" title="{% trans 'Показать все даты' %}">&times;</a>
+    </span>
+  </div>
+{% endif %}
+
+<!-- ОБЩИЙ ВЕРХ ОБЪЕКТА (SHARED OBJECT TOP) -->
+{% include "projects/includes/_object_common_top.html" with site=site group=site.group completed_rows=detail.completed_rows photo_summary=photo_summary files=files daily_work=detail.daily_work chosen_date=chosen_date is_customer_view=True %}
+
+<!-- ПРОВЕРКА ЗАКАЗЧИКОМ (SITE REVIEW) -->
+<section class="time-card">
+  <h2>{% trans "Проверка заказчиком" %}</h2>
+  <p class="time-hint" style="margin-bottom: 14px;">
+    {% trans "Попозиционная приёмка работ заказчиком (Emil) пока не реализована — действует общая проверка объекта." %}
+  </p>
+  <p>
+    {% if detail.review %}
+      {{ detail.review.get_status_display }}
+    {% else %}
+      {% trans "Не отправлено" %}
+    {% endif %}
+    {% if detail.review_stale %} · {% trans "Работы изменились, требуется повторная отправка" %}{% endif %}
+  </p>
+  {% if detail.review.remark %}
+    <p>{{ detail.review.remark }}</p>
+  {% endif %}
+  {% if manager %}
+    <form method="post" action="{% url 'customer_portal:review_submit' site.pk %}">
+      {% csrf_token %}
+      <button class="time-button" type="submit">{% trans "Отправить на проверку" %}</button>
+    </form>
+  {% elif detail.review.status == 'submitted' and not detail.review_stale %}
+    <form method="post" action="{% url 'customer_portal:review_decision' site.pk %}" class="time-inline">
+      {% csrf_token %}
+      <button class="time-button" name="decision" value="accept">{% trans "Принять без замечаний" %}</button>
+      <input name="reason" placeholder="{% trans 'Замечание для возврата' %}">
+      <button class="time-button secondary" name="decision" value="return">{% trans "Вернуть с замечанием" %}</button>
+    </form>
+  {% endif %}
+</section>
+
+<!-- ПРЕДЛОЖЕНИЯ ПЛАНА (PROPOSALS) -->
+{% if detail.proposals %}
+  <section class="time-card">
+    <h2>{% trans "Предложения плана" %}</h2>
+    {% for proposal in detail.proposals %}
+      <div style="margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--cab-border, #e2e8f0);">
+        <p>{{ proposal.get_status_display }} · {{ proposal.created_at|date:"d.m.Y H:i" }} · {{ proposal.payload|length }} {% trans "позиций" %}{% if proposal.decision_reason %} · {{ proposal.decision_reason }}{% endif %}</p>
+        {% if manager and proposal.status == 'pending' %}
+          <ul>
+            {% for row in proposal.payload %}
+              <li>{{ row.label }} · {{ row.planned_quantity }}</li>
+            {% endfor %}
+          </ul>
+          <form method="post" action="{% url 'customer_portal:proposal_decision' proposal.pk %}" class="time-inline">
+            {% csrf_token %}
+            <input name="reason" required placeholder="{% trans 'Причина решения' %}">
+            <button class="time-button" name="decision" value="approve">{% trans "Утвердить позиции" %}</button>
+            <button class="time-button secondary" name="decision" value="reject">{% trans "Отклонить" %}</button>
+          </form>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </section>
+{% endif %}
+
+<dialog class="project-media-dialog" data-media-dialog aria-labelledby="project-media-dialog-title">
+  <div class="project-media-dialog-head">
+    <h2 id="project-media-dialog-title" data-media-dialog-title></h2>
+    <button type="button" data-media-close aria-label="Schließen"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+  </div>
+  <div class="project-media-dialog-body">
+    <img data-media-dialog-image alt="" hidden>
+    <iframe data-media-dialog-pdf title="Vorschau" hidden></iframe>
+  </div>
+</dialog>
+{% endblock %}
+{% block extra_js %}{{ block.super }}<script src="{% static 'project_media/js/gallery.js' %}" defer></script>{% endblock %}

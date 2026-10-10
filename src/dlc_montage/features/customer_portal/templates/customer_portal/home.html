@@ -1,0 +1,75 @@
+{% extends "customer_portal/base.html" %}
+{% load i18n %}
+
+{% block report_content %}
+<div class="customer-header">
+  <div class="customer-header-title">
+    <p class="time-eyebrow">DLC Montage</p>
+    <h1>{% trans "Кабинет заказчика" %}</h1>
+    <p>{% trans "Ваши Anlagen и Standorte, план и подтверждённые работы." %}</p>
+  </div>
+  {% if manager %}
+    <div class="customer-header-actions time-inline">
+      <a class="time-button secondary" href="{% url 'customer_portal:memberships' %}">{% trans "Доступ пользователей" %}</a>
+      <a class="time-button secondary" href="{% url 'projects:new' %}">{% trans "Создать Anlage в CRM" %}</a>
+    </div>
+  {% elif membership.can_manage_projects %}
+    <div class="customer-header-actions">
+      <a class="time-button" href="{% url 'customer_portal:group_new' %}">{% trans "Создать Anlage" %}</a>
+    </div>
+  {% endif %}
+</div>
+
+{% if pending_proposals %}
+  <section class="time-card" style="margin-bottom: 24px;">
+    <h2>{% trans "Планы на проверке" %}</h2>
+    <ul>
+      {% for proposal in pending_proposals %}
+        <li><a href="{% url 'customer_portal:site' proposal.site_id %}">{{ proposal.site.group.name }} · {{ proposal.site.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endif %}
+
+<form method="get" class="customer-filter-bar" aria-label="{% trans 'Фильтры проектов' %}">
+  <div class="customer-filter-item">
+    <label for="id_home_search">{% trans "Поиск" %}</label>
+    <input id="id_home_search" type="search" name="q" value="{{ query }}" placeholder="{% trans 'Название или адрес Anlage' %}">
+  </div>
+  <div class="customer-filter-item">
+    <label for="id_home_status">{% trans "Статус" %}</label>
+    <select id="id_home_status" name="status">
+      <option value="active"{% if status == 'active' %} selected{% endif %}>{% trans "Активные (по умолчанию)" %}</option>
+      <option value="completed"{% if status == 'completed' %} selected{% endif %}>{% trans "Завершённые" %}</option>
+      <option value="all"{% if status == 'all' %} selected{% endif %}>{% trans "Все" %}</option>
+    </select>
+  </div>
+  <div class="customer-filter-item">
+    <label for="id_home_type">{% trans "Направление" %}</label>
+    <select id="id_home_type" name="type">
+      <option value="all"{% if not direction or direction == 'all' %} selected{% endif %}>{% trans "Все типы" %}</option>
+      <option value="ac"{% if direction == 'ac' %} selected{% endif %}>{% trans "Только AC" %}</option>
+      <option value="dc"{% if direction == 'dc' %} selected{% endif %}>{% trans "Только DC" %}</option>
+    </select>
+  </div>
+  <div class="customer-filter-actions">
+    <button type="submit" class="time-button secondary">{% trans "Применить" %}</button>
+    {% if query or status != 'active' or direction %}
+      <a href="{% url 'customer_portal:home' %}" class="time-button quiet">{% trans "Сбросить" %}</a>
+    {% endif %}
+  </div>
+</form>
+
+<div class="customer-grid">
+  {% for group in groups %}
+    {% include "customer_portal/includes/_group_card.html" with group=group %}
+  {% empty %}
+    <div class="customer-empty-card" style="grid-column: 1 / -1;">
+      <p>{% trans "Доступные проекты не найдены." %}</p>
+    </div>
+  {% endfor %}
+</div>
+
+{% include "customer_portal/includes/_pagination.html" with page_obj=groups_page extra_params="q="|add:query|add:"&status="|add:status|add:"&type="|add:direction %}
+
+{% endblock %}

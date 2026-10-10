@@ -1,0 +1,84 @@
+{% extends "internal_time/base.html" %}{% load i18n static %}
+{% block report_content %}
+<link rel="stylesheet" href="{% static 'customer_portal/css/portal.css' %}">
+<link rel="stylesheet" href="{% static 'project_media/css/gallery.css' %}">
+<div class="customer-documents-content">
+<header class="time-heading">
+  <div>
+    <p class="time-eyebrow">{% trans "Документация проекта" %}</p>
+    <h1>{{ group.name }}</h1>
+    <p>{% trans "Фотографии, планы и документы доступны только участникам проекта." %}</p>
+  </div>
+  <a href="{% url 'projects:detail' group.pk %}">{% trans "К проекту" %}</a>
+</header>
+
+<details class="time-card project-media-upload" {% if form.errors %}open{% endif %}>
+  <summary><strong>＋ {% trans "Загрузить файл" %}</strong></summary>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}{{ form.non_field_errors }}
+    <div class="time-grid">{% for field in form %}<div class="time-field">{{ field.label_tag }}{{ field }}{{ field.errors }}</div>{% endfor %}</div>
+    <button class="time-button" type="submit">{% trans "Загрузить" %}</button>
+    <p class="time-hint">{% trans "JPEG, PNG, WebP или PDF, до 20 МБ. Загрузка не публикует файл на сайте." %}</p>
+  </form>
+</details>
+
+<form method="get" class="time-card project-media-filters">
+  <div>{{ filter_form.kind.label_tag }}{{ filter_form.kind }}</div>
+  <div>{{ filter_form.site.label_tag }}{{ filter_form.site }}</div>
+  <button class="time-button secondary" type="submit">{% trans "Применить" %}</button>
+  <a href="{% url 'project_media:list' group.pk %}">{% trans "Сбросить" %}</a>
+</form>
+
+<section class="project-media-grid" aria-label="{% trans 'Файлы проекта' %}">
+  {% for item in files %}
+    <article class="project-media-card">
+      {% if item.is_image %}
+        <button type="button" class="project-media-preview project-media-image"
+                data-media-preview data-preview-kind="image"
+                data-preview-url="{% url 'project_media:preview' item.pk %}"
+                data-preview-title="{{ item.caption|default:item.original_name }}"
+                aria-label="{% trans 'Открыть' %}: {{ item.caption|default:item.original_name }}">
+          <img src="{% url 'project_media:preview' item.pk %}" alt="{{ item.caption|default:item.original_name }}" loading="lazy">
+        </button>
+      {% elif item.is_pdf %}
+        <button type="button" class="project-media-preview project-media-document"
+                data-media-preview data-preview-kind="pdf"
+                data-preview-url="{% url 'project_media:preview' item.pk %}"
+                data-preview-title="{{ item.caption|default:item.original_name }}">
+          <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i><span>PDF</span>
+        </button>
+      {% endif %}
+      <div class="project-media-info">
+        <h2>{{ item.caption|default:item.original_name }}</h2>
+        <p>{{ item.get_kind_display }} · {{ item.site|default:group }}</p>
+        <p class="time-hint">{{ item.original_name }} · {{ item.size|filesizeformat }}</p>
+        <div class="project-media-actions">
+          {% if item.can_preview %}<button type="button" class="time-button secondary" data-media-preview data-preview-kind="{% if item.is_image %}image{% else %}pdf{% endif %}" data-preview-url="{% url 'project_media:preview' item.pk %}" data-preview-title="{{ item.caption|default:item.original_name }}">{% trans "Просмотреть" %}</button>{% endif %}
+          <a class="time-button quiet" href="{% url 'project_media:download' item.pk %}">{% trans "Скачать" %}</a>
+        </div>
+        {% if manager and item.kind == 'photo' %}
+          <form method="post" action="{% url 'project_media:publicity' item.pk %}" class="project-media-publicity">
+            {% csrf_token %}<label><input type="checkbox" name="public" value="1" {% if item.is_public %}checked{% endif %}> {% trans "Для будущего сайта" %}</label>
+            <button class="time-button quiet" type="submit">{% trans "Сохранить" %}</button>
+          </form>
+        {% endif %}
+      </div>
+    </article>
+  {% empty %}
+    <div class="time-card time-empty">{% trans "По выбранным фильтрам файлов нет." %}</div>
+  {% endfor %}
+</section>
+
+<dialog class="project-media-dialog" data-media-dialog aria-labelledby="project-media-dialog-title">
+  <div class="project-media-dialog-head">
+    <h2 id="project-media-dialog-title" data-media-dialog-title></h2>
+    <button type="button" data-media-close aria-label="{% trans 'Закрыть' %}"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+  </div>
+  <div class="project-media-dialog-body">
+    <img data-media-dialog-image alt="" hidden>
+    <iframe data-media-dialog-pdf title="{% trans 'Предварительный просмотр PDF' %}" hidden></iframe>
+  </div>
+</dialog>
+</div>
+{% endblock %}
+{% block extra_js %}{{ block.super }}<script src="{% static 'project_media/js/gallery.js' %}" defer></script>{% endblock %}

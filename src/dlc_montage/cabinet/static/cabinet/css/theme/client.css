@@ -1,0 +1,42 @@
+/* CODEX_DJANGO_CLI BLUEPRINT STATUS: MOVE_TO_CLI_BLUEPRINT. Reason: generated cabinet app asset source for codex-django-cli blueprints. */
+/* Client-space overrides.
+   Loaded in the shared cabinet bundle, but scoped to the client shell only. */
+
+.cab-wrapper--client {
+  --cab-primary: #0f766e;
+  --cab-primary-dark: #115e59;
+  --cab-sidebar-bg: #fcfffe;
+  --cab-sidebar-text: #4b5563;
+  --cab-sidebar-active: #0f172a;
+  --cab-sidebar-hover-bg: #e6fffb;
+  --cab-topbar-bg: #ffffff;
+  --cab-topbar-border: #d9f2ee;
+  --cab-content-bg: linear-gradient(180deg, #f5fbfa 0%, #eef7f5 100%);
+  --cab-border: #d9ebe7;
+  --cab-text: #13201d;
+  --cab-text-muted: #5b6b68;
+}
+
+.cab-wrapper--client .cab-sidebar {
+  border-right: 1px solid var(--cab-border);
+  box-shadow: none;
+}
+
+.cab-wrapper--client .cab-sidebar__logo-name,
+.cab-wrapper--client .cab-nav__label {
+  color: var(--cab-text);
+}
+
+.cab-wrapper--client .cab-nav:hover {
+  background: var(--cab-sidebar-hover-bg);
+}
+
+.cab-wrapper--client .cab-nav.active {
+  background: color-mix(in srgb, var(--cab-primary) 12%, white);
+  color: var(--cab-text);
+}
+
+.cab-wrapper--client .cab-topbar,
+.cab-wrapper--client .cab-content {
+  background: transparent;
+}

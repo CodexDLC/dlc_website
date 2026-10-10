@@ -1,0 +1,168 @@
+/* DLC Montage Unified Documents Presentation CSS */
+/* Reusable styling for Customer Portal and Internal MBG Reports Unified Document Screen */
+
+.unified-documents-content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0;
+  text-align: left;
+}
+
+/* Tabs for Admin / Settlement Manager */
+.unified-doc-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--cab-border, #e2e8f0);
+  margin-bottom: 24px;
+}
+
+.unified-doc-tab {
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cab-text-muted, #5b6b68);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.unified-doc-tab:hover {
+  color: var(--cab-text, #0A2540);
+}
+
+.unified-doc-tab:focus-visible {
+  outline: 2px solid var(--cab-primary, #00A86B);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.unified-doc-tab[aria-selected="true"],
+.unified-doc-tab.is-active {
+  color: var(--cab-primary, #00A86B);
+  border-bottom-color: var(--cab-primary, #00A86B);
+}
+
+/* Payment Status Badges */
+.unified-doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.unified-doc-badge--paid {
+  background: rgba(0, 168, 107, 0.12);
+  color: #007a4d;
+  border: 1px solid rgba(0, 168, 107, 0.3);
+}
+
+.unified-doc-badge--unpaid {
+  background: rgba(10, 37, 64, 0.08);
+  color: #0A2540;
+  border: 1px solid rgba(10, 37, 64, 0.2);
+}
+
+/* Settlement Batch Actions Bar */
+.unified-doc-batch-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: #f8fafc;
+  border: 1px solid var(--cab-border, #e2e8f0);
+  border-radius: var(--cab-radius, 8px);
+  padding: 10px 16px;
+  margin-bottom: 16px;
+}
+
+.unified-doc-batch-bar__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.unified-doc-batch-bar__filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cab-text, #0A2540);
+  cursor: pointer;
+}
+
+/* Missing Action URL Warnings & Disabled State */
+.unified-doc-url-warning {
+  display: inline-block;
+  font-size: 12px;
+  color: #b91c1c;
+  margin-left: 8px;
+  font-style: italic;
+}
+
+/* Master Tab Card & Google Sheets Sync Form */
+.unified-master-card {
+  background: var(--cab-card-bg, #ffffff);
+  border: 1px solid var(--cab-border, #e2e8f0);
+  border-radius: var(--cab-radius, 8px);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.unified-master-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cab-text, #0A2540);
+  margin: 0 0 8px;
+}
+
+.unified-master-card p {
+  color: var(--cab-text-muted, #5b6b68);
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+
+.unified-doc-sync-form {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--cab-border, #e2e8f0);
+}
+
+.unified-doc-sync-form button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Site Table Selection Checkboxes */
+.unified-site-select-cb {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--cab-primary, #00A86B);
+}
+
+.unified-site-select-cb[disabled] {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* Row visibility toggling for archive/paid filter */
+tr.is-paid-row.is-filtered-out {
+  display: none !important;
+}

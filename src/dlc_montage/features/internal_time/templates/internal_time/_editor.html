@@ -1,0 +1,71 @@
+{% load i18n %}
+<section data-hour-label="{% trans 'ч' %}" data-minute-label="{% trans 'мин' %}" data-request-error="{% trans 'Не удалось выполнить запрос. Данные формы остались на странице. Попробуйте ещё раз.' %}" id="report-editor" aria-labelledby="report-title">
+<header class="time-heading"><div><a href="{% url 'internal_time:list' %}">{% trans '← Внутренние отчёты' %}</a>
+<p class="time-eyebrow">{% trans 'ПЕРСОНАЛ / РАБОЧИЙ ДЕНЬ' %}</p>
+<h1 id="report-title">{% if report %}{% trans 'Изменить отчёт' %}{% else %}{% trans 'Отчёт команды' %}{% endif %}</h1>
+<p>{% trans 'Один рабочий день для всей команды. Индивидуальные изменения — рядом с именем.' %}</p></div>
+<span class="time-badge">{% if report %}{{ report.get_status_display }}{% else %}{% trans 'Новый отчёт' %}{% endif %}</span></header>
+{% if errors or form.non_field_errors or formset.non_form_errors %}
+<div class="time-alert" role="alert">{% for error in errors %}<p>{{ error }}</p>{% endfor %}
+{{ form.non_field_errors }}{{ formset.non_form_errors }}</div>{% endif %}
+<form id="report-form" method="post" action="{{ post_url }}"
+      hx-post="{{ post_url }}" hx-target="#report-editor" hx-swap="outerHTML" hx-disabled-elt="find button[type='submit']">
+{% csrf_token %}{{ form.version }}{{ form.submission_key }}{{ form.submission_key.errors }}{{ formset.management_form }}
+<div class="time-card">
+<h2>{% trans '01 · Где работали' %}</h2>
+<div class="time-grid">
+<label>{{ form.work_date.label }}{{ form.work_date }}{{ form.work_date.errors }}</label>
+<label>{{ form.direction.label }}{{ form.direction }}{{ form.direction.errors }}</label>
+<div class="time-wide"><label for="id_project_group">{% trans 'Проект' %}</label>
+{{ form.project_group }}{{ form.project_group.errors }}</div>
+</div>
+{% if can_create_group %}<details class="time-details"><summary>{% trans 'Проекта ещё нет?' %}</summary>
+<p>{% trans 'Достаточно названия. Остальные данные можно заполнить позже.' %}</p>
+<div class="time-inline"><input name="new_project_name" maxlength="255" placeholder="{% trans 'Название проекта' %}" aria-label="{% trans 'Новый проект' %}">
+<button type="submit" name="action" value="project" formnovalidate class="time-button secondary">{% trans 'Создать проект' %}</button></div></details>{% endif %}
+</div>
+<div class="time-card">
+<h2>{% trans '02 · Рабочий день команды' %}</h2>
+<div class="time-grid three">
+<label>{{ form.starts_at.label }}{{ form.starts_at }}{{ form.starts_at.errors }}</label>
+<label>{{ form.ends_at.label }}{{ form.ends_at }}{{ form.ends_at.errors }}</label>
+<label>{{ form.lunch_minutes.label }}{{ form.lunch_minutes }}{{ form.lunch_minutes.errors }}</label>
+</div>
+<p class="time-hint">{% trans 'Дорога уже входит в указанное время. Обед отмечается, но не вычитается.' %}</p>
+<div class="time-base">{% trans 'Общее время на человека' %} <strong data-base-duration>—</strong></div>
+</div>
+<div class="time-card">
+<div class="time-inline spread"><h2>{% trans '03 · Кто работал' %}</h2><a href="{% url 'crews:list' %}" target="_blank" rel="noopener">{% trans 'Мои команды ↗' %}</a></div>
+<div class="time-inline"><select name="team" aria-label="{% trans 'Сохранённая команда' %}"><option value="">{% trans 'Выбрать сохранённую команду' %}</option>
+{% for team in teams %}<option value="{{ team.pk }}">{{ team.name }}</option>{% endfor %}</select>
+<button type="submit" name="action" value="team" formnovalidate class="time-button secondary">{% trans 'Добавить команду' %}</button></div>
+<p class="time-hint">{% trans 'Можно добавить людей по одному. Кнопка «−1 ч» уменьшает время только выбранного сотрудника.' %}</p>
+<div class="time-members">
+{% for member in formset %}
+<div class="time-member" data-member>
+<div><label>{% trans 'Сотрудник' %}{{ member.employee }}</label>{{ member.employee.errors }}</div>
+<div><label>{% trans 'Уменьшить на, минут' %}{{ member.deduction_minutes }}</label>{{ member.deduction_minutes.errors }}</div>
+<div class="time-member-actions"><button type="button" data-deduct="60" class="time-button secondary">{% trans '−1 ч' %}</button>
+<strong data-member-total>—</strong>
+<button type="submit" name="action" value="remove:{{ forloop.counter0 }}" formnovalidate
+class="time-button quiet" aria-label="Убрать сотрудника {{ forloop.counter }}">{% trans 'Убрать' %}</button></div>
+{{ member.non_field_errors }}
+</div>{% endfor %}
+</div>
+<button type="submit" name="action" value="add" formnovalidate class="time-button secondary">{% trans '＋ Добавить сотрудника' %}</button>
+</div>
+<div class="time-card">
+<h2>{% trans '04 · Дополнительно' %}</h2>
+<label>{{ form.work_description.label }}{{ form.work_description }}{{ form.work_description.errors }}</label>
+<datalist id="work-types">{% for item in work_types %}<option value="{{ item.name }}">{% endfor %}</datalist>
+<p class="time-hint">{% trans 'Выберите сохранённый вариант или напишите свой — он появится в списке после сохранения.' %}</p>
+<label>{{ form.note.label }}{{ form.note }}{{ form.note.errors }}</label>
+{% if manager and report %}<label>{{ form.reason.label }}{{ form.reason }}{{ form.reason.errors }}</label>{% endif %}
+</div>
+<footer class="time-save"><div><strong data-team-total>—</strong><span> {% trans 'человеко-часов суммарно' %}</span></div>
+<div class="time-inline"><button type="submit" name="action" value="draft" class="time-button secondary">
+{% if report and report.status != 'draft' %}{% trans 'Сохранить изменения' %}{% else %}{% trans 'Сохранить черновик' %}{% endif %}</button>
+{% if not report or report.status != 'accepted' %}<button type="submit" name="action" value="submit" class="time-button">{% trans 'Отправить отчёт' %}</button>{% endif %}</div></footer>
+<p class="time-hint">{% trans 'После отправки правка доступна 7 дней, пока администратор не примет отчёт.' %}</p>
+</form>
+</section>

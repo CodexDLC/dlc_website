@@ -1,47 +1,36 @@
-# dlc_website
+# DLC Montage
 
-> Django + Telegram Bot project.
+Текущий Django-проект: кабинет сотрудников и заказчиков, проекты AC/DC, отчёты,
+документы и публичный сайт. Кабинет поддерживает русский и немецкий языки.
 
-## Quick Start
+## Публичный сайт
 
-```bash
-# Install dependencies
-poetry install
+Сохранённый дизайн прежнего сайта доступен в
+[prototypes/public-site](prototypes/public-site/README.md). Это отдельный HTML-прототип;
+его страницы ещё не подключены к текущему Django-сайту. Старый backend не используется.
 
-# Run
-# Django dev server
-cd src/backend_django
-python manage.py runserver
+## Локальная разработка
 
-# Telegram Bot
-cd src/telegram_bot
-python -m main
+Требуется Python 3.13. Установка зависимостей: `uv sync --frozen --extra dev`.
+Настройки задаются локальным `.env` по образцу `.env.example`; секретные ключи нужно
+сгенерировать отдельно. Для рабочего запуска нужны база и приватное хранилище файлов.
 
-# Docker
-cd deploy
-docker compose up -d --build
-```
+Проверки: `uv run --extra dev pytest` и
+`uv run python src/dlc_montage/manage.py check --settings=dlc_montage.core.settings.test`.
+Тесты используют отдельную базу; рабочая база не должна задаваться в `TEST_DATABASE_URL`.
 
-## Structure
+## Тестовый сервер
 
-```
-src/
-├── backend_django/   # Django backend
-├── telegram_bot/     # Telegram Bot
-└── shared/           # Shared utilities
-```
+Временный адрес: `https://ai.penlite.de`. Подготовка, секреты, перенос базы и файлов,
+закрытый доступ и запрет индексации описаны в
+[инструкции](docs/ideas-and-tasks/28-test-server-preparation.md).
+Публикация исходников сама по себе не развёртывает сервер.
 
-## Development
+## Что хранится локально
 
-```bash
-ruff check src/        # Linting
-ruff format src/       # Formatting
-mypy src/              # Type checking
-pytest                 # Tests
-```
+Секреты, базы, пользовательские файлы, архив прежнего репозитория, реальные исторические
+записи и внутренние рабочие заметки исключены из Git. Одноразовые инструменты сверки
+реальных исторических данных и их тесты также остаются локальными. Универсальные
+сервисы импорта и их тесты входят в исходники; тестовые персональные данные синтетические.
 
-## Deploy
-
-Managed via Docker Compose + GitHub Actions CI/CD.
-
-See `deploy/` for Docker configs and `.github/workflows/` for pipelines.
+Правила разработки: [AGENTS.md](AGENTS.md) и [.agents/skills](.agents/skills/).

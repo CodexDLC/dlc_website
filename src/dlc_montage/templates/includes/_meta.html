@@ -1,0 +1,48 @@
+{% load static %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+    {% block title %}{% firstof seo.seo_title site_settings.company_name 'Project' %}{% endblock %}
+</title>
+
+<meta name="description"
+    content="{% block meta_description %}{% firstof seo.seo_description site_settings.site_description '' %}{% endblock %}">
+
+<meta name="author" content="{{ site_settings.company_name }}">
+<meta name="generator" content="Django">
+<link rel="canonical" href="{{ CANONICAL_DOMAIN }}{{ request.path }}">
+
+{% block meta_robots %}
+{% if TEST_SITE_NOINDEX %}
+<meta name="robots" content="noindex, nofollow, noarchive">
+{% else %}
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+{% endif %}
+{% endblock %}
+
+{% include 'includes/_hreflang_tags.html' %}
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ CANONICAL_DOMAIN }}{{ request.path }}">
+<meta property="og:title" content="{% block og_title %}{% firstof seo.seo_title site_settings.company_name %}{% endblock %}">
+<meta property="og:description" content="{% block og_description %}{% firstof seo.seo_description site_settings.site_description %}{% endblock %}">
+<meta property="og:image" content="{% block og_image %}{% if seo.seo_image %}{{ CANONICAL_DOMAIN }}{{ seo.seo_image.url }}{% else %}{{ CANONICAL_DOMAIN }}{{ site_settings.logo_url }}{% endif %}{% endblock %}">
+<meta property="og:site_name" content="{{ site_settings.company_name }}">
+<meta property="og:locale" content="{{ LANGUAGE_CODE }}">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{% block twitter_title %}{% firstof seo.seo_title site_settings.company_name %}{% endblock %}">
+<meta name="twitter:description" content="{% block twitter_description %}{% firstof seo.seo_description site_settings.site_description %}{% endblock %}">
+<meta name="twitter:image" content="{% block twitter_image %}{% if seo.seo_image %}{{ CANONICAL_DOMAIN }}{{ seo.seo_image.url }}{% else %}{{ CANONICAL_DOMAIN }}{{ site_settings.logo_url }}{% endif %}{% endblock %}">
+
+<!-- Favicons -->
+<link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/apple-touch-icon.png' %}">
+<link rel="manifest" href="{% static 'manifest.json' %}">
+
+<meta name="theme-color" content="#3b82f6">
+
+{% include 'includes/_critical_css.html' %}

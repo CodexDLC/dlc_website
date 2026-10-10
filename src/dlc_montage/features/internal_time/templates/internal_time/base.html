@@ -1,0 +1,10 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load static %}
+{% block cabinet_content %}
+<link rel="stylesheet" href="{% static 'internal_time/css/reports.css' %}">
+<div class="time-page">
+{% for message in messages %}<div class="time-alert" role="alert">{{ message }}</div>{% endfor %}
+{% block report_content %}{% endblock %}
+</div>
+{% endblock %}
+{% block extra_js %}<script src="{% static 'projects/js/searchable_choice.js' %}" defer></script><script src="{% static 'internal_time/js/editor.js' %}" defer></script>{% endblock %}

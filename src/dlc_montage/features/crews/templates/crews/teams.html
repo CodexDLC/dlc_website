@@ -1,0 +1,19 @@
+{% extends "internal_time/base.html" %}
+{% load i18n %}
+{% block title %}{% trans 'Команды' %}{% endblock %}
+{% block report_content %}
+<header class="time-heading"><div><a href="{% url 'internal_time:list' %}">{% trans '← Внутренние отчёты' %}</a>
+<p class="time-eyebrow">{% trans 'ПЕРСОНАЛ / КОМАНДЫ' %}</p><h1>{% trans 'Команды' %}</h1>
+<p>{% trans 'Сохраните состав один раз, чтобы добавлять его в отчёт одной кнопкой.' %}</p></div></header>
+<div class="time-grid">
+<div>{% for item in teams %}<a href="{% url 'crews:edit' item.pk %}" class="time-card time-report-link">
+<div><strong>{{ item.name }}</strong><p>{{ item.owner }}</p>
+{% for membership in item.memberships.all %}<span>{{ membership.employee }}{% if not forloop.last %}, {% endif %}</span>{% endfor %}</div></a>
+{% empty %}<div class="time-card"><h2>{% trans 'Соберите первую команду' %}</h2><p>{% trans 'Сотрудников заводит администратор в базе.' %}</p>
+{% if manager %}<a href="{% url 'staff_employees' %}">{% trans 'Управление сотрудниками' %}</a>{% endif %}</div>{% endfor %}</div>
+<form method="post" class="time-card">{% csrf_token %}<h2>{% if team %}{% trans 'Изменить команду' %}{% else %}{% trans 'Новая команда' %}{% endif %}</h2>
+{{ form.non_field_errors }}
+{% for field in form %}{% if field.is_hidden %}{{ field }}{% else %}<div class="time-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{{ field.errors }}</div>{% endif %}{% endfor %}
+<button class="time-button">{% trans 'Сохранить команду' %}</button>{% if team %}<a href="{% url 'crews:list' %}">{% trans 'Создать другую' %}</a>{% endif %}
+</form></div>
+{% endblock %}

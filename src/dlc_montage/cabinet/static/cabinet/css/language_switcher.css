@@ -1,0 +1,35 @@
+.crm-language-switcher {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 2px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid var(--cab-border, #d9ebe7);
+  border-radius: var(--cab-radius, 8px);
+  background: var(--cab-topbar-bg, #fff);
+}
+.crm-language-switcher button {
+  min-width: 38px;
+  min-height: 36px;
+  padding: 4px 7px;
+  border: 0;
+  border-radius: 5px;
+  font: inherit;
+  font-size: .8125rem;
+  font-weight: 600;
+  color: var(--cab-text, #0a2540);
+  background: transparent;
+  cursor: pointer;
+}
+.crm-language-switcher button[aria-pressed="true"] {
+  color: #fff;
+  background: var(--cab-primary-dark, #0a2540);
+}
+.crm-topbar__tab--active { color: var(--cab-primary-dark, #0a2540); }
+.crm-language-switcher button:hover { box-shadow: inset 0 0 0 1px var(--cab-primary, #00a86b); }
+.crm-language-switcher button:focus-visible { outline: 2px solid var(--cab-primary, #00a86b); outline-offset: 2px; }
+@media (max-width: 575.98px) {
+  .crm-language-switcher button { min-height: 40px; }
+  .crm-topbar > .flex-grow-1 { display: none; }
+  .crm-topbar__tab { padding-left: 6px; padding-right: 6px; }
+}

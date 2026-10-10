@@ -1,38 +1,53 @@
-# Git
-.git
+# Git and VCS
+archive/
+.git/
 .gitignore
+.github/
 
-# Python
-__pycache__
-*.py[codz]
-.venv
-.mypy_cache
-.ruff_cache
-.pytest_cache
-*.egg-info
+# Python caches and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
 
-# IDE
-.idea
-.vscode
-.cursor*
+# Virtual environment and package caches
+.venv/
+venv/
+.uv-cache/
+.pip-cache/
 
-# Docs & Meta
-docs/
-*.md
-LICENSE
-
-# Environment
+# Environment files and credentials
 .env
-.envrc
+.env.*
+!.env.example
 
-# Data
+# Working databases and local persistent state
 data/
+*.sqlite3
+*.db
+
+# Temporary directories and runtime artifacts
+.tmp/
+tmp/
+scratch/
 logs/
+outputs/
+pdfs/
+media/
+staticfiles/
 
-# Tests
-**/tests/
+# Test, lint, and IDE caches
+tests/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+.idea/
+.vscode/
 
-# Dev tools
-.pre-commit-config.yaml
-tools/
-scripts/
+# Deploy configs and docs (handled separately via mounts/contexts)
+deploy/
+!deploy/nginx/nginx.conf
+docs/

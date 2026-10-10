@@ -1,0 +1,88 @@
+/* ===================================================
+   Global Components: Buttons, Cards, Forms, Alerts
+   =================================================== */
+
+/* --- Buttons --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: 10px 24px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 500;
+    transition: all var(--transition-base);
+    cursor: pointer;
+    border: 2px solid transparent;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+    color: #fff;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.btn-outline:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.btn-lg { padding: 14px 32px; font-size: 17px; }
+.btn-sm { padding: 6px 16px; font-size: 13px; }
+.btn-block { width: 100%; }
+
+/* --- Cards --- */
+.card {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--transition-base);
+}
+.card:hover { box-shadow: var(--shadow-md); }
+.card-title { font-size: 20px; font-weight: 600; margin-bottom: var(--spacing-sm); }
+.card-description { color: var(--text-muted); }
+
+/* --- Feature Icons --- */
+.feature-icon { font-size: 40px; margin-bottom: var(--spacing-md); }
+
+/* --- Alerts --- */
+.alert {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-md);
+    font-size: 14px;
+}
+.alert-success { background: #d1fae5; color: #065f46; }
+.alert-error, .alert-danger { background: #fee2e2; color: #991b1b; }
+.alert-warning { background: #fef3c7; color: #92400e; }
+.alert-info { background: #dbeafe; color: #1e40af; }
+
+/* --- Section headers --- */
+.section-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+}
+
+/* --- CTA Section --- */
+.cta-section {
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-2xl) var(--spacing-xl);
+    text-align: center;
+}
+.cta-title { font-size: 32px; font-weight: 700; color: #fff; margin-bottom: var(--spacing-md); }

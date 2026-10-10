@@ -1,0 +1,59 @@
+# DLC Montage — Local Container Environment
+# Aggregates infra and django layers; isolated loopback ports; safe dev defaults.
+# Includes local Nginx adapter for static asset serving.
+include:
+  - path: compose.infra.yml
+  - path: compose.django.yml
+
+services:
+  db:
+    environment:
+      POSTGRES_PASSWORD: ${DLC_DB_PASSWORD:-dlc_local_pg_password}
+    ports:
+      - "127.0.0.1:${DLC_LOCAL_DB_PORT:-55433}:5432"
+
+  web:
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-dlc_montage.core.settings.container_local}
+      DEBUG: "False"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,web,nginx"
+      SECRET_KEY: ${SECRET_KEY:-local-dev-secret-key-dlc-montage-container-readiness-32c}
+      DLC_DB_PASSWORD: ${DLC_DB_PASSWORD:-dlc_local_pg_password}
+      DATABASE_URL: postgres://${DLC_DB_USER:-dlc_montage}:${DLC_DB_PASSWORD:-dlc_local_pg_password}@db:5432/${DLC_DB_NAME:-dlc_montage}
+    ports:
+      - "127.0.0.1:${DLC_LOCAL_WEB_PORT:-8000}:8000"
+
+  migrate:
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-dlc_montage.core.settings.container_local}
+      SECRET_KEY: ${SECRET_KEY:-local-dev-secret-key-dlc-montage-container-readiness-32c}
+      DLC_DB_PASSWORD: ${DLC_DB_PASSWORD:-dlc_local_pg_password}
+      DATABASE_URL: postgres://${DLC_DB_USER:-dlc_montage}:${DLC_DB_PASSWORD:-dlc_local_pg_password}@db:5432/${DLC_DB_NAME:-dlc_montage}
+
+  collectstatic:
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-dlc_montage.core.settings.container_local}
+      SECRET_KEY: ${SECRET_KEY:-local-dev-secret-key-dlc-montage-container-readiness-32c}
+      DLC_DB_PASSWORD: ${DLC_DB_PASSWORD:-dlc_local_pg_password}
+      DATABASE_URL: postgres://${DLC_DB_USER:-dlc_montage}:${DLC_DB_PASSWORD:-dlc_local_pg_password}@db:5432/${DLC_DB_NAME:-dlc_montage}
+
+  redis:
+    ports:
+      - "127.0.0.1:${DLC_LOCAL_REDIS_PORT:-56379}:6379"
+
+  nginx:
+    build:
+      context: ..
+      dockerfile: deploy/nginx/Dockerfile
+    image: dlc-montage-nginx:${DLC_IMAGE_TAG:-latest}
+    depends_on:
+      web:
+        condition: service_healthy
+    volumes:
+      - dlc_static_data:/app/staticfiles:ro
+      - dlc_media_data:/app/media:ro
+    ports:
+      - "127.0.0.1:${DLC_LOCAL_HTTP_PORT:-8080}:80"
+    networks:
+      - dlc_network
+    restart: unless-stopped

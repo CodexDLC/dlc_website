@@ -1,0 +1,14 @@
+/* CODEX_DJANGO_CLI BLUEPRINT STATUS: MOVE_TO_CLI_BLUEPRINT. Reason: generated cabinet app asset source for codex-django-cli blueprints. */
+/* =====================================================
+   Cabinet CSS Entry Point
+   Compiled by: manage.py startserver
+   Output: app_cabinet.css
+   ===================================================== */
+
+/* 1. Project theme tokens (override library colors, fonts, etc.) */
+@import url('theme/tokens.css');
+@import url('theme/client.css');
+@import url('theme/crm_navigation.css');
+
+/* ---- Add your custom cabinet styles below ---- */
+/* Add page-specific CSS files here (e.g. pages/my_page.css) */

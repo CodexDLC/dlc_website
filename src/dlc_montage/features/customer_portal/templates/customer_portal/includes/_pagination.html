@@ -1,0 +1,29 @@
+{% load i18n %}
+{% if page_obj and page_obj.has_other_pages %}
+<div class="customer-pagination">
+  <div class="customer-pagination-info">
+    {% trans "Страница" %} {{ page_obj.number }} {% trans "из" %} {{ page_obj.paginator.num_pages }} ({% trans "всего" %}: {{ page_obj.paginator.count }})
+  </div>
+  <div class="customer-pagination-nav">
+    {% if page_obj.has_previous %}
+      <a href="?{% if page_param_name %}{{ page_param_name }}{% else %}page{% endif %}={{ page_obj.previous_page_number }}{% if extra_params %}&{{ extra_params }}{% endif %}" aria-label="{% trans 'Предыдущая страница' %}">&larr;</a>
+    {% else %}
+      <span class="disabled" aria-hidden="true">&larr;</span>
+    {% endif %}
+
+    {% for p in page_obj.paginator.page_range %}
+      {% if p == page_obj.number %}
+        <span class="active" aria-current="page">{{ p }}</span>
+      {% elif p >= page_obj.number|add:"-3" and p <= page_obj.number|add:"3" %}
+        <a href="?{% if page_param_name %}{{ page_param_name }}{% else %}page{% endif %}={{ p }}{% if extra_params %}&{{ extra_params }}{% endif %}">{{ p }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <a href="?{% if page_param_name %}{{ page_param_name }}{% else %}page{% endif %}={{ page_obj.next_page_number }}{% if extra_params %}&{{ extra_params }}{% endif %}" aria-label="{% trans 'Следующая страница' %}">&rarr;</a>
+    {% else %}
+      <span class="disabled" aria-hidden="true">&rarr;</span>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

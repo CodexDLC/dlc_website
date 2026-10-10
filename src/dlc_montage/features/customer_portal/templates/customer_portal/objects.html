@@ -1,0 +1,66 @@
+{% extends "customer_portal/base.html" %}
+{% load i18n %}
+
+{% block report_content %}
+<div class="customer-header">
+  <div class="customer-header-title">
+    <h1>{% trans "Объекты" %}</h1>
+    <p>{% trans "Standorte вашей компании, статус готовности и фотофиксация." %}</p>
+  </div>
+</div>
+
+<form method="get" class="customer-filter-bar" aria-label="{% trans 'Фильтры объектов' %}">
+  {% if group_id %}
+    <input type="hidden" name="group" value="{{ group_id }}">
+  {% endif %}
+  <div class="customer-filter-item">
+    <label for="id_objects_search">{% trans "Поиск" %}</label>
+    <input id="id_objects_search" type="search" name="q" value="{{ query }}" placeholder="{% trans 'Название, адрес или P/Nr' %}">
+  </div>
+  <div class="customer-filter-item">
+    <label for="id_objects_status">{% trans "Состояние" %}</label>
+    <select id="id_objects_status" name="status">
+      <option value="non_completed"{% if status == 'non_completed' %} selected{% endif %}>{% trans "В работе (по умолчанию)" %}</option>
+      <option value="completed"{% if status == 'completed' %} selected{% endif %}>{% trans "Завершённые" %}</option>
+      <option value="all"{% if status == 'all' %} selected{% endif %}>{% trans "Все состояния" %}</option>
+      <option value="not_started"{% if status == 'not_started' %} selected{% endif %}>{% trans "Не начато" %}</option>
+      <option value="started"{% if status == 'started' %} selected{% endif %}>{% trans "Начато" %}</option>
+    </select>
+  </div>
+  <div class="customer-filter-item">
+    <label for="id_objects_sort">{% trans "Сортировка" %}</label>
+    <select id="id_objects_sort" name="sort">
+      <option value="activity"{% if sort == 'activity' %} selected{% endif %}>{% trans "По недавней активности" %}</option>
+      <option value="name"{% if sort == 'name' %} selected{% endif %}>{% trans "По названию" %}</option>
+    </select>
+  </div>
+  <div class="customer-filter-actions">
+    <button type="submit" class="time-button secondary">{% trans "Применить" %}</button>
+    {% if query or status != 'non_completed' or sort != 'activity' or group_id %}
+      <a href="{% url 'customer_portal:objects' %}" class="time-button quiet">{% trans "Сбросить всё" %}</a>
+    {% endif %}
+  </div>
+</form>
+
+{% if selected_group %}
+  <div class="customer-chips">
+    <span class="customer-chip">
+      {% trans "Anlage" %}: {{ selected_group.name }}
+      <a href="?q={{ query|urlencode }}&status={{ status|urlencode }}&sort={{ sort|urlencode }}" class="customer-chip-clear" title="{% trans 'Убрать фильтр по группе' %}" aria-label="{% trans 'Убрать фильтр' %}">&times;</a>
+    </span>
+  </div>
+{% endif %}
+
+<div class="customer-grid">
+  {% for site in sites %}
+    {% include "customer_portal/includes/_site_card.html" with site=site %}
+  {% empty %}
+    <div class="customer-empty-card" style="grid-column: 1 / -1;">
+      <p>{% trans "Подходящих Standorte не найдено." %}</p>
+    </div>
+  {% endfor %}
+</div>
+
+{% include "customer_portal/includes/_pagination.html" with page_obj=sites_page extra_params="q="|add:query|add:"&group="|add:group_id|add:"&status="|add:status|add:"&sort="|add:sort %}
+
+{% endblock %}

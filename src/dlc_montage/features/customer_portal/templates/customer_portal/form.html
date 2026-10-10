@@ -1,0 +1,29 @@
+{% extends "customer_portal/base.html" %}
+{% load i18n %}
+
+{% block report_content %}
+<div class="customer-header">
+  <div class="customer-header-title">
+    <h1>{{ title }}</h1>
+    <p>{% trans "Изменения сохраняются с указанием пользователя и времени." %}</p>
+  </div>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="time-card">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div class="time-grid three">
+    {% for field in form.visible_fields %}
+      <div class="time-field">
+        {{ field.label_tag }}
+        {{ field }}
+        {{ field.errors }}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="time-inline">
+    <button class="time-button" type="submit">{% trans "Сохранить" %}</button>
+    <a class="time-button secondary" href="{% if back_id %}{% url back back_id %}{% else %}{% url back %}{% endif %}">{% trans "Отмена" %}</a>
+  </div>
+</form>
+{% endblock %}

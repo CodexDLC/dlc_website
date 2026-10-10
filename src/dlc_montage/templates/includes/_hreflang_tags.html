@@ -1,0 +1,10 @@
+
+
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% for lang_code, lang_name in LANGUAGES %}
+<link rel="alternate" hreflang="{{ lang_code }}" href="{{ CANONICAL_DOMAIN }}/{{ lang_code }}{{ request.path }}">
+{% endfor %}
+<link rel="alternate" hreflang="x-default" href="{{ CANONICAL_DOMAIN }}{{ request.path }}">
+

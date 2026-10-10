@@ -1,0 +1,32 @@
+{% load i18n %}
+{# Project translation override of the shared cabinet modal; vendor files remain unchanged. #}
+<div x-data="{ isModalOpen: false, url: '', size: '420px' }"
+     @open-modal.window="isModalOpen = true; url = $event.detail.url; size = $event.detail.size || '420px';"
+     @close-modal.window="isModalOpen = false" class="cab-modal-root">
+  <div x-cloak x-show="isModalOpen"
+       x-transition:enter="transition ease-out duration-150"
+       x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-100"
+       x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+       class="position-fixed top-0 start-0 w-100 h-100 align-items-center justify-content-center"
+       :class="isModalOpen ? 'd-flex' : 'd-none'"
+       style="background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:2000;"
+       @click.self="isModalOpen = false">
+    <div x-show="isModalOpen"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         class="bg-white rounded-4 shadow-2xl position-relative"
+         :style="'width:' + size + '; max-width: 94vw; min-height: 150px;'" @click.stop>
+      <button type="button" @click="isModalOpen = false"
+              class="btn-close position-absolute top-0 end-0 m-3" style="z-index:10;"
+              aria-label="{% trans 'Close' %}"></button>
+      <div id="modal-body" class="h-100"
+           x-effect="if(isModalOpen && url && window.htmx) { window.htmx.ajax('GET', url, {target:'#modal-body', swap:'innerHTML'}) }">
+        <div class="d-flex flex-column align-items-center justify-content-center p-5 text-center">
+          <div class="spinner-border text-primary mb-3" role="status" style="width:2rem;height:2rem;"></div>
+          <div class="text-secondary small fw-medium">{% trans "Loading details..." %}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

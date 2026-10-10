@@ -1,0 +1,99 @@
+name: Release Build & Image Packaging
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Immutable release tag (e.g. v0.1.0)'
+        required: true
+
+concurrency:
+  group: release-build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # Mandatory quality gate on the exact same commit prior to building release image
+  quality-gate:
+    uses: ./.github/workflows/ci.yml
+
+  build-and-tag:
+    needs: quality-gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate release tag input safely
+        id: validate
+        env:
+          INPUT_TAG: ${{ github.event.inputs.release_tag }}
+          REF_NAME: ${{ github.ref_name }}
+          FULL_SHA: ${{ github.sha }}
+        run: |
+          # Safe input extraction without direct shell interpolation
+          RAW_TAG="${INPUT_TAG:-$REF_NAME}"
+          if [[ ! "$RAW_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
+            echo "::error::Invalid release tag format '$RAW_TAG'. Must match semantic versioning (e.g. v1.0.0)."
+            exit 1
+          fi
+          echo "tag=$RAW_TAG" >> "$GITHUB_OUTPUT"
+          echo "full_sha=$FULL_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "0.11.8"
+
+      - name: Set up Python 3.13
+        run: uv python install 3.13
+
+      - name: Verify frozen dependencies integrity
+        run: uv sync --frozen --no-dev
+
+      - name: Build immutable Django container image
+        env:
+          RELEASE_TAG: ${{ steps.validate.outputs.tag }}
+          FULL_SHA: ${{ steps.validate.outputs.full_sha }}
+        run: |
+          docker build \
+            --file deploy/django/Dockerfile \
+            --tag "dlc-montage-django:${RELEASE_TAG}" \
+            --tag "dlc-montage-django:${FULL_SHA}" \
+            .
+
+      - name: Build immutable Nginx container image
+        env:
+          RELEASE_TAG: ${{ steps.validate.outputs.tag }}
+          FULL_SHA: ${{ steps.validate.outputs.full_sha }}
+        run: |
+          docker build \
+            --file deploy/nginx/Dockerfile \
+            --tag "dlc-montage-nginx:${RELEASE_TAG}" \
+            --tag "dlc-montage-nginx:${FULL_SHA}" \
+            .
+
+      - name: Verify built container health probe
+        env:
+          RELEASE_TAG: ${{ steps.validate.outputs.tag }}
+        run: |
+          docker run --rm \
+            "dlc-montage-django:${RELEASE_TAG}" \
+            python -c "import django, psycopg2, redis; print('Release container verified successfully.')"
+
+      - name: Artifact validation report
+        env:
+          RELEASE_TAG: ${{ steps.validate.outputs.tag }}
+          FULL_SHA: ${{ steps.validate.outputs.full_sha }}
+        run: |
+          echo "Immutable release image built successfully on commit $FULL_SHA:"
+          echo " - Django Image Tag: dlc-montage-django:$RELEASE_TAG"
+          echo " - Django Commit SHA: dlc-montage-django:$FULL_SHA"
+          echo " - Nginx Image Tag: dlc-montage-nginx:$RELEASE_TAG"
+          echo " - Nginx Commit SHA: dlc-montage-nginx:$FULL_SHA"
+          echo "Registry publishing is withheld until owner designates official container registry."

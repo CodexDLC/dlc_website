@@ -1,0 +1,17 @@
+{# CODEX_DJANGO_CLI BLUEPRINT STATUS: MOVE_TO_CLI_BLUEPRINT. Reason: generated app-layer or scaffold-owned template for codex-django-cli blueprints. #}
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n %}
+
+{% block cabinet_content %}
+<div class="container-fluid py-4">
+
+  {# Toolbar / Header #}
+  <div class="mb-4">
+    <h1 class="h4 mb-0 text-dark fw-bold">{{ header_subtitle }}</h1>
+  </div>
+
+  {# Card Grid Section #}
+  {% include "cabinet/components/card_grid.html" with cards=cards %}
+
+</div>
+{% endblock %}

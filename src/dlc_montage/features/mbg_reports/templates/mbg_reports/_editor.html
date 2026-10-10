@@ -1,0 +1,132 @@
+{% load i18n %}
+<section id="mbg-editor">
+  <div class="time-heading">
+    <div>
+      <p class="time-eyebrow">{% trans 'AC · MBG' %}</p>
+      <h1>{% trans "Рабочий день" %}</h1>
+      <p>{% trans "Сначала выберите состав дня, затем распределите выполненные работы." %}</p>
+    </div>
+    <a href="{% url 'mbg_reports:list' %}">{% trans "К списку" %}</a>
+  </div>
+
+  <div class="mbg-editor-layout">
+  <form id="mbg-day-form" method="post" hx-post="{{ request.path }}" hx-target="#mbg-editor" hx-swap="outerHTML"
+        data-availability-url="{% url 'mbg_reports:employee_availability' %}"
+        data-site-history-url="{% url 'mbg_reports:site_history' %}"
+        data-work-item-url="{% url 'mbg_reports:work_item_options' %}"
+        data-report-id="{{ report.pk|default:'' }}"
+        data-availability-empty="{% trans 'Выберите дату и сотрудников.' %}"
+        data-availability-loading="{% trans 'Проверяем сохранённые интервалы…' %}"
+        data-availability-ready="{% trans 'Пересечений с сохранёнными MBG-отчётами нет.' %}"
+        data-availability-conflict="{% trans 'Найдено пересечение с другим MBG-отчётом.' %}"
+        data-availability-error="{% trans 'Не удалось проверить сохранённые интервалы.' %}"
+        data-availability-free="{% trans 'Нет других сохранённых интервалов MBG.' %}"
+        data-site-history-error="{% trans 'Не удалось загрузить историю работ.' %}"
+        data-choose-route="{% trans 'выберите путь' %}"
+        data-choose-cable="{% trans 'выберите тип кабеля' %}">
+    {% csrf_token %}
+    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+
+    {% if form.errors or formset.errors or formset.non_form_errors %}
+      <aside class="mbg-error-toast" role="alert" tabindex="-1" data-error-toast>
+        <div>
+          <strong>{% trans "Отчёт не сохранён" %}</strong>
+          <p>{% trans "Проверьте отмеченные поля и повторите сохранение." %}</p>
+          {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+          {% if formset.non_form_errors %}{{ formset.non_form_errors }}{% endif %}
+        </div>
+        <button type="button" aria-label="{% trans 'Закрыть уведомление' %}" data-error-toast-close>×</button>
+      </aside>
+    {% endif %}
+
+    <section class="time-card mbg-day-card">
+      <h2>{% trans "1. Рабочий день" %}</h2>
+      <div class="time-grid three">
+        <div>{{ form.group.label_tag }}{{ form.group }}{{ form.group.errors }}</div>
+        {% include "mbg_reports/_site_field.html" with site=form.site group_selected=form.group.value has_sites=True only %}
+        <div>{{ form.work_date.label_tag }}{{ form.work_date }}{{ form.work_date.errors }}</div>
+      </div>
+      <div class="mbg-person-field" data-person-picker data-add-label="{% trans 'Добавить сотрудника' %}" data-remove-label="{% trans 'Удалить сотрудника' %}">
+        {{ form.workforce.label_tag }}{{ form.workforce }}{{ form.workforce.errors }}
+      </div>
+      <section class="mbg-availability" data-employee-availability aria-live="polite">
+        <div class="mbg-availability-head">
+          <strong>{% trans "Занятость сотрудников" %}</strong>
+          <span data-availability-status>{% trans "Выберите дату и сотрудников." %}</span>
+        </div>
+        <div class="mbg-availability-list" data-availability-list></div>
+      </section>
+      {% if report and report.status == "accepted" %}
+        <div class="mbg-reason-field{% if form.reason.errors %} has-error{% endif %}" data-reason-field>
+          {{ form.reason.label_tag }}{{ form.reason }}{{ form.reason.errors }}
+        </div>
+      {% else %}{{ form.reason.as_hidden }}{% endif %}
+    </section>
+
+    {{ formset.management_form }}
+    <section class="mbg-work-section">
+      <div class="time-heading mbg-section-heading">
+        <div><h2>{% trans "2. Выполненные работы" %}</h2><p>{% trans "Каждая карточка станет строкой отчёта." %}</p></div>
+      </div>
+
+      {% for entry in formset %}
+        <article class="time-card mbg-work-card" data-work-card>
+          <div class="mbg-work-head">
+            <h3>{% trans "Работа" %} {{ forloop.counter }}</h3>
+            <div class="mbg-work-actions">
+              <button class="time-button quiet mbg-work-move" name="action" value="move:{{ forloop.counter0 }}:up" formnovalidate title="{% trans 'Переместить выше' %}" {% if forloop.first %}disabled{% endif %}>↑</button>
+              <button class="time-button quiet mbg-work-move" name="action" value="move:{{ forloop.counter0 }}:down" formnovalidate title="{% trans 'Переместить ниже' %}" {% if forloop.last %}disabled{% endif %}>↓</button>
+              <button class="time-button quiet" name="action" value="remove:{{ forloop.counter0 }}" formnovalidate>{% trans "Удалить" %}</button>
+            </div>
+          </div>
+          <div class="time-grid three">
+            <div class="time-wide">{{ entry.work_item.label_tag }}{{ entry.work_item }}{{ entry.work_item.errors }}
+              <p class="time-hint">{% trans "Выберите физическую позицию этого Standort. Оставьте пустым для почасовой работы или ещё не разобранной записи." %}</p></div>
+            <div>{{ entry.completed_quantity.label_tag }}{{ entry.completed_quantity }}{{ entry.completed_quantity.errors }}
+              <p class="time-hint">{% trans "0 — продолжение без новой физической единицы. Укажите прирост только вместе с позицией плана." %}</p></div>
+            <div class="time-wide">{{ entry.work_type.label_tag }}{{ entry.work_type }}{{ entry.work_type.errors }}</div>
+            <div>{{ entry.starts_at.label_tag }}{{ entry.starts_at }}{{ entry.starts_at.errors }}</div>
+            <div>{{ entry.ends_at.label_tag }}{{ entry.ends_at }}{{ entry.ends_at.errors }}</div>
+            <div>{{ entry.quantity.label_tag }}{{ entry.quantity }}{{ entry.quantity.errors }}
+              <p class="time-hint">{% trans "Количество для расчёта этой дневной строки; это не подтверждённый прирост по плану." %}</p></div>
+          </div>
+          <div class="mbg-person-field" data-person-picker data-add-label="{% trans 'Добавить из состава дня' %}" data-remove-label="{% trans 'Удалить сотрудника' %}">
+            {{ entry.participants.label_tag }}{{ entry.participants }}{{ entry.participants.errors }}
+          </div>
+          <div class="time-wide">{{ entry.internal_only }} {{ entry.internal_only.label_tag }}{{ entry.internal_only.errors }}
+            <p class="time-hint">{% trans "Работа и часы остаются в DLC; строка не попадает в счёт, акт и кабинет заказчика." %}</p>
+          </div>
+          <details class="time-details" data-work-details>
+            <summary>{% trans "Кабель, путь и дополнительные параметры" %}</summary>
+            <div class="time-grid three mbg-details-grid">
+              <div data-work-parameter="cable">{{ entry.cable_type.label_tag }}{{ entry.cable_type }}{{ entry.cable_type.errors }}</div>
+              <div data-work-parameter="route">{{ entry.route.label_tag }}{{ entry.route }}{{ entry.route.errors }}</div>
+              <div>{{ entry.with_underconstruction.label_tag }}{{ entry.with_underconstruction }}{{ entry.with_underconstruction.errors }}</div>
+              <div>{{ entry.standard_connections.label_tag }}{{ entry.standard_connections }}{{ entry.standard_connections.errors }}</div>
+              <div>{{ entry.heavy_connections.label_tag }}{{ entry.heavy_connections }}{{ entry.heavy_connections.errors }}</div>
+              <div class="time-wide">{{ entry.description.label_tag }}{{ entry.description }}{{ entry.description.errors }}</div>
+            </div>
+          </details>
+        </article>
+      {% endfor %}
+    </section>
+
+    <section class="time-card mbg-preview" data-work-summary>
+      <h2>{% trans "3. Строки отчёта" %}</h2>
+      <p class="time-hint">{% trans "Одна работа с несколькими людьми остаётся одной строкой; Mont показывает сумму человеко-часов." %}</p>
+      <div class="mbg-table-wrap"><table><thead><tr><th>{% trans "Время" %}</th><th>{% trans "Работа" %}</th><th>{% trans "Сотрудники" %}</th><th>{% trans 'Mont' %}</th></tr></thead><tbody data-work-summary-body></tbody></table></div>
+      <p class="time-hint" data-work-summary-empty>{% trans "Добавьте первую выполненную работу." %}</p>
+    </section>
+
+    <div class="mbg-action-bar" data-mbg-action-bar>
+      <span class="mbg-action-status" data-action-status>{% trans "Выберите дату и сотрудников." %}</span>
+      <div class="mbg-action-buttons">
+        <button class="time-button secondary" name="action" value="add" formnovalidate>＋ {% trans "Добавить работу" %}</button>
+        <button class="time-button secondary" name="action" value="save">{% trans "Сохранить" %}</button>
+        <button class="time-button" name="action" value="submit">{% trans "Отправить" %}</button>
+      </div>
+    </div>
+  </form>
+  {% include "mbg_reports/_site_history.html" with site_history=site_history only %}
+  </div>
+</section>

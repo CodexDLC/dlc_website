@@ -1,0 +1,310 @@
+{% load i18n %}
+
+<div class="unified-master-tab">
+  <div class="time-card unified-master-card" style="margin-bottom: 24px;">
+    <h3>{% trans "Сводная ведомость по проектам" %}</h3>
+    <p>{% trans "Единая сводная книга по всем проектам и объектам с актуальными данными и объёмами." %}</p>
+
+    <div class="time-inline" style="margin-bottom: 24px;">
+      {% if download_common_excel_url %}
+        <a href="{{ download_common_excel_url }}" class="time-button">
+          <i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i> {% trans "Скачать сводную ведомость (Excel)" %}
+        </a>
+      {% elif build_common_excel_url %}
+        <form method="post" action="{{ build_common_excel_url }}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="time-button">
+            <i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i> {% trans "Сформировать сводную ведомость (Excel)" %}
+          </button>
+        </form>
+      {% else %}
+        <button type="button" class="time-button" disabled aria-disabled="true" title="{% trans 'URL действия не настроен' %}">
+          <i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i> {% trans "Сводная ведомость (Excel)" %}
+        </button>
+        <span class="unified-doc-url-warning">{% trans "URL скачивания не настроен" %}</span>
+      {% endif %}
+    </div>
+
+    <form method="post" action="{{ update_google_sheets_url|default:'' }}" class="unified-doc-sync-form" data-sync-sheets-form>
+      {% csrf_token %}
+      <h4 style="margin: 0 0 8px; font-size: 15px; color: var(--cab-text, #0A2540);">{% trans "Интеграция с Google Таблицей" %}</h4>
+      <p class="time-hint" style="margin-bottom: 16px;">
+        {% trans "Синхронизация фиксированных данных в Google Таблицу выполняется только вручную по нажатию кнопки ниже. При открытии страницы или навигации по вкладкам сетевые запросы не отправляются." %}
+      </p>
+      <div class="time-inline">
+        <button type="submit"
+                class="time-button secondary"
+                {% if not update_google_sheets_url %}disabled aria-disabled="true" title="{% trans 'URL действия не подключён интегратором' %}"{% endif %}>
+          <i class="bi bi-cloud-arrow-up" aria-hidden="true"></i> {% trans "Обновить Google Таблицу" %}
+        </button>
+        {% if not update_google_sheets_url %}
+          <span class="unified-doc-url-warning">{% trans "URL действия не подключён" %}</span>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
+  <header class="mbg-export-section-heading">
+    <div><span>1</span><div><h2>{% trans "Недельный Stundennachweis" %}</h2><p>{% trans "Одна книга на календарную неделю сразу по всей AC-части." %}</p></div></div>
+  </header>
+  <section class="mbg-week-list">
+    {% for card in weekly_cards %}
+      <article class="time-card mbg-week-card" data-week-card="true">
+        <header class="mbg-week-card__header">
+          <div>
+            <p class="time-eyebrow">{% trans 'KW' %} {{ card.week|stringformat:"02d" }} · {{ card.year }}</p>
+            <h2>{% blocktrans with week=card.week %}Календарная неделя {{ week }}{% endblocktrans %}</h2>
+            <p>{{ card.week_start|date:"d.m.Y" }}–{{ card.week_end|date:"d.m.Y" }} · {% blocktrans count reports=card.report_count %}{{ reports }} отчёт{% plural %}{{ reports }} отчётов{% endblocktrans %} · {{ card.person_hours }} {% trans "чел.-ч" %}</p>
+          </div>
+          <div class="mbg-week-card__actions">
+            {% if card.latest_export %}
+              <a class="time-button secondary" href="{% url 'mbg_reports:download' card.latest_export.pk %}">{% trans "Скачать Excel" %}</a>
+            {% endif %}
+            <a class="time-button" href="{% url 'mbg_reports:exports' %}?year={{ card.year }}&week={{ card.week }}">
+              {% if card.latest_export %}{% trans "Сформировать заново" %}{% else %}{% trans "Создать Stundennachweis" %}{% endif %}
+            </a>
+          </div>
+        </header>
+        {% if card.pending_report_count %}
+          <div class="mbg-week-card__notice">{% blocktrans count pending=card.pending_report_count %}Нужно принять {{ pending }} отчёт перед выгрузкой{% plural %}Нужно принять {{ pending }} отчётов перед выгрузкой{% endblocktrans %}</div>
+        {% endif %}
+        <div class="mbg-week-table">
+          <div class="mbg-week-row mbg-week-row--head">
+            <span>{% trans "Anlage" %}</span>
+            <span>{% trans "Сотрудников" %}</span>
+            <span>{% trans "Человеко-часов" %}</span>
+          </div>
+          {% for metric in card.groups %}
+            <div class="mbg-week-row">
+              <a href="{% url 'mbg_reports:group_overview' metric.group_id %}">{{ metric.name }}</a>
+              <span data-label="{% trans 'Сотрудников' %}">{{ metric.employee_count }}</span>
+              <strong>{{ metric.person_hours }}</strong>
+            </div>
+          {% endfor %}
+        </div>
+      </article>
+    {% empty %}
+      <div class="customer-empty-card">
+        <strong>{% trans "Недельных отчётов пока нет" %}</strong>
+        <p>{% trans "Карточка недели появится после сохранения первого отчёта MBG." %}</p>
+      </div>
+    {% endfor %}
+    {% include "customer_portal/includes/_pagination.html" with page_obj=weekly_cards_page page_param_name="page_weeks" extra_params=weeks_pagination_params %}
+  </section>
+
+  <header class="mbg-export-section-heading">
+    <div><span>2</span><div><h2>{% trans "Отчёт о выполненных работах" %}</h2><p>{% trans "Клиентский документ по всем принятым данным за весь период: без цен, ставок, сумм и нормативных часов." %}</p></div></div>
+  </header>
+
+  <section class="mbg-export-grid">
+    {% for item in work_completion_groups %}
+      <article class="time-card mbg-export-card">
+        <div>
+          <p class="time-eyebrow">{% trans 'ANLAGE · LEISTUNGSNACHWEIS' %}</p>
+          <h2>{{ item.group.name }}</h2>
+          <p>{% trans "Объекты с принятыми отчётами" %}: {{ item.sites|length }}</p>
+        </div>
+        <div class="time-inline mbg-export-card__actions">
+          <form method="post" action="{% url 'mbg_reports:work_completion_export' %}">
+            {% csrf_token %}
+            <input type="hidden" name="scope" value="group">
+            <input type="hidden" name="scope_id" value="{{ item.group.pk }}">
+            <button class="time-button" type="submit">📄 {% trans "Скачать по проекту" %}</button>
+          </form>
+          <details class="mbg-work-completion-sites">
+            <summary>{% trans "Выбрать объект" %}</summary>
+            <div>
+              {% for site in item.sites %}
+                <form method="post" action="{% url 'mbg_reports:work_completion_export' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="scope" value="site">
+                  <input type="hidden" name="scope_id" value="{{ site.pk }}">
+                  <button class="time-button quiet" type="submit">{{ site.name }} · {{ site.project_number|default:"P/Nr —" }}</button>
+                </form>
+              {% endfor %}
+            </div>
+          </details>
+        </div>
+      </article>
+    {% empty %}
+      <div class="customer-empty-card mbg-export-empty">
+        <strong>{% trans "Нет объектов с актуальными принятыми данными" %}</strong>
+        <p>{% trans "Документ появится после принятия MBG-отчёта для объекта в работе или завершённого объекта." %}</p>
+      </div>
+    {% endfor %}
+  </section>
+  {% include "customer_portal/includes/_pagination.html" with page_obj=work_completion_groups_page page_param_name="page_completion" extra_params=completion_pagination_params %}
+
+  <section class="time-card" aria-labelledby="work-completion-history-title" style="margin-top: 18px; margin-bottom: 24px;">
+    <h2 id="work-completion-history-title">{% trans "Последние отчёты о выполненных работах" %}</h2>
+    <p class="time-hint">{% trans "Только документы без цен. История содержит последние десять сформированных файлов." %}</p>
+    <div class="mbg-export-history-grid">
+      {% for item in work_completion_history %}
+        <a class="mbg-export-file" href="{% url 'mbg_reports:performance_download' item.artifact.pk %}">
+          <span class="mbg-export-file-icon">XLSX</span>
+          <span class="mbg-export-info">
+            <strong>{{ item.scope_label }}</strong>
+            <small>{% if item.artifact.snapshot.scope == "site" %}{% trans "Объект" %}{% else %}{% trans "Проект" %}{% endif %} · {{ item.artifact.created_at|date:"d.m.Y H:i" }} · {{ item.artifact.author }}</small>
+          </span>
+          <span class="download-arrow" aria-hidden="true">↓</span>
+        </a>
+      {% empty %}
+        <p class="time-hint">{% trans "Отчёты о выполненных работах ещё не формировались." %}</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <header class="mbg-export-section-heading">
+    <div><span>3</span><div><h2>{% trans "Промежуточный Zwischennachweis с ценами (В работе)" %}</h2><p>{% trans "Предварительный срез с ценами по объектам в работе. Доступен как общий срез по всем проектам, так и выбор отдельных групп и объектов." %}</p></div></div>
+  </header>
+
+  {% if preliminary_groups %}
+    <article class="time-card mbg-preliminary-card" data-export-picker style="margin-bottom: 24px;">
+      <div class="mbg-preliminary-card__header">
+        <div>
+          <p class="time-eyebrow mbg-preliminary-card__eyebrow">{% trans 'AC · GESAMT · ВСЕ ПРОЕКТЫ' %}</p>
+          <h2>{% trans "Общий Zwischennachweis (Все проекты в работе)" %}</h2>
+          <p class="mbg-preliminary-card__summary">
+            {% blocktrans with groups=preliminary_groups|length sites=total_preliminary_sites reports=total_preliminary_reports %}
+            Единая книга Excel сразу по всем {{ groups }} активным проектам ({{ sites }} Standorte · {{ reports }} принятых отчётов). Сводная таблица + лист каждого объекта.
+            {% endblocktrans %}
+          </p>
+        </div>
+        <div class="time-inline mbg-preliminary-actions">
+          <form method="post" action="{% url 'mbg_reports:multi_performance_export' %}">
+            {% csrf_token %}
+            <input type="hidden" name="mode" value="preliminary">
+            <input type="hidden" name="scope" value="all">
+            <button class="time-button mbg-preliminary-primary" type="submit">
+              📋 {% trans "Сформировать общий Zwischennachweis" %}
+            </button>
+          </form>
+          <button class="time-button secondary" type="button" data-action="toggle-picker" aria-controls="custom-zwischen-picker" aria-expanded="false">
+            ⚙️ {% trans "Выбрать конкретные объекты" %}
+          </button>
+        </div>
+      </div>
+
+      <div id="custom-zwischen-picker" class="mbg-custom-picker" hidden>
+        <form method="post" action="{% url 'mbg_reports:multi_performance_export' %}" id="custom-zwischen-form" data-empty-selection-message="{% trans 'Добавьте группу и отметьте хотя бы один объект для формирования отчёта.' %}">
+          {% csrf_token %}
+          <input type="hidden" name="mode" value="preliminary">
+          <input type="hidden" name="scope" value="custom">
+
+          <div class="mbg-picker-toolbar">
+            <div class="mbg-picker-toolbar__choice">
+              <label for="group-picker-select">
+                {% trans "Добавить проект в отчёт:" %}
+              </label>
+              <select id="group-picker-select">
+                <option value="">-- {% trans "Выберите Anlage..." %} --</option>
+                {% for item in preliminary_groups_with_sites %}
+                  <option value="{{ item.group.pk }}" id="opt-group-{{ item.group.pk }}">
+                    {{ item.group.name }} ({{ item.sites|length }} {% trans "объектов" %})
+                  </option>
+                {% endfor %}
+              </select>
+              <button type="button" class="time-button mbg-picker-button" id="btn-add-group" data-action="add-group">
+                ➕ {% trans "Добавить группу" %}
+              </button>
+            </div>
+            <button type="button" class="time-button quiet mbg-picker-button--small" data-action="add-all-groups">
+              {% trans "Добавить все группы" %}
+            </button>
+          </div>
+
+          <div id="selected-groups-empty" class="mbg-picker-empty">
+            <p>{% trans "Группы ещё не добавлены" %}</p>
+            <small>{% trans "Выберите нужную Anlage в списке выше и нажмите «Добавить группу», чтобы настроить состав отчёта." %}</small>
+          </div>
+
+          <div id="selected-groups-grid" class="mbg-selected-groups">
+            {% for item in preliminary_groups_with_sites %}
+              <div class="selected-group-card" id="group-card-{{ item.group.pk }}" data-group-id="{{ item.group.pk }}" hidden>
+                <div class="selected-group-card__header">
+                  <label class="selected-group-card__toggle">
+                    <input type="checkbox" checked class="group-picker-toggle">
+                    {{ item.group.name }}
+                  </label>
+                  <button type="button" class="time-button quiet selected-group-card__remove" data-action="remove-group" data-group-id="{{ item.group.pk }}" title="{% trans 'Убрать эту группу' %}">
+                    ✕ {% trans "Убрать" %}
+                  </button>
+                </div>
+                <div class="selected-group-card__sites">
+                  {% for site in item.sites %}
+                    <label class="selected-group-card__site">
+                      <input type="checkbox" name="site_ids" value="{{ site.pk }}" class="site-picker-cb" disabled>
+                      <span><strong>{{ site.name }}</strong> ({{ site.project_number }}) · <small>{{ site.accepted_reports_count }} {% trans "отч." %}</small></span>
+                    </label>
+                  {% empty %}
+                    <span class="selected-group-card__empty">{% trans "Нет принятых отчётов" %}</span>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div id="custom-export-submit-bar" class="mbg-picker-submit" hidden>
+            <button class="time-button" type="submit">📋 {% trans "Сформировать Zwischennachweis для выбранных" %}</button>
+            <button type="button" class="time-button quiet mbg-picker-button--small" data-action="remove-all-groups">{% trans "Очистить список" %}</button>
+          </div>
+        </form>
+      </div>
+    </article>
+  {% endif %}
+
+  <section class="mbg-export-grid" style="margin-bottom: 24px;">
+    {% for group in preliminary_groups %}
+      <article class="time-card mbg-export-card">
+        <div>
+          <p class="time-eyebrow">{% trans 'ANLAGE ·' %} {% trans "В РАБОТЕ" %}</p>
+          <h2>{{ group }}</h2>
+          <p>{% blocktrans with reports=group.report_count completed=group.completed_site_count total=group.total_site_count %}Отчётов MBG: {{ reports }} · Standorte: {{ completed }}/{{ total }} завершено{% endblocktrans %}</p>
+        </div>
+        <div class="time-inline mbg-export-card__actions">
+          <a class="time-button" href="{% url 'mbg_reports:performance_exports' group.pk %}?mode=preliminary">📋 {% trans "Zwischennachweis Anlage" %}</a>
+          <a class="time-button secondary" href="{% url 'mbg_reports:group_overview' group.pk %}">{% trans "Сводка" %}</a>
+          <a class="time-button quiet" href="{% url 'projects:detail' group.pk %}">{% trans "Anlage" %}</a>
+        </div>
+      </article>
+    {% empty %}
+      <div class="customer-empty-card mbg-export-empty">
+        <strong>{% trans "Нет активных проектов с отчётами MBG" %}</strong>
+        <p>{% trans "Проекты появятся здесь сразу после внесения первого отчёта MBG." %}</p>
+      </div>
+    {% endfor %}
+  </section>
+
+  <header class="mbg-export-section-heading">
+    <div><span>4</span><div><h2>{% trans "Итоговый почасовой отчёт и Итоговый Leistungsnachweis с ценами" %}</h2><p>{% trans "Полный почасовой Stundennachweis за весь период и сдельный Leistungsnachweis с ценами." %}</p></div></div>
+  </header>
+  <section class="mbg-export-grid">
+    {% for group in completed_groups %}
+      <article class="time-card mbg-export-card">
+        <div>
+          <p class="time-eyebrow">{% trans 'ANLAGE ·' %} {% trans "ГОТОВО К СДАЧЕ" %}</p>
+          <h2>{{ group }}</h2>
+          <p>{% blocktrans with sites=group.completed_site_count exports=group.export_count %}Завершено Standort: {{ sites }} · выпущенных книг: {{ exports }}{% endblocktrans %}</p>
+        </div>
+        <div class="time-inline mbg-export-card__actions">
+          {% if group.completed_site_count == group.total_site_count %}
+            <form method="post" action="{% url 'mbg_reports:final_hours_export' group.pk %}">
+              {% csrf_token %}
+              <button class="time-button" type="submit">⏱ {% trans "Итоговый почасовой отчёт" %}</button>
+            </form>
+          {% else %}
+            <span class="mbg-final-hours-wait">{% trans "Итоговые часы — после завершения всех Standorte" %}</span>
+          {% endif %}
+          <a class="time-button" href="{% url 'mbg_reports:performance_exports' group.pk %}">📄 {% trans "Выпустить Leistungsnachweis" %}</a>
+          <a class="time-button secondary" href="{% url 'mbg_reports:group_overview' group.pk %}">{% trans "Сводка" %}</a>
+          <a class="time-button quiet" href="{% url 'projects:detail' group.pk %}">{% trans "Anlage" %}</a>
+        </div>
+      </article>
+    {% empty %}
+      <div class="customer-empty-card mbg-export-empty">
+        <strong>{% trans "Нет завершённых проектов" %}</strong>
+        <p>{% trans "Итоговый Leistungsnachweis станет доступен, когда хотя бы один Standort в Anlage будет переведён в статус «Завершено»." %}</p>
+      </div>
+    {% endfor %}
+  </section>
+</div>

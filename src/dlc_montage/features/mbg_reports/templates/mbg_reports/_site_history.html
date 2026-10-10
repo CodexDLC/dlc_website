@@ -1,0 +1,48 @@
+{% load i18n %}
+<aside class="mbg-site-history" data-site-history data-loaded-site="{{ site_history.site.pk|default:'' }}" aria-live="polite">
+  <div class="mbg-site-history-head">
+    <div>
+      <p class="time-eyebrow">{% trans 'STANDORT ·' %} {% trans "КОНТЕКСТ" %}</p>
+      <h2>{% trans "Уже внесено по Standort" %}</h2>
+    </div>
+    {% if site_history.days %}
+      <span class="mbg-site-history-total">{{ site_history.person_hours|floatformat:2 }} {% trans "чел.-ч" %}</span>
+    {% endif %}
+  </div>
+
+  {% if not site_history %}
+    <p class="mbg-site-history-empty">{% trans "Выберите Standort — здесь появятся уже сохранённые работы." %}</p>
+  {% elif not site_history.days %}
+    <p class="mbg-site-history-site">{{ site_history.site.name }}</p>
+    <p class="mbg-site-history-empty">{% trans "По этому Standort ещё нет других сохранённых работ." %}</p>
+  {% else %}
+    <p class="mbg-site-history-site">{{ site_history.site.name }} · {{ site_history.entry_count }} {% trans "поз." %}</p>
+    <div class="mbg-site-history-days">
+      {% for day in site_history.days %}
+        <section class="mbg-site-history-day">
+          <div class="mbg-site-history-date">
+            <a href="{% url 'mbg_reports:detail' day.entries.0.report_id %}">{{ day.work_date|date:"D, d.m.Y" }}</a>
+            <div>
+              <span>{{ day.person_hours|floatformat:2 }} {% trans "чел.-ч" %}</span>
+              <span class="mbg-site-history-status" data-status="{{ day.status }}">
+                {% if day.status == "accepted" %}{% trans "Принят" %}
+                {% elif day.status == "submitted" %}{% trans "Отправлен" %}
+                {% elif day.status == "returned" %}{% trans "Возвращён" %}
+                {% else %}{% trans "Черновик" %}{% endif %}
+              </span>
+            </div>
+          </div>
+          <ol>
+            {% for entry in day.entries %}
+              <li>
+                <div class="mbg-site-history-time">{{ entry.starts_at|time:"H:i" }}–{{ entry.ends_at|time:"H:i" }}</div>
+                <strong>{{ entry.description }}{% if entry.internal_only %} <span class="cust-badge">{% trans "Только внутренний учёт" %}</span>{% endif %}</strong>
+                <small>{{ entry.participants|join:", " }} · {{ entry.person_hours|floatformat:2 }} {% trans "чел.-ч" %}</small>
+              </li>
+            {% endfor %}
+          </ol>
+        </section>
+      {% endfor %}
+    </div>
+  {% endif %}
+</aside>

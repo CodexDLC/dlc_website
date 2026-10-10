@@ -1,0 +1,89 @@
+# Layer 2: Django Application Layer (Web runtime + explicit one-shot migrate & collectstatic)
+# Web runtime never runs migrations automatically on boot; migrate is a separate job.
+# Persistent private storage is mapped to named volume dlc_private_data (/app/data/private).
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/django/Dockerfile
+    image: dlc-montage-django:${DLC_IMAGE_TAG:-latest}
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-dlc_montage.core.settings.prod}
+      DATABASE_URL: postgres://${DLC_DB_USER:-dlc_montage}:${DLC_DB_PASSWORD:-dlc_local_pg_password}@db:5432/${DLC_DB_NAME:-dlc_montage}
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-local-dev-secret-key-dlc-montage-container-readiness-32c}
+      DEBUG: ${DEBUG:-False}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,web}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:-}
+      CSRF_COOKIE_DOMAIN: ${CSRF_COOKIE_DOMAIN:-}
+      SESSION_COOKIE_DOMAIN: ${SESSION_COOKIE_DOMAIN:-}
+      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:?Provide a private encryption key explicitly}
+      PRIVATE_MEDIA_ROOT: /app/data/private
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; request = urllib.request.Request('http://127.0.0.1:8000/health/', headers={'X-Forwarded-Proto': 'https'}); urllib.request.urlopen(request).read()"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - dlc_static_data:/app/staticfiles
+      - dlc_media_data:/app/media
+      - dlc_private_data:/app/data/private
+    networks:
+      - dlc_network
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: ..
+      dockerfile: deploy/django/Dockerfile
+    image: dlc-montage-django:${DLC_IMAGE_TAG:-latest}
+    command: ["python", "src/dlc_montage/manage.py", "migrate", "--noinput"]
+    restart: "no"
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-dlc_montage.core.settings.prod}
+      DATABASE_URL: postgres://${DLC_DB_USER:-dlc_montage}:${DLC_DB_PASSWORD:-dlc_local_pg_password}@db:5432/${DLC_DB_NAME:-dlc_montage}
+      SECRET_KEY: ${SECRET_KEY:-local-dev-secret-key-dlc-montage-container-readiness-32c}
+      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:?Provide a private encryption key explicitly}
+      PRIVATE_MEDIA_ROOT: /app/data/private
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - dlc_static_data:/app/staticfiles
+      - dlc_media_data:/app/media
+      - dlc_private_data:/app/data/private
+    networks:
+      - dlc_network
+
+  collectstatic:
+    build:
+      context: ..
+      dockerfile: deploy/django/Dockerfile
+    image: dlc-montage-django:${DLC_IMAGE_TAG:-latest}
+    command: ["python", "src/dlc_montage/manage.py", "collectstatic", "--noinput"]
+    restart: "no"
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-dlc_montage.core.settings.prod}
+      DATABASE_URL: postgres://${DLC_DB_USER:-dlc_montage}:${DLC_DB_PASSWORD:-dlc_local_pg_password}@db:5432/${DLC_DB_NAME:-dlc_montage}
+      SECRET_KEY: ${SECRET_KEY:-local-dev-secret-key-dlc-montage-container-readiness-32c}
+      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:?Provide a private encryption key explicitly}
+      PRIVATE_MEDIA_ROOT: /app/data/private
+    volumes:
+      - dlc_static_data:/app/staticfiles
+    networks:
+      - dlc_network
+
+volumes:
+  dlc_static_data:
+  dlc_media_data:
+  dlc_private_data:
+
+networks:
+  dlc_network:
+    driver: bridge

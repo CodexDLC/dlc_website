@@ -1,0 +1,12 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n %}
+
+{% block title %}{{ section.label }} — {{ workspace.label }}{% endblock %}
+
+{% block cabinet_content %}
+  <section class="crm-placeholder" aria-labelledby="crm-page-title">
+    <span class="crm-placeholder__eyebrow">{% trans 'DLC Montage CRM · структура страницы' %}</span>
+    <h1 id="crm-page-title">{{ section.label }}</h1>
+    <p>{{ workspace.label }} {% trans '· визуальный прототип без данных и рабочих действий.' %}</p>
+  </section>
+{% endblock %}

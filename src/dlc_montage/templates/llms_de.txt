@@ -1,0 +1,11 @@
+# Codex Project — AI Context (German)
+
+This file provides context for LLMs about this project.
+
+## Services
+- List your services here
+
+## Contact
+- Address: Not configured
+- Phone: Not configured
+- Email: Not configured

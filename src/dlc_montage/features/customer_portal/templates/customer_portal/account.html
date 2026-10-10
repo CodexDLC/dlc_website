@@ -1,0 +1,28 @@
+{% extends "customer_portal/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Mein Konto" %}{% endblock %}
+{% block report_content %}
+<div class="customer-header"><div class="customer-header-title"><h1>{% trans "Mein Konto" %}</h1></div></div>
+<section class="time-card" aria-labelledby="account-details">
+  <h2 id="account-details">{% trans "Persönliche Angaben" %}</h2>
+  <dl class="time-grid three">
+    <div><dt>{% trans "Name" %}</dt><dd>{% if account_user.get_full_name %}{{ account_user.get_full_name }}{% else %}{% trans "Nicht hinterlegt" %}{% endif %}</dd></div>
+    <div><dt>{% trans "E-Mail" %}</dt><dd>{% if account_user.email %}{{ account_user.email }}{% else %}{% trans "Nicht hinterlegt" %}{% endif %}</dd></div>
+    <div><dt>{% trans "Benutzername" %}</dt><dd>{{ account_user.get_username }}</dd></div>
+  </dl>
+  <p>{% trans "Diese Angaben werden von der Administration verwaltet." %}</p>
+</section>
+<form method="post" class="time-card customer-password-form" aria-labelledby="password-heading">
+  {% csrf_token %}
+  <h2 id="password-heading">{% trans "Passwort ändern" %}</h2>
+  <p>{% trans "Verwenden Sie ein eigenes, sicheres Passwort." %}</p>
+  {{ form.non_field_errors }}
+  <div class="time-grid three">
+    {% for field in form.visible_fields %}<div class="time-field">
+      {{ field.label_tag }}{{ field }}{{ field.errors }}
+      {% if field.help_text %}<div class="time-help">{{ field.help_text|safe }}</div>{% endif %}
+    </div>{% endfor %}
+  </div>
+  <button class="time-button" type="submit">{% trans "Passwort ändern" %}</button>
+</form>
+{% endblock %}

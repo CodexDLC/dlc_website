@@ -1,0 +1,24 @@
+{% extends "customer_portal/base.html" %}
+{% load i18n static %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'customer_portal/js/unified_documents.js' %}" defer></script>
+{% endblock %}
+
+{% block report_content %}
+<link rel="stylesheet" href="{% static 'customer_portal/css/unified_documents.css' %}">
+
+<div class="unified-documents-content">
+  <div class="customer-header">
+    <div class="customer-header-title">
+      <h1>{% trans "Документы" %}</h1>
+      <p>{% trans "Клиентские ведомости, табели MBG и утверждённые проектные документы. Без коммерческих цен и персональных данных." %}</p>
+    </div>
+  </div>
+
+  {% with can_manage_settlement=False %}
+    {% include "customer_portal/includes/_unified_documents_partial.html" %}
+  {% endwith %}
+</div>
+{% endblock %}

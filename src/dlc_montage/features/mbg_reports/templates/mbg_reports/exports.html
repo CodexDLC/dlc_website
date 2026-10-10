@@ -1,0 +1,47 @@
+{% extends "internal_time/base.html" %}
+{% load i18n static %}
+{% block report_content %}
+<link rel="stylesheet" href="{% static 'mbg_reports/css/list.css' %}">
+{% include "mbg_reports/_section_nav.html" with active_section="exports" %}
+
+<div class="time-heading mbg-page-heading">
+  <div>
+    <p class="time-eyebrow">{% trans 'AC · MBG · EXCEL' %}</p>
+    <h1>{% trans "Недельный Stundennachweis AC" %}</h1>
+    <p>{% trans "Одна книга за календарную неделю: общая сводка и отдельный лист каждого Standort." %}</p>
+  </div>
+  <a class="time-button secondary" href="{% url 'mbg_reports:export_hub' %}">{% trans "Все проекты" %}</a>
+</div>
+
+<div class="mbg-export-workspace">
+  <form method="post" class="time-card mbg-generate-card">
+    {% csrf_token %}
+    <div>
+      <h2>{% trans "Новая недельная книга" %}</h2>
+      <p>{% trans "Выберите календарную неделю. Готовый файл загрузится автоматически." %}</p>
+    </div>
+    {{ form.non_field_errors }}
+    <div class="time-grid">
+      <label>{{ form.year.label }}{{ form.year }}{{ form.year.errors }}</label>
+      <label>{{ form.week.label }}{{ form.week }}{{ form.week.errors }}</label>
+    </div>
+    <button class="time-button" type="submit">{% trans "Сформировать и скачать" %}</button>
+  </form>
+
+  <section class="time-card mbg-export-history">
+    <div>
+      <h2>{% trans "Ранее сформированные книги" %}</h2>
+      <p>{% trans "Файлы сохраняются как снимки и не меняются задним числом." %}</p>
+    </div>
+    {% for export in exports %}
+      <a class="mbg-export-file" href="{% url 'mbg_reports:download' export.pk %}">
+        <span class="mbg-export-file-icon">XLSX</span>
+        <span><strong>{{ export.filename }}</strong><small>{{ export.created_at }}</small></span>
+        <span aria-hidden="true">↓</span>
+      </a>
+    {% empty %}
+      <div class="time-empty">{% trans "Недельные книги ещё не создавались." %}</div>
+    {% endfor %}
+  </section>
+</div>
+{% endblock %}

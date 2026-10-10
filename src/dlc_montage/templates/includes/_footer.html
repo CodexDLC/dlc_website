@@ -1,0 +1,57 @@
+{% load i18n static %}
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <!-- Col 1: Brand -->
+            <div class="footer-col">
+                <h3 class="footer-col-title">{{ site_settings.company_name }}</h3>
+                <p class="footer-link" style="margin-bottom: 24px;">
+                    {{ site_settings.site_description|default:"" }}
+                </p>
+                <div class="footer-socials">
+                    {% if site_settings.instagram_url %}
+                        <a href="{{ site_settings.instagram_url }}" class="footer-link" target="_blank">Instagram</a>
+                    {% endif %}
+                    {% if site_settings.facebook_url %}
+                        <a href="{{ site_settings.facebook_url }}" class="footer-link" target="_blank">Facebook</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Col 2: Navigation -->
+            <div class="footer-col">
+                <h4 class="footer-col-title">{% trans "Navigation" %}</h4>
+                <nav class="footer-links">
+                    <a href="{% url 'home' %}" class="footer-link">{% trans "Home" %}</a>
+                    <a href="{% url 'contacts' %}" class="footer-link">{% trans "Contacts" %}</a>
+                </nav>
+            </div>
+
+            <!-- Col 3: Contacts -->
+            <div class="footer-col">
+                <h4 class="footer-col-title">{% trans "Contact Us" %}</h4>
+                <div class="footer-links">
+                    <div class="footer-contact-item">
+                        <span>📞</span>
+                        <a href="tel:{{ site_settings.phone }}" class="footer-link">{{ site_settings.phone }}</a>
+                    </div>
+                    <div class="footer-contact-item">
+                        <span>✉️</span>
+                        <a href="mailto:{{ site_settings.email }}" class="footer-link">{{ site_settings.email }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="footer-bottom">
+            <p class="footer-copyright">
+                &copy; {% now "Y" %} {{ site_settings.company_name }}. All rights reserved.
+            </p>
+            <div class="footer-legal">
+                <a href="{% url 'account_login' %}" class="footer-link" style="opacity: 0.5; font-size: 12px;">{% trans "Management" %}</a>
+            </div>
+        </div>
+    </div>
+</footer>

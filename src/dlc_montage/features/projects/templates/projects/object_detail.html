@@ -1,0 +1,282 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n static %}
+
+{% block title %}{{ site.name }} {% trans '— DLC Montage' %}{% endblock %}
+
+{% block cabinet_content %}
+<link rel="stylesheet" href="{% static 'internal_time/css/reports.css' %}">
+<link rel="stylesheet" href="{% static 'customer_portal/css/portal.css' %}">
+<link rel="stylesheet" href="{% static 'project_media/css/gallery.css' %}">
+
+<div class="customer-portal-shell time-page">
+  <!-- ВЕРХНИЕ ДЕЙСТВИЯ ОБЪЕКТА -->
+  <div class="time-inline time-field" style="margin-bottom: 20px; flex-wrap: wrap;">
+    {% if manager and site.is_active and group.status == "active" %}
+      <a class="time-button" href="{% url 'mbg_reports:new' %}?group={{ group.pk }}&site={{ site.pk }}">+ {% trans "Добавить отчёт" %}</a>
+    {% endif %}
+    {% if editable %}
+      <a class="time-button secondary" href="{% url 'projects:object_edit' group.pk site.pk %}">{% trans "Редактировать" %}</a>
+    {% endif %}
+    {% if files_allowed %}
+      <a class="time-button secondary" href="{% url 'project_media:list' group.pk %}?site={{ site.pk }}">{% trans "Фото и файлы" %}</a>
+    {% endif %}
+    {% if export_allowed and activity.accepted_person_hours > 0 %}
+      {% if site.status == "completed" %}
+        <a class="time-button secondary" href="{% url 'mbg_reports:site_performance_export' site.pk %}">{% trans '📄 Leistungsnachweis' %}</a>
+      {% else %}
+        <a class="time-button secondary" href="{% url 'mbg_reports:site_performance_export' site.pk %}">{% trans '📋 Zwischennachweis' %}</a>
+      {% endif %}
+    {% endif %}
+    {% if export_allowed and site.status != "not_started" %}
+      <form method="post" action="{% url 'mbg_reports:work_completion_export' %}" style="margin: 0;">
+        {% csrf_token %}
+        <input type="hidden" name="scope" value="site">
+        <input type="hidden" name="scope_id" value="{{ site.pk }}">
+        <button class="time-button secondary" type="submit">📄 {% trans "Выполненные работы" %}</button>
+      </form>
+    {% endif %}
+    {% if export_allowed %}
+      <a class="time-button quiet" href="{% url 'mbg_reports:performance_exports' site.group_id %}">{% trans "Акты Anlage →" %}</a>
+    {% endif %}
+  </div>
+
+  <!-- ОБЩИЙ ВЕРХ ОБЪЕКТА (SHARED OBJECT TOP) -->
+  {% include "projects/includes/_object_common_top.html" with site=site group=group completed_rows=completed_rows photo_summary=photo_summary files=files daily_work=daily_work is_customer_view=False %}
+
+  <!-- ВНУТРЕННИЙ БЛОК МЕНЕДЖЕРА DLC (INTERNAL ONLY) -->
+  <div class="dlc-manager-internal-block" style="margin-top: 36px; padding-top: 24px; border-top: 2px dashed var(--cab-border, #cbd5e1);">
+    <div class="customer-header" style="margin-bottom: 20px;">
+      <div class="customer-header-title">
+        <p class="time-eyebrow">{% trans 'DLC MANAGER · ВНУТРЕННИЙ БЛОК' %}</p>
+        <h2>{% trans "Управление планом и внутренние метрики" %}</h2>
+        <p>{% trans "Этот блок виден только сотрудникам DLC и никогда не отображается заказчику." %}</p>
+      </div>
+    </div>
+
+    <!-- Быстрая смена статуса -->
+    {% if manager %}
+      <div class="time-card" style="margin-bottom: 24px;">
+        <div class="time-inline spread" style="flex-wrap: wrap; gap: 12px;">
+          <div>
+            <strong>{% trans "Быстрая смена статуса объекта" %}</strong>
+            <p class="time-hint" style="margin: 2px 0 0;">{% trans "Смена статуса пересчитывает агрегаты Anlage." %}</p>
+          </div>
+          <form method="post" action="{% url 'projects:site_status' group.pk site.pk %}" class="status-quick-form" style="margin: 0;">
+            {% csrf_token %}
+            <select name="status" onchange="this.form.submit()" class="status-quick-select status-{{ site.status }}" title="{% trans 'Быстрая смена статуса' %}">
+              <option value="not_started" {% if site.status == "not_started" %}selected{% endif %}>⚪ {% trans "Не начато" %}</option>
+              <option value="started" {% if site.status == "started" %}selected{% endif %}>🟡 {% trans "В работе (Начато)" %}</option>
+              <option value="completed" {% if site.status == "completed" %}selected{% endif %}>🟢 {% trans "Завершено (Сдано)" %}</option>
+            </select>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+
+    <!-- План работ Standort -->
+    <section class="time-card" aria-labelledby="site-work-plan-title" style="margin-bottom: 24px;">
+      <div class="time-inline spread" style="flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+        <h2 id="site-work-plan-title" style="margin: 0;">{% trans "План работ Standort" %}</h2>
+        {% if manager %}
+          <div class="time-inline" style="gap: 8px;">
+            {% if not work_plan.rows %}
+              <a class="time-button" href="{% url 'projects:typical_work_plan' group.pk site.pk %}">{% trans "Составить типовой AC-план" %}</a>
+            {% endif %}
+            <a class="time-button secondary" href="{% url 'projects:work_item_new' group.pk site.pk %}">+ {% trans "Добавить позицию" %}</a>
+          </div>
+        {% endif %}
+      </div>
+      <p class="time-hint">{% trans "Плановый объём и подтверждённый прирост показаны отдельно. Ноль означает, что по позиции ещё нет принятого прироста." %}</p>
+      {% if work_plan.is_ready == None %}
+        <p class="time-hint">{% trans "План не ведётся; готовность по позициям не отслеживается." %}</p>
+      {% elif work_plan.is_ready %}
+        <p class="time-hint" style="color: #007a4d; font-weight: 600;">{% trans "Все обязательные позиции закрыты. Standort готов к подтверждению завершения." %}</p>
+      {% else %}
+        <p class="time-hint" style="color: #b45309;">{% trans "Обязательные позиции ещё не закрыты." %}</p>
+      {% endif %}
+
+      {% if work_plan.rows %}
+        <div class="time-table-scroll">
+          <table class="time-table">
+            <thead>
+              <tr>
+                <th>{% trans "Позиция" %}</th>
+                <th>{% trans "План" %}</th>
+                <th>{% trans "Подтверждено" %}</th>
+                <th>{% trans "Осталось" %}</th>
+                <th>{% trans "Статус" %}</th>
+                <th>{% trans "Человеко-часы" %}</th>
+                {% if manager %}<th>{% trans "Действие" %}</th>{% endif %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in work_plan.rows %}
+                <tr>
+                  <td>
+                    <strong>{{ row.item.label }}</strong>
+                    <small style="color: var(--cab-text-muted);"> · {{ row.item.work_type.name_de }}{% if row.item.route %} · {{ row.item.route.name_de }}{% endif %}{% if row.item.cable_type %} · {{ row.item.cable_type.name_de }}{% endif %}</small>
+                  </td>
+                  <td>{{ row.item.planned_quantity|floatformat:2 }} {% trans row.item.unit_snapshot %}</td>
+                  <td>{{ row.completed_quantity|floatformat:2 }} {% trans row.item.unit_snapshot %}</td>
+                  <td>{{ row.remaining_quantity|floatformat:2 }} {% trans row.item.unit_snapshot %}</td>
+                  <td>
+                    {% if row.status == "completed" %}
+                      <span class="cust-badge cust-badge--completed">{% trans "Завершено" %}</span>
+                    {% elif row.status == "not_required" %}
+                      <span class="cust-badge cust-badge--not_started">{% trans "Не требуется" %}</span>
+                      {% if row.item.not_required_reason %}<small> · {{ row.item.not_required_reason }}</small>{% endif %}
+                    {% elif row.status == "partial" %}
+                      <span class="cust-badge cust-badge--started">{% trans "В работе" %}</span>
+                    {% else %}
+                      <span class="cust-badge cust-badge--not_started">{% trans "Не начато" %}</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ row.actual_person_hours|floatformat:2 }}</td>
+                  {% if manager %}
+                    <td>
+                      <div class="time-inline" style="gap: 6px; flex-wrap: wrap;">
+                        <a class="time-button quiet sm" href="{% url 'projects:work_item_edit' group.pk site.pk row.item.pk %}">{% trans "Редактировать" %}</a>
+                        <form method="post" action="{% url 'projects:work_item_lifecycle' group.pk site.pk row.item.pk %}" style="margin: 0;">
+                          {% csrf_token %}
+                          {% if row.status != "completed" and row.status != "not_required" %}
+                            <button class="time-button secondary sm" type="submit" name="action" value="confirm" {% if row.remaining_quantity %}disabled{% endif %}>{% trans "Подтвердить" %}</button>
+                          {% endif %}
+                          {% if row.status == "completed" or row.status == "not_required" %}
+                            <button class="time-button secondary sm" type="submit" name="action" value="reopen">{% trans "Открыть" %}</button>
+                          {% endif %}
+                        </form>
+                        {% if row.status != "not_required" %}
+                          <form method="post" action="{% url 'projects:work_item_lifecycle' group.pk site.pk row.item.pk %}" class="time-inline" style="margin: 0; gap: 4px;">
+                            {% csrf_token %}
+                            <input name="reason" required maxlength="500" aria-label="{% trans 'Причина' %}" placeholder="{% trans 'Причина' %}" style="padding: 4px 8px; font-size: 12px; height: 28px;">
+                            <button class="time-button quiet sm" type="submit" name="action" value="not_required">✕</button>
+                          </form>
+                        {% endif %}
+                      </div>
+                    </td>
+                  {% endif %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="time-empty">{% trans "План пока пуст. Дневной отчёт можно сохранить без плана." %}</div>
+      {% endif %}
+      <p class="time-hint" style="margin-top: 10px;">
+        {% trans "Неразобранных принятых строк" %}: {{ work_plan.unresolved_count }}{% if work_plan.excluded_report_count %} · {% trans "Принятых отчётов без актуального снимка" %}: {{ work_plan.excluded_report_count }}{% endif %}. {% trans "Их количество не засчитано как подтверждённое." %}
+      </p>
+    </section>
+
+    <!-- Внутренние метрики и расчёт с ценами -->
+    <section class="time-card" aria-labelledby="overview-title" style="margin-bottom: 24px;">
+      <h2 id="overview-title" style="margin-top: 0;">{% trans "Обзор Standort" %}</h2>
+      <div class="project-metrics project-metrics-large" style="margin-bottom: 16px;">
+        <div><strong>{{ activity.work_day_count }}</strong><small>{% trans "рабочих дней" %}</small></div>
+        <div><strong>{{ activity.employee_count }}</strong><small>{% trans "сотрудников" %}</small></div>
+        <div><strong>{{ activity.recorded_person_hours|floatformat:2 }}</strong><small>{% trans "человеко-часов" %}</small></div>
+        <div><strong>{{ activity.known_subtotal|floatformat:2 }} €</strong><small>{% if activity.preliminary_amount == None %}{% trans "Teilbetrag · цены не согласованы" %}{% else %}{% trans "Подтверждённая сумма" %}{% endif %}</small></div>
+      </div>
+      <p class="time-hint">
+        {% trans "Принято администратором" %}: {{ activity.accepted_person_hours|floatformat:2 }} {% trans "чел.-ч" %} · {{ activity.known_subtotal|floatformat:2 }} € {% if activity.accepted_amount == None %}({% trans "Teilbetrag, не итог к оплате" %}){% endif %}.
+      </p>
+
+      {% if positions %}
+        <div class="time-table-scroll" style="margin-top: 16px;">
+          <table class="time-table">
+            <thead>
+              <tr>
+                <th>{% trans "Работа" %}</th>
+                <th>{% trans "Количество" %}</th>
+                <th>{% trans "Норма, чел.-ч" %}</th>
+                <th>{% trans "Факт, чел.-ч" %}</th>
+                <th>{% trans "Предварительно" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in positions %}
+                <tr>
+                  <td>{{ row.name }}</td>
+                  <td>{% if row.quantity == None %}{% trans "Menge ungeklärt" %}{% else %}{{ row.quantity|floatformat:2 }} {% trans row.unit %}{% endif %}</td>
+                  <td>{% if row.normative_person_hours == None %}—{% else %}{{ row.normative_person_hours|floatformat:2 }}{% endif %}</td>
+                  <td>{{ row.actual_person_hours|floatformat:2 }}</td>
+                  <td>{% if row.amount == None %}{% trans "Preis nicht vereinbart" %}{% else %}{{ row.amount|floatformat:2 }} €{% endif %}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+    </section>
+
+    <!-- Полный журнал MBG-отчётов объекта (для администратора) -->
+    <details class="time-card" style="margin-bottom: 24px;">
+      <summary style="cursor: pointer; padding: 4px 0;">
+        <h2 style="display: inline; margin: 0; font-size: 18px;">
+          {% trans "Все отчёты MBG по объекту" %} ({{ reports|length }})
+        </h2>
+        <span class="time-hint" style="margin-left: 8px;">({% trans "нажмите для просмотра списка" %})</span>
+      </summary>
+      <div style="margin-top: 14px;">
+        {% for report in reports %}
+          <a class="time-card time-report-link" href="{% url 'mbg_reports:detail' report.pk %}" style="margin-bottom: 8px;">
+            <div>
+              <strong>{{ report.work_date|date:"d.m.Y" }}</strong>
+              <p>{{ report.workforce.all|length }} {% trans "сотрудников" %} · {{ report.person_hours|default_if_none:0|floatformat:2 }} {% trans "чел.-ч" %}</p>
+            </div>
+            <span>{{ report.get_status_display }} →</span>
+          </a>
+        {% empty %}
+          <div class="time-empty">{% trans "Отчётов пока нет." %}</div>
+        {% endfor %}
+      </div>
+    </details>
+  </div>
+
+  <dialog class="project-media-dialog" data-media-dialog aria-labelledby="project-media-dialog-title">
+    <div class="project-media-dialog-head">
+      <h2 id="project-media-dialog-title" data-media-dialog-title></h2>
+      <button type="button" data-media-close aria-label="{% trans 'Schließen' %}"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+    </div>
+    <div class="project-media-dialog-body">
+      <img data-media-dialog-image alt="" hidden>
+      <iframe data-media-dialog-pdf title="{% trans 'Vorschau' %}" hidden></iframe>
+    </div>
+  </dialog>
+</div>
+
+<style>
+.status-quick-select {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 30px;
+  border: 1px solid var(--cab-border);
+  background-color: var(--cab-topbar-bg);
+  color: var(--cab-text);
+  cursor: pointer;
+  outline: none;
+  transition: all .15s ease;
+}
+.status-quick-select:hover {
+  border-color: var(--cab-primary);
+}
+.status-quick-select.status-completed {
+  border-color: #00A86B;
+  background-color: #E6FBF2;
+  color: #00875A;
+}
+.status-quick-select.status-started {
+  border-color: #F59E0B;
+  background-color: #FEF3C7;
+  color: #B45309;
+}
+.status-quick-select.status-not_started {
+  border-color: #94A3B8;
+  background-color: #F1F5F9;
+  color: #475569;
+}
+</style>
+{% endblock %}
+{% block extra_js %}{{ block.super }}<script src="{% static 'project_media/js/gallery.js' %}" defer></script>{% endblock %}

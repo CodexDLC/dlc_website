@@ -1,0 +1,152 @@
+{% load i18n %}
+
+<section class="time-card" style="margin-bottom: 24px;">
+  <h2>{% trans "Клиентские ведомости и акты (XLSX)" %}</h2>
+
+  {% if can_manage_settlement %}
+    <form id="batch-settlement-form" method="post" action="{{ batch_settlement_report_url|default:'' }}" data-batch-settlement-form>
+      {% csrf_token %}
+    </form>
+    <div class="unified-doc-batch-bar">
+      <div class="unified-doc-batch-bar__controls">
+        <button type="submit"
+                form="batch-settlement-form"
+                class="time-button secondary sm"
+                data-batch-submit-btn
+                data-base-label="{% trans 'Отчёт для выставления счёта' %}"
+                {% if not batch_settlement_report_url %}disabled aria-disabled="true" title="{% trans 'URL действия не подключён интегратором' %}"{% endif %}>
+          {% trans "Отчёт для выставления счёта" %}
+        </button>
+        {% if not batch_settlement_report_url %}
+          <span class="unified-doc-url-warning">{% trans "URL действия не подключён" %}</span>
+        {% endif %}
+      </div>
+      <div>
+        <label class="unified-doc-batch-bar__filter">
+          <input type="checkbox" form="batch-settlement-form" name="include_paid" value="1" data-filter-include-paid
+                 data-paid-excluded-title="{% trans 'Оплаченный объект не включается в новый счёт' %}"
+                 data-paid-included-title="{% trans 'Оплаченный объект (включён явно)' %}">
+          {% trans "Включить оплаченные" %}
+        </label>
+      </div>
+    </div>
+  {% endif %}
+
+  {% for group in groups_page %}
+    <div data-doc-group style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--cab-border, #e2e8f0);">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+        <div>
+          <h3 style="margin:0; font-size:16px;">
+            <a href="{% if group.detail_url %}{{ group.detail_url }}{% else %}{% url 'customer_portal:group' group.pk %}{% endif %}">{{ group.name }}</a>
+          </h3>
+          {% if group.address %}<p class="time-hint" style="margin:2px 0 0;">{{ group.address }}</p>{% endif %}
+        </div>
+        <div class="time-inline" style="margin:0;">
+          <a class="time-button secondary sm" href="{% if group.group_act_url %}{{ group.group_act_url }}{% else %}{% url 'customer_portal:group_work_xlsx' group.pk %}{% endif %}">
+            <i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i> {% trans "Сводный акт (XLSX)" %}
+          </a>
+          <a class="time-button secondary sm" href="{% if group.group_timesheet_url %}{{ group.group_timesheet_url }}{% else %}{% url 'customer_portal:group_timesheet_xlsx' group.pk %}{% endif %}">
+            <i class="bi bi-clock-history" aria-hidden="true"></i> {% trans "Сводный табель (XLSX)" %}
+          </a>
+        </div>
+      </div>
+
+      <div class="time-table-scroll">
+        <table class="time-table">
+          <thead>
+            <tr>
+              {% if can_manage_settlement %}
+                <th style="width:36px; text-align:center;">
+                  <input type="checkbox" data-select-all-sites class="unified-site-select-cb" title="{% trans 'Выбрать все к оплате' %}">
+                </th>
+              {% endif %}
+              <th>{% trans "Standort" %}</th>
+              <th>{% trans "Projektnummer" %}</th>
+              <th>{% trans "Status" %}</th>
+              {% if can_manage_settlement %}
+                <th>{% trans "Оплата" %}</th>
+              {% endif %}
+              <th style="text-align:center;">{% trans "Акт" %}</th>
+              <th style="text-align:center;">{% trans "Табель часов" %}</th>
+              {% if can_manage_settlement %}
+                <th style="text-align:center;">{% trans "Отчёт для выставления счёта" %}</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% with sites=group.sites|default:group.ac_objects.all %}
+              {% for site in sites %}
+                <tr class="{% if site.is_paid %}is-paid-row{% endif %}">
+                  {% if can_manage_settlement %}
+                    <td style="text-align:center;">
+                      <input type="checkbox" form="batch-settlement-form" name="site_ids" value="{{ site.pk }}" class="unified-site-select-cb {% if site.is_paid %}is-paid-cb{% endif %}"{% if site.is_paid %} disabled title="{% trans 'Оплаченный объект не включается в новый счёт' %}"{% endif %}>
+                    </td>
+                  {% endif %}
+                  <td>
+                    <a href="{% if site.detail_url %}{{ site.detail_url }}{% else %}{% url 'customer_portal:site' site.pk %}{% endif %}">{{ site.name }}</a>
+                  </td>
+                  <td>{{ site.project_number|default:"—" }}</td>
+                  <td>{% if site.status_display %}{{ site.status_display }}{% elif site.get_status_display %}{{ site.get_status_display }}{% else %}—{% endif %}</td>
+                  {% if can_manage_settlement %}
+                    <td>
+                      {% if site.is_paid %}
+                        <span class="unified-doc-badge unified-doc-badge--paid">{% trans "Оплачено" %}</span>
+                        <form method="post" action="{% if site.payment_toggle_url %}{{ site.payment_toggle_url }}{% else %}{% url 'mbg_reports:site_payment_toggle' site.pk %}{% endif %}" style="display:inline-block; margin-left:4px;">
+                          {% csrf_token %}
+                          <input type="hidden" name="is_paid" value="0">
+                          <button type="submit" class="time-button quiet sm" title="{% trans 'Снять отметку оплаты' %}" style="padding: 1px 4px; font-size: 11px; line-height: 1;">
+                            <i class="bi bi-x-circle" aria-hidden="true"></i>
+                          </button>
+                        </form>
+                      {% else %}
+                        <span class="unified-doc-badge unified-doc-badge--unpaid">{% trans "К оплате" %}</span>
+                        <form method="post" action="{% if site.payment_toggle_url %}{{ site.payment_toggle_url }}{% else %}{% url 'mbg_reports:site_payment_toggle' site.pk %}{% endif %}" style="display:inline-block; margin-left:4px;">
+                          {% csrf_token %}
+                          <input type="hidden" name="is_paid" value="1">
+                          <button type="submit" class="time-button quiet sm" title="{% trans 'Отметить оплаченным' %}" style="padding: 1px 4px; font-size: 11px; line-height: 1;">
+                            <i class="bi bi-check-circle" aria-hidden="true"></i>
+                          </button>
+                        </form>
+                      {% endif %}
+                    </td>
+                  {% endif %}
+                  <td style="text-align:center;">
+                    <a class="time-button secondary sm" href="{% if site.act_url %}{{ site.act_url }}{% else %}{% url 'customer_portal:accepted_work_xlsx' site.pk %}{% endif %}">
+                      {% trans "Акт" %}
+                    </a>
+                  </td>
+                  <td style="text-align:center;">
+                    <a class="time-button secondary sm" href="{% if site.timesheet_url %}{{ site.timesheet_url }}{% else %}{% url 'customer_portal:site_timesheet_xlsx' site.pk %}{% endif %}">
+                      {% trans "Табель часов" %}
+                    </a>
+                  </td>
+                  {% if can_manage_settlement %}
+                    <td style="text-align:center;">
+                      {% if site.settlement_report_url %}
+                        <a class="time-button secondary sm" href="{{ site.settlement_report_url }}">
+                          {% trans "Отчёт для выставления счёта" %}
+                        </a>
+                      {% else %}
+                        <span class="time-button secondary sm disabled" aria-disabled="true" title="{% trans 'URL действия не настроен' %}">
+                          {% trans "Отчёт для выставления счёта" %}
+                        </span>
+                      {% endif %}
+                    </td>
+                  {% endif %}
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="{% if can_manage_settlement %}8{% else %}5{% endif %}">{% trans "В этой Anlage пока нет Standorte." %}</td>
+                </tr>
+              {% endfor %}
+            {% endwith %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% empty %}
+    <p>{% trans "Доступных проектов пока нет." %}</p>
+  {% endfor %}
+
+  {% include "customer_portal/includes/_pagination.html" with page_obj=groups_page page_param_name="page_groups" extra_params="q_group="|add:q_group|add:"&q_pdf="|add:q_pdf|add:"&page_pdf="|add:page_pdf|stringformat:"s" %}
+</section>

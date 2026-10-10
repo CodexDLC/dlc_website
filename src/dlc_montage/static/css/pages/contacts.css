@@ -1,0 +1,42 @@
+/* ===================================================
+   Contacts Page Styles
+   =================================================== */
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--spacing-xl);
+    align-items: start;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.contact-icon { font-size: 20px; }
+
+.contact-link {
+    color: var(--text-main);
+    font-size: 16px;
+    transition: color var(--transition-fast);
+}
+.contact-link:hover { color: var(--primary-color); }
+
+.contact-form-wrapper {
+    background: var(--bg-white);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 768px) {
+    .contact-grid { grid-template-columns: 1fr; }
+}

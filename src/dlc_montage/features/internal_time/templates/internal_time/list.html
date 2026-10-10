@@ -1,0 +1,31 @@
+{% extends "internal_time/base.html" %}
+{% load i18n %}
+{% block title %}{% trans 'Внутренние отчёты' %}{% endblock %}
+{% block report_content %}
+<header class="time-heading"><div><p class="time-eyebrow">{% trans 'ПЕРСОНАЛ / УЧЁТ ВРЕМЕНИ' %}</p><h1>{% trans 'Внутренние отчёты' %}</h1>
+<p>{% if manager %}{% trans 'Рабочие дни команд: просмотр, проверка и подтверждение.' %}{% else %}{% trans 'Ваши рабочие дни и отчёты команды.' %}{% endif %}</p></div>
+<a class="time-button" href="{% url 'internal_time:new' %}">{% trans '＋ Создать отчёт' %}</a></header>
+<form method="get" class="time-card time-filters">
+<label>{% trans 'С даты' %}<input type="date" name="from" value="{{ filters.from }}"></label>
+<label>{% trans 'По дату' %}<input type="date" name="to" value="{{ filters.to }}"></label>
+<label>{% trans 'Направление' %}<select name="direction"><option value="">{% trans 'AC и DC' %}</option><option value="ac" {% if filters.direction == 'ac' %}selected{% endif %}>AC</option><option value="dc" {% if filters.direction == 'dc' %}selected{% endif %}>DC</option></select></label>
+<label>{% trans 'Статус' %}<select name="status"><option value="">{% trans 'Все статусы' %}</option>{% for key,label in statuses %}<option value="{{ key }}" {% if filters.status == key %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+<label>{% trans 'Проект' %}<select name="project_group"><option value="">{% trans 'Все проекты' %}</option>{% for group in groups %}<option value="{{ group.pk }}" {% if filters.project_group == group.pk|stringformat:'s' %}selected{% endif %}>{{ group }}</option>{% endfor %}</select></label>
+<label>{% trans 'Сотрудник' %}<select name="participants__employee"><option value="">{% trans 'Все сотрудники' %}</option>{% for employee in employees %}<option value="{{ employee.pk }}" {% if filters.participants__employee == employee.pk|stringformat:'s' %}selected{% endif %}>{{ employee }}</option>{% endfor %}</select></label>
+{% if manager %}<label>{% trans 'Автор' %}<select name="author"><option value="">{% trans 'Все авторы' %}</option>{% for author in authors %}<option value="{{ author.author_id }}" {% if filters.author == author.author_id|stringformat:'s' %}selected{% endif %}>{{ author.author__username }}</option>{% endfor %}</select></label>{% endif %}
+<button class="time-button secondary">{% trans 'Показать' %}</button><a href="{% url 'internal_time:list' %}">{% trans 'Сбросить' %}</a>
+</form>
+{% for row in rows %}<a class="time-card time-report-link" href="{% url 'internal_time:detail' row.report.pk %}">
+<div><span class="time-badge">{{ row.report.direction|upper }}</span> <strong>{{ row.report.project_group }}</strong>
+<p>{{ row.report.work_date|date:"d.m.Y" }} · {{ row.report.starts_at|time:"H:i" }}–{{ row.report.ends_at|time:"H:i" }} · {{ row.report.author }}</p></div>
+<div><span class="time-badge">{{ row.report.get_status_display }}</span><p>{{ row.members|length }} {% trans 'чел. ·' %} {{ row.total }}</p></div></a>
+{% empty %}<div class="time-card time-empty"><h2>{% trans 'Отчётов пока нет' %}</h2><p>{% trans 'Создайте первый отчёт или измените фильтры.' %}</p>
+<p>{% trans 'Сотрудников добавляет администратор. Команды можно собрать из уже заведённых сотрудников.' %}</p>
+<a class="time-button secondary" href="{% url 'crews:list' %}">{% trans 'Настроить команды' %}</a>
+{% if manager %}<a href="{% url 'staff_employee_new' %}">{% trans 'Добавить сотрудника' %}</a>{% endif %}</div>{% endfor %}
+<nav class="time-inline" aria-label="{% trans 'Страницы отчётов' %}">
+{% if page.has_previous %}<a href="?{{ query }}&page={{ page.previous_page_number }}">{% trans '← Назад' %}</a>{% endif %}
+<span>{{ page.number }} / {{ page.paginator.num_pages }}</span>
+{% if page.has_next %}<a href="?{{ query }}&page={{ page.next_page_number }}">{% trans 'Далее →' %}</a>{% endif %}
+</nav>
+{% endblock %}

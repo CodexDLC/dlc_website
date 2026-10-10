@@ -1,0 +1,97 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n static %}
+
+{% block title %}{% trans "Отчёты MBG" %} {% trans '— DLC Montage' %}{% endblock %}
+
+{% block cabinet_content %}
+<link rel="stylesheet" href="{% static 'internal_time/css/reports.css' %}">
+<link rel="stylesheet" href="{% static 'customer_portal/css/portal.css' %}">
+<link rel="stylesheet" href="{% static 'mbg_reports/css/list.css' %}">
+
+<div class="customer-portal-shell time-page">
+  <div class="customer-header mbg-page-heading">
+    <div class="customer-header-title">
+      <p class="time-eyebrow">{% trans 'AC · MBG' %}</p>
+      <h1>{% trans "Отчёты для заказчика" %}</h1>
+      <p>{% trans "Рабочие дни по отдельным Standort. Время MBG не связано с внутренними сменами." %}</p>
+    </div>
+    <div class="customer-header-actions time-inline">
+      <a class="time-button quiet" href="{% url 'mbg_reports:export_hub' %}">
+        <i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i> {% trans "Документы" %}
+      </a>
+      <a class="time-button" href="{% url 'mbg_reports:new' %}">+ {% trans "Создать отчёт" %}</a>
+    </div>
+  </div>
+
+  <form method="get" class="customer-filter-bar mbg-filter-card" aria-label="{% trans 'Фильтры отчётов' %}">
+    <div class="customer-filter-item">
+      <label>{{ filter_form.group.label }}</label>
+      {{ filter_form.group }}
+    </div>
+    <div class="customer-filter-item">
+      <label>{{ filter_form.site.label }}</label>
+      {{ filter_form.site }}
+    </div>
+    <div class="customer-filter-item">
+      <label>{{ filter_form.status.label }}</label>
+      {{ filter_form.status }}
+    </div>
+    <div class="customer-filter-item">
+      <label>{{ filter_form.date_from.label }}</label>
+      {{ filter_form.date_from }}
+    </div>
+    <div class="customer-filter-item">
+      <label>{{ filter_form.date_to.label }}</label>
+      {{ filter_form.date_to }}
+    </div>
+    <div class="customer-filter-actions">
+      <button class="time-button secondary" type="submit">{% trans "Применить" %}</button>
+      <a class="time-button quiet" href="{% url 'mbg_reports:list' %}">{% trans "Сбросить" %}</a>
+    </div>
+  </form>
+
+  {% for day in report_days %}
+    <section class="customer-day-section">
+      <div class="customer-day-header">
+        <h2>{{ day.date|date:"d.m.Y" }}</h2>
+        <span class="cust-badge cust-badge--progress">
+          {% blocktrans count count=day.reports|length %}{{ count }} отчёт{% plural %}{{ count }} отчётов{% endblocktrans %}
+        </span>
+      </div>
+
+      <div class="customer-grid">
+        {% for report in day.reports %}
+          <article class="customer-card">
+            <div class="customer-card-body">
+              <div class="customer-card-eyebrow">{{ report.site.group.name }}</div>
+              <h3 class="customer-card-title">
+                <a href="{% url 'mbg_reports:detail' report.pk %}">{{ report.site.name }}</a>
+              </h3>
+              <p class="customer-card-meta">
+                {{ report.site.address|default:"—" }}{% if report.site.project_number %} {% trans '· P/Nr' %} {{ report.site.project_number }}{% endif %}
+              </p>
+              <div class="customer-card-badges">
+                <span class="cust-badge cust-badge--{{ report.status }}">{{ report.get_status_display }}</span>
+                <span class="cust-badge">👥 {{ report.workforce_count }} {% trans "сотр." %}</span>
+              </div>
+            </div>
+            <div class="customer-card-footer">
+              <a class="time-button secondary sm" href="{% url 'mbg_reports:detail' report.pk %}">
+                {% trans "Открыть" %} →
+              </a>
+              <a class="time-button quiet sm" href="{% url 'mbg_reports:edit' report.pk %}">
+                {% trans "Редактировать" %}
+              </a>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </section>
+  {% empty %}
+    <div class="customer-empty-card">
+      <strong>{% trans "По выбранным фильтрам отчётов нет" %}</strong>
+      <p>{% trans "Измените фильтры или создайте новый рабочий день." %}</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

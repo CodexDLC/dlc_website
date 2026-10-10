@@ -1,0 +1,20 @@
+# Optional isolated local PostgreSQL. Does not migrate or replace existing SQLite data.
+name: dlc-montage-local
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: dlc_montage
+      POSTGRES_USER: dlc_montage
+      POSTGRES_PASSWORD: ${DLC_LOCAL_DB_PASSWORD:?Set DLC_LOCAL_DB_PASSWORD before starting}
+    ports:
+      - "127.0.0.1:55432:5432"
+    volumes:
+      - dlc_pg_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dlc_montage -d dlc_montage"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  dlc_pg_data:

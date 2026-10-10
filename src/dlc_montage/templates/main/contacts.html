@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+    {{ site_settings.company_name }} | {% trans "Contacts" %}
+{% endblock title %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h1 class="section-title">{% trans "Contact Us" %}</h1>
+            <p class="text-muted">{% trans "We'd love to hear from you. Send us a message!" %}</p>
+        </div>
+        <div class="contact-grid">
+            <!-- Contact Info -->
+            <div class="contact-info">
+                {% if site_settings.phone %}
+                <div class="contact-item">
+                    <span class="contact-icon">📞</span>
+                    <a href="tel:{{ site_settings.phone }}" class="contact-link">{{ site_settings.phone }}</a>
+                </div>
+                {% endif %}
+                {% if site_settings.email %}
+                <div class="contact-item">
+                    <span class="contact-icon">✉️</span>
+                    <a href="mailto:{{ site_settings.email }}" class="contact-link">{{ site_settings.email }}</a>
+                </div>
+                {% endif %}
+            </div>
+            <!-- Contact Form -->
+            <div class="contact-form-wrapper">
+                <p class="text-muted">{% trans "Add your contact form here." %}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,115 @@
+{# CODEX_DJANGO_CLI BLUEPRINT STATUS: MOVE_TO_CLI_BLUEPRINT. Reason: generated app-layer or scaffold-owned template for codex-django-cli blueprints. #}
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n cabinet_tags %}
+
+{% block title %}{{ message.subject|default:message.sender_name }}{% endblock %}
+
+{% block cabinet_content %}
+<div class="px-3 py-4" style="max-width:1400px; min-width:600px; background-color:#f8fafc; min-height:calc(100vh - 100px); border-radius:16px;">
+
+    {% if message %}
+    {# ── Header ── #}
+    {% url 'cabinet:conversations_inbox' as inbox_url %}
+    {% include "cabinet/includes/_page_header.html" with title=message.subject|default:"—" btn_label="Назад" btn_url=inbox_url btn_icon="bi-arrow-left" %}
+
+    {# ── Message card ── #}
+    <div class="card border-0 shadow-sm mb-4" style="border-radius:var(--cab-radius);overflow:hidden;">
+
+        {# Meta #}
+        <div class="card-header bg-white border-bottom px-4 py-3">
+            <div class="d-flex align-items-center gap-3 flex-wrap" style="font-size:.83rem;color:var(--cab-text-muted);">
+                <span><strong style="color:var(--cab-text);">{{ message.sender_name }}</strong> &lt;{{ message.sender_email }}&gt;</span>
+                {% if message.sender_phone %}<span><span class="bi bi-telephone me-1"></span>{{ message.sender_phone }}</span>{% endif %}
+                <span class="ms-auto">{{ message.created_at|date:"d M Y, H:i" }}</span>
+            </div>
+            <div class="d-flex gap-2 mt-2 flex-wrap align-items-center">
+                {% include "cabinet/includes/_status_badge.html" with label=message.get_topic_display bg="#f1f5f9" color="var(--cab-text-muted)" %}
+                {% include "cabinet/includes/_status_badge.html" with label=message.get_source_display bg="#f1f5f9" color="var(--cab-text-muted)" %}
+                {% if message.status == 'open' %}
+                    {% include "cabinet/includes/_status_badge.html" with label=message.get_status_display bg="#ede9fe" color="#6366f1" %}
+                {% elif message.status == 'processed' %}
+                    {% include "cabinet/includes/_status_badge.html" with label=message.get_status_display bg="#dcfce7" color="#16a34a" %}
+                {% else %}
+                    {% include "cabinet/includes/_status_badge.html" with label=message.get_status_display bg="#fee2e2" color="#dc2626" %}
+                {% endif %}
+                {% if message.is_read %}
+                    {% trans "Read" as read_label %}
+                    {% include "cabinet/includes/_status_badge.html" with label=read_label bg="#ecfeff" color="#0f766e" %}
+                {% else %}
+                    {% trans "Unread" as unread_label %}
+                    {% include "cabinet/includes/_status_badge.html" with label=unread_label bg="#fff7ed" color="#c2410c" %}
+                {% endif %}
+                <div class="ms-auto d-flex gap-2 flex-wrap">
+                    {% for action in thread_actions %}
+                    <form method="post" action="{% url 'cabinet:conversations_action' message.pk action.slug %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-light border">{{ action.label }}</button>
+                    </form>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        {# Body #}
+        <div class="card-body px-4 py-3">
+            <div class="p-4 rounded-3" style="background:#f8fafc; white-space:pre-wrap; font-size:.95rem; color:var(--cab-text); border:1px solid #e2e8f0; line-height:1.6;">{{ message.body }}</div>
+        </div>
+
+        {# Replies #}
+        {% if replies %}
+        <div class="border-top px-4 py-4" style="background:#fff;">
+            <h6 class="mb-3 text-uppercase fw-bold" style="font-size:.75rem; color:var(--cab-text-muted); letter-spacing:0.05em;">{% trans "История переписки" %}</h6>
+            {% for reply in replies %}
+            <div class="d-flex mb-3 {% if not reply.is_inbound %}justify-content-end{% endif %}">
+                <div class="px-4 py-3 rounded-4 shadow-sm"
+                     style="max-width:80%; background:{% if reply.is_inbound %}#f1f5f9{% else %}#f5f3ff{% endif %};
+                            border:1px solid {% if reply.is_inbound %}#e2e8f0{% else %}#c7d2fe{% endif %};">
+                    <div class="mb-2 d-flex align-items-center gap-2" style="font-size:.78rem;color:var(--cab-text-muted);">
+                        <span class="fw-bold" style="color:var(--cab-text);">{% if reply.is_inbound %}{{ message.sender_name }}{% else %}{{ reply.sent_by }}{% endif %}</span>
+                        <span>·</span>
+                        <span>{{ reply.sent_at|date:"d M, H:i" }}</span>
+                    </div>
+                    <div style="font-size:.92rem;white-space:pre-wrap;color:var(--cab-text);line-height:1.5;">{{ reply.body }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {# Reply form (Consistent with Compose) #}
+        <div class="card-footer bg-light border-top px-4 py-4">
+            <form method="post" action="{% url 'cabinet:conversations_reply' message.pk %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold" style="font-size:.8rem; color:var(--cab-text);">{% trans "Ваш ответ" %}</label>
+                    <textarea name="body" rows="6" class="form-control bg-white shadow-sm" required
+                              placeholder="{% trans 'Напишите ваш ответ здесь...' %}"
+                              style="border-radius:var(--cab-radius); font-size:.9rem; resize:vertical;"></textarea>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary px-4">
+                        <span class="bi bi-reply-fill me-1"></span>{% trans "Отправить ответ" %}
+                    </button>
+                    <button type="button" class="btn btn-outline-primary shadow-sm px-4"
+                            onclick="alert('Preview functionality is under development.')">
+                        <span class="bi bi-eye me-1"></span>{% trans "Предпросмотр" %}
+                    </button>
+                    <a href="{{ inbox_url }}" class="btn btn-light border px-4">
+                        {% trans "Закрыть" %}
+                    </a>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+    {% else %}
+        {% include "cabinet/includes/_empty_state.html" with icon="bi-exclamation-circle" title="{% trans 'Сообщение не найдено' %}" %}
+    {% endif %}
+
+</div>
+
+<style>
+.form-control:focus { border-color: var(--cab-primary); box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.1); }
+</style>
+{% endblock %}
