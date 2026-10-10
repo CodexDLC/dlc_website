@@ -378,7 +378,7 @@ def submit_for_review(*, actor, site):
     site = AcObject.objects.select_for_update().get(pk=site.pk)
     if site.group.client_id is None or not site.group.client.is_active:
         raise ValidationError(_("Для проверки требуется активный заказчик Anlage."))
-    if not MbgDailyReport.objects.filter(site=site, status="accepted").exists():
+    if site.status != "completed" and not MbgDailyReport.objects.filter(site=site, status="accepted").exists():
         raise ValidationError(_("Для проверки требуются принятые дневные работы."))
     digest = accepted_snapshot_digest(site)
     review, _created = SiteReview.objects.select_for_update().get_or_create(site=site)

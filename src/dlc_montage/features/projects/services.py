@@ -79,9 +79,24 @@ def save_object(*, actor, group, data, object_id=None):
             before=before,
             after=after,
         )
+    if data.get("status") == "completed":
+        _submit_completed_site_for_review(actor=actor, site=obj)
     synchronize_ac_progress(group_id=group.pk)
     transaction.on_commit(lambda: ensure_site_folders(obj))
     return obj
+
+
+def _submit_completed_site_for_review(*, actor, site):
+    """Передать завершённый Standort заказчику, сохранив открытую проверку и приёмку."""
+    from features.customer_portal.models import SiteReview
+    from features.customer_portal.services import submit_for_review
+
+    if site.group.client_id is None:
+        return
+    review = SiteReview.objects.select_for_update().filter(site=site).first()
+    if review is not None and review.status in {"submitted", "accepted"}:
+        return
+    submit_for_review(actor=actor, site=site)
 
 
 def _validate_site_completion(site):
@@ -115,6 +130,8 @@ def set_site_status(*, actor, site, status):
             before={"status": previous_status},
             after={"status": status},
         )
+    if status == "completed":
+        _submit_completed_site_for_review(actor=actor, site=site)
     synchronize_ac_progress(group_id=site.group_id)
     return site
 
