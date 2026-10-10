@@ -63,3 +63,23 @@ def test_missing_field_key_requires_explicit_new_database(tmp_path):
     assert accepted.returncode == 0, accepted.stderr
     values = dotenv_values(output)
     Fernet(values["FIELD_ENCRYPTION_KEY"].encode("ascii"))
+
+
+def test_preserves_nextcloud_configuration_without_disclosure(tmp_path):
+    source = tmp_path / 'source.env'
+    output = tmp_path / 'deployment.env'
+    key = Fernet.generate_key().decode('ascii')
+    source.write_text(
+        f'FIELD_ENCRYPTION_KEY={key}\n'
+        'NEXTCLOUD_WEBDAV_URL=https://cloud.example.test/remote.php/dav/files/test/\n'
+        'NEXTCLOUD_USER=test-user\n'
+        "NEXTCLOUD_PASSWORD='test$pass # with spaces'\n",
+        encoding='utf-8',
+    )
+    result = invoke_generator(source, output)
+    assert result.returncode == 0, result.stderr
+    original = dotenv_values(source)
+    generated = dotenv_values(output)
+    for name in ('NEXTCLOUD_WEBDAV_URL', 'NEXTCLOUD_USER', 'NEXTCLOUD_PASSWORD'):
+        assert generated[name] == original[name]
+        assert generated[name] not in result.stdout + result.stderr

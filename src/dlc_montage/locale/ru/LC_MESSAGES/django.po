@@ -5277,3 +5277,11 @@ msgstr "Произошла ошибка. Попробуйте позже."
 #: .\templates\includes\_language_switcher.html:3
 msgid "Sprache"
 msgstr "Язык"
+
+#: features/projects/templates/projects/includes/_object_common_top.html
+msgid "Fotos anzeigen"
+msgstr "Показать фотографии"
+
+#: features/projects/templates/projects/includes/_object_common_top.html
+msgid "Fotos ausblenden"
+msgstr "Скрыть фотографии"

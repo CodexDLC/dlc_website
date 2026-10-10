@@ -394,6 +394,7 @@ def site_detail(request, site_id):
         {
             "detail": detail,
             "photo_summary": photo_summary,
+            "show_photos": request.GET.get("show_photos") == "1",
             "site": site,
             "files": files,
             "manager": is_manager(request.user),

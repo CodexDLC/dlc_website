@@ -15,7 +15,7 @@
 </div>
 
 <!-- Фотофиксация объекта -->
-<section class="time-card">
+<section class="time-card" id="site-photos">
   <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
     <h2 style="margin:0;">{% trans 'Fotos der Baustelle' %}{% if photo_summary.is_available and photo_summary.count %} ({{ photo_summary.count }}){% endif %}</h2>
     {% if photo_summary.status == "ok" %}
@@ -23,6 +23,13 @@
         <span class="cust-badge cust-badge--photo-ok">📸 {% blocktrans count count=photo_summary.count %}{{ count }} Foto vorhanden{% plural %}{{ count }} Fotos vorhanden{% endblocktrans %}</span>
       {% else %}
         <span class="cust-badge cust-badge--not_started">{% trans '⏳ Keine Fotos' %}</span>
+      {% endif %}
+      {% if photo_summary.count > 0 %}
+        {% if show_photos %}
+          <a class="time-button secondary sm" href="{% querystring show_photos=None %}#site-photos" aria-controls="site-photo-gallery" aria-expanded="true">{% trans 'Fotos ausblenden' %}</a>
+        {% else %}
+          <a class="time-button secondary sm" href="{% querystring show_photos='1' %}#site-photos" aria-controls="site-photo-gallery" aria-expanded="false">{% trans 'Fotos anzeigen' %}</a>
+        {% endif %}
       {% endif %}
     {% elif photo_summary.status == "unavailable" %}
       <span class="cust-badge cust-badge--photo-unavail">{% trans '⚠️ Fotospeicher vorübergehend nicht erreichbar' %}</span>
@@ -33,8 +40,8 @@
     <p class="time-alert" role="alert">{% trans 'Das Nextcloud-Speichersystem ist derzeit nicht erreichbar. Bitte versuchen Sie es später erneut.' %}</p>
   {% elif photo_summary.count == 0 %}
     <p class="time-hint">{% trans 'Für diesen Standort wurden noch keine Fotos im MBG-Speicher abgelegt.' %}</p>
-  {% else %}
-    <div class="project-media-grid" aria-label="{% trans 'Fotos des Standorts' %}">
+  {% elif show_photos %}
+    <div id="site-photo-gallery" class="project-media-grid" aria-label="{% trans 'Fotos des Standorts' %}">
       {% for photo in photo_summary.photos %}
         <article class="project-media-card">
           {% if photo.is_previewable %}
@@ -72,6 +79,8 @@
         </article>
       {% endfor %}
     </div>
+  {% else %}
+    <div id="site-photo-gallery" hidden></div>
   {% endif %}
 </section>
 

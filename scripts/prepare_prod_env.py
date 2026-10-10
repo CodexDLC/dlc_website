@@ -6,7 +6,7 @@ import secrets
 from pathlib import Path
 
 from cryptography.fernet import Fernet
-from dotenv import dotenv_values
+from dotenv import dotenv_values, set_key
 
 
 def main():
@@ -45,6 +45,9 @@ def main():
         stream.write("# Private deployment configuration. Never commit or share in chat.\n")
         for key, value in values.items():
             stream.write(f"{key}={value}\n")
+    for key in ("NEXTCLOUD_WEBDAV_URL", "NEXTCLOUD_USER", "NEXTCLOUD_PASSWORD"):
+        if existing.get(key):
+            set_key(args.output, key, existing[key], quote_mode="always")
     print(f"Created {args.output}; secret values were not printed.")
 
 

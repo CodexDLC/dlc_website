@@ -282,6 +282,7 @@ def site_detail(request, group_id, pk):
             "work_plan": site_work_plan(site),
             "completed_rows": completed_rows,
             "photo_summary": photo_summary,
+            "show_photos": request.GET.get("show_photos") == "1",
             "files": customer_files,
             "daily_work": daily_work,
             "manager": is_manager(request.user),

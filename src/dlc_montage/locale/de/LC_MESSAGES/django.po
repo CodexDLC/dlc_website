@@ -5273,3 +5273,11 @@ msgstr "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
 #: .\templates\includes\_language_switcher.html:3
 msgid "Sprache"
 msgstr "Sprache"
+
+#: features/projects/templates/projects/includes/_object_common_top.html
+msgid "Fotos anzeigen"
+msgstr "Fotos anzeigen"
+
+#: features/projects/templates/projects/includes/_object_common_top.html
+msgid "Fotos ausblenden"
+msgstr "Fotos ausblenden"

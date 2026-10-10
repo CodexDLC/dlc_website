@@ -232,7 +232,7 @@ def test_client_propfind_redirect_classified_as_unavailable(mock_request, portal
     site = portal_setup["site_a"]
     settings.NEXTCLOUD_WEBDAV_URL = "https://storage.test/remote.php/dav/files/user/"
     settings.NEXTCLOUD_USER = "test-user"
-    settings.NEXTCLOUD_PASSWORD = "synthetic-test-password"
+    settings.NEXTCLOUD_PASSWORD = "synthetic-test-password"  # noqa: S105 - synthetic fixture only
     cache.clear()
     resp = MagicMock()
     resp.is_redirect = True
@@ -387,8 +387,15 @@ def test_customer_photo_proxy_unauthenticated_redirects(portal_setup, client):
 
 
 @patch("features.integrations.nextcloud.services.NextcloudWebDAVClient")
-def test_customer_site_detail_shows_gallery_and_count(mock_client_cls, portal_setup, client):
-    """Экран объекта выводит количество фото, превью и диалог Lightbox."""
+@pytest.mark.parametrize("internal", [False, True])
+@pytest.mark.parametrize("language,show_label,hide_label", [
+    ("ru", "Показать фотографии", "Скрыть фотографии"),
+    ("de", "Fotos anzeigen", "Fotos ausblenden"),
+])
+def test_site_photos_are_revealed_on_request(
+    mock_client_cls, portal_setup, client, internal, language, show_label, hide_label
+):
+    """Both site pages show a count first and request private previews only after Show."""
     alice = portal_setup["alice"]
     site_a = portal_setup["site_a"]
 
@@ -398,14 +405,34 @@ def test_customer_site_detail_shows_gallery_and_count(mock_client_cls, portal_se
         {"name": "inverter.png", "is_directory": False},
     ]
 
-    client.force_login(alice)
-    response = client.get(reverse("customer_portal:site", kwargs={"site_id": site_a.pk}))
+    from django.utils.translation import override
+
+    client.force_login(portal_setup["manager"] if internal else alice)
+    with override(language):
+        url = (
+            reverse("projects:site_detail", kwargs={"group_id": site_a.group_id, "pk": site_a.pk})
+            if internal else reverse("customer_portal:site", kwargs={"site_id": site_a.pk})
+        )
+        response = client.get(url, {"date": "2026-10-09"}, HTTP_ACCEPT_LANGUAGE=language)
+        assert response.status_code == 200
+        collapsed = response.content.decode("utf-8")
+        assert "📸 2" in collapsed
+        assert show_label in collapsed
+        assert "overview.jpg" not in collapsed
+        assert "inverter.png" not in collapsed
+        assert "show_photos=1" in collapsed
+        assert "date=2026-10-09" in collapsed
+        assert reverse("customer_portal:site_photo", args=[site_a.pk, "overview.jpg"]) not in collapsed
+        mock_client.get_file.assert_not_called()
+        response = client.get(url, {"show_photos": "1", "date": "2026-10-09"}, HTTP_ACCEPT_LANGUAGE=language)
+        hidden_again = client.get(url, {"date": "2026-10-09"}).content.decode("utf-8")
+        assert show_label in hidden_again
+        assert "overview.jpg" not in hidden_again
 
     assert response.status_code == 200
     content = response.content.decode("utf-8")
-    assert "Фотографии стройплощадки (2)" in content
+    assert hide_label in content
     assert "📸 2" in content
-    assert "фотограф" in content.lower()
     assert "overview.jpg" in content
     assert "inverter.png" in content
     # Наличие Lightbox диалога и data-атрибутов
