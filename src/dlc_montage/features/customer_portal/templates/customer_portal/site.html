@@ -1,6 +1,7 @@
 {% extends "customer_portal/base.html" %}{% load static i18n %}
 {% block report_content %}
 <link rel="stylesheet" href="{% static 'project_media/css/gallery.css' %}">
+<link rel="stylesheet" href="{% static 'customer_portal/css/review.css' %}">
 
 <p class="time-inline" style="margin-bottom: 20px;">
   <a class="time-button secondary" href="{% url 'customer_portal:accepted_work_xlsx' site.pk %}">{% trans "Акт выполненных работ (XLSX)" %}</a>
@@ -22,39 +23,9 @@
 {% endif %}
 
 <!-- ОБЩИЙ ВЕРХ ОБЪЕКТА (SHARED OBJECT TOP) -->
-{% include "projects/includes/_object_common_top.html" with site=site group=site.group completed_rows=detail.completed_rows photo_summary=photo_summary files=files daily_work=detail.daily_work chosen_date=chosen_date is_customer_view=True %}
+{% include "projects/includes/_object_common_top.html" with site=site group=site.group completed_rows=detail.completed_rows photo_summary=photo_summary files=files daily_work=detail.daily_work chosen_date=chosen_date is_customer_view=True hide_completed=detail.review %}
 
-<!-- ПРОВЕРКА ЗАКАЗЧИКОМ (SITE REVIEW) -->
-<section class="time-card">
-  <h2>{% trans "Проверка заказчиком" %}</h2>
-  <p class="time-hint" style="margin-bottom: 14px;">
-    {% trans "Попозиционная приёмка работ заказчиком (Emil) пока не реализована — действует общая проверка объекта." %}
-  </p>
-  <p>
-    {% if detail.review %}
-      {{ detail.review.get_status_display }}
-    {% else %}
-      {% trans "Не отправлено" %}
-    {% endif %}
-    {% if detail.review_stale %} · {% trans "Работы изменились, требуется повторная отправка" %}{% endif %}
-  </p>
-  {% if detail.review.remark %}
-    <p>{{ detail.review.remark }}</p>
-  {% endif %}
-  {% if manager %}
-    <form method="post" action="{% url 'customer_portal:review_submit' site.pk %}">
-      {% csrf_token %}
-      <button class="time-button" type="submit">{% trans "Отправить на проверку" %}</button>
-    </form>
-  {% elif detail.review.status == 'submitted' and not detail.review_stale %}
-    <form method="post" action="{% url 'customer_portal:review_decision' site.pk %}" class="time-inline">
-      {% csrf_token %}
-      <button class="time-button" name="decision" value="accept">{% trans "Принять без замечаний" %}</button>
-      <input name="reason" placeholder="{% trans 'Замечание для возврата' %}">
-      <button class="time-button secondary" name="decision" value="return">{% trans "Вернуть с замечанием" %}</button>
-    </form>
-  {% endif %}
-</section>
+{% include "customer_portal/includes/review.html" %}
 
 <!-- ПРЕДЛОЖЕНИЯ ПЛАНА (PROPOSALS) -->
 {% if detail.proposals %}
@@ -92,4 +63,4 @@
   </div>
 </dialog>
 {% endblock %}
-{% block extra_js %}{{ block.super }}<script src="{% static 'project_media/js/gallery.js' %}" defer></script>{% endblock %}
+{% block extra_js %}{{ block.super }}<script src="{% static 'project_media/js/gallery.js' %}" defer></script><script src="{% static 'customer_portal/js/review.js' %}" defer></script>{% endblock %}

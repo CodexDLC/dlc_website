@@ -62,6 +62,8 @@ class SiteReview(models.Model):
         ],
     )
     snapshot_digest = models.CharField(max_length=64, blank=True)
+    work_snapshot = models.JSONField(default=list, blank=True)
+    item_decisions = models.JSONField(default=dict, blank=True)
     submitted_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name="submitted_site_reviews"
     )

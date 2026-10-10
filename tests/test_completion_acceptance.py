@@ -25,12 +25,31 @@ def ready_site():
     group = ProjectGroup.objects.create(name="Anlage", client=client)
     site = AcObject.objects.create(group=group, name="Standort", status="started")
     report = MbgDailyReport.objects.create(
-        author=manager, site=site, work_date=date(2026, 10, 3),
-        status="accepted", version=1, submission_key=uuid4(),
+        author=manager,
+        site=site,
+        work_date=date(2026, 10, 3),
+        status="accepted",
+        version=1,
+        submission_key=uuid4(),
     )
     MbgReportRevision.objects.create(
-        report=report, actor=manager, version=1, action="accept",
-        snapshot={"status": "accepted", "entries": []},
+        report=report,
+        actor=manager,
+        version=1,
+        action="accept",
+        snapshot={
+            "status": "accepted",
+            "entries": [
+                {
+                    "work_type_code": "cable",
+                    "description": "Kabel verlegen",
+                    "unit": "m",
+                    "work_item_id": 1,
+                    "completed_quantity": "25",
+                    "quantity": "25",
+                }
+            ],
+        },
     )
     return manager, customer, site, report
 
@@ -74,7 +93,7 @@ def test_completion_failure_rolls_back_site_status_and_audit(ready_site, path):
 def test_repeated_completion_preserves_customer_acceptance(ready_site):
     manager, customer, site, _report = ready_site
     complete(manager, site, "status")
-    review = decide_review(actor=customer, site=site, accept=True)
+    review = decide_review(actor=customer, site=site, **review_decisions(site))
     original_decision = review.decided_at
     complete(manager, site, "form")
     review.refresh_from_db()
@@ -84,7 +103,7 @@ def test_repeated_completion_preserves_customer_acceptance(ready_site):
 def test_explicit_completion_resubmits_returned_review(ready_site):
     manager, customer, site, _report = ready_site
     complete(manager, site, "status")
-    review = decide_review(actor=customer, site=site, accept=False, reason="Bitte prüfen")
+    review = decide_review(actor=customer, site=site, **review_decisions(site, rejected="Bitte prüfen"))
     complete(manager, site, "status")
     review.refresh_from_db()
     assert review.status == "submitted"
@@ -132,8 +151,20 @@ def test_incomplete_site_without_accepted_reports_cannot_be_submitted():
 def test_unrelated_edit_preserves_returned_review(ready_site):
     manager, customer, site, _report = ready_site
     complete(manager, site, "status")
-    review = decide_review(actor=customer, site=site, accept=False, reason="Bitte prüfen")
+    review = decide_review(actor=customer, site=site, **review_decisions(site, rejected="Bitte prüfen"))
     save_object(actor=manager, group=site.group, object_id=site.pk, data={"name": "Neuer Name"})
     review.refresh_from_db()
     assert review.status == "returned"
-    assert review.remark == "Bitte prüfen"
+    assert review.remark == "Kabel verlegen: Bitte prüfen"
+
+
+def review_decisions(site, rejected=None):
+    review = SiteReview.objects.get(site=site)
+    return {
+        "snapshot_digest": review.snapshot_digest,
+        "submission_token": review.submitted_at.isoformat(),
+        "decisions": {
+            row["key"]: {"decision": "accepted" if rejected is None else "rejected", "comment": rejected or ""}
+            for row in review.work_snapshot
+        },
+    }

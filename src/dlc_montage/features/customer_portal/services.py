@@ -384,9 +384,16 @@ def submit_for_review(*, actor, site):
     review, _created = SiteReview.objects.select_for_update().get_or_create(site=site)
     if review.status == "submitted" and review.snapshot_digest == digest:
         raise ValidationError(_("Standort уже ожидает проверки заказчика."))
-    before = {"status": review.status, "digest": review.snapshot_digest}
+    before = {
+        "status": review.status,
+        "digest": review.snapshot_digest,
+        "work_snapshot": review.work_snapshot,
+        "item_decisions": review.item_decisions,
+    }
     review.status = "submitted"
     review.snapshot_digest = digest
+    review.work_snapshot = review_work_snapshot(site)
+    review.item_decisions = {}
     review.submitted_by = actor
     review.submitted_at = timezone.now()
     review.decided_by = None
@@ -398,14 +405,14 @@ def submit_for_review(*, actor, site):
         action="review_submitted",
         target=review,
         before=before,
-        after={"status": review.status, "digest": digest},
+        after={"status": review.status, "digest": digest, "work_snapshot": review.work_snapshot},
     )
     return review
 
 
 @transaction.atomic
-def decide_review(*, actor, site, accept, reason=""):
-    """Клиент принимает без замечаний или возвращает с обязательной причиной."""
+def decide_review(*, actor, site, decisions, snapshot_digest, submission_token):
+    """Сохранить полную попозиционную приёмку неизменного отправленного среза."""
     site = AcObject.objects.select_for_update().select_related("group").get(pk=site.pk)
     if is_manager(actor):
         raise PermissionDenied
@@ -413,22 +420,92 @@ def decide_review(*, actor, site, accept, reason=""):
     review = SiteReview.objects.select_for_update().get(site=site)
     if review.status != "submitted":
         raise ValidationError(_("Нет открытой проверки."))
-    if not accept and not reason.strip():
-        raise ValidationError(_("Укажите замечание для возврата."))
-    if review.snapshot_digest != accepted_snapshot_digest(site):
+    if not review.submitted_at or submission_token != review.submitted_at.isoformat():
+        raise ValidationError(_("Проверка была отправлена заново. Обновите страницу перед сохранением."))
+    if snapshot_digest != review.snapshot_digest or review.snapshot_digest != accepted_snapshot_digest(site):
         raise ValidationError(_("Принятые работы изменились. Попросите отправить объект на проверку заново."))
-    review.status = "accepted" if accept else "returned"
+    if not review.work_snapshot:
+        raise ValidationError(_("Нет подтверждённых позиций для приёмки. DLC должен уточнить состав работ."))
+    expected = {row["key"] for row in review.work_snapshot}
+    if not isinstance(decisions, dict) or set(decisions) != expected:
+        raise ValidationError(_("Проверьте каждую работу перед сохранением."))
+    clean = {}
+    for key in expected:
+        row = decisions[key]
+        if not isinstance(row, dict) or row.get("decision") not in {"accepted", "rejected"}:
+            raise ValidationError(_("Проверьте каждую работу перед сохранением."))
+        comment = str(row.get("comment", "")).strip()
+        if row["decision"] == "rejected" and not comment:
+            raise ValidationError(_("Для каждой непринятой работы укажите, что нужно исправить."))
+        if len(comment) > 2000:
+            raise ValidationError(_("Замечание не должно превышать 2000 символов."))
+        clean[key] = {"decision": row["decision"], "comment": comment if row["decision"] == "rejected" else ""}
+    review.item_decisions = clean
+    review.status = "accepted" if all(row["decision"] == "accepted" for row in clean.values()) else "returned"
     review.decided_by = actor
     review.decided_at = timezone.now()
-    review.remark = "" if accept else reason.strip()
-    review.save(update_fields=["status", "decided_by", "decided_at", "remark"])
+    review.remark = "\n".join(
+        f"{row['name']}: {clean[row['key']]['comment']}"
+        for row in review.work_snapshot
+        if clean[row["key"]]["decision"] == "rejected"
+    )
+    review.save(update_fields=["status", "decided_by", "decided_at", "remark", "item_decisions"])
     _audit(
         actor=actor,
         action="review_decided",
         target=review,
         before={"status": "submitted"},
-        after={"status": review.status, "digest": review.snapshot_digest},
+        after={
+            "status": review.status,
+            "digest": review.snapshot_digest,
+            "work_snapshot": review.work_snapshot,
+            "item_decisions": clean,
+        },
         reason=review.remark,
+    )
+    return review
+
+
+def review_work_snapshot(site):
+    """Снять безценовой состав приёмки из подтверждённых версий дневных работ."""
+    from .selectors import accepted_completion_rows
+
+    rows = []
+    for index, row in enumerate(accepted_completion_rows(site)):
+        rows.append(
+            {
+                "key": str(index + 1),
+                "name": row.name,
+                "unit": row.unit,
+                "quantity": str(row.quantity) if row.quantity is not None else None,
+                "kind": row.kind,
+                "route": row.route,
+                "cable_type": row.cable_type,
+                "work_item_id": row.work_item_id,
+                "sources": list(row.sources),
+            }
+        )
+    return rows
+
+
+@transaction.atomic
+def backfill_review_snapshot(*, actor, review):
+    """Заполнить ранее отправленную проверку без смены даты, статуса и решений."""
+    if not is_manager(actor):
+        raise PermissionDenied
+    site = AcObject.objects.select_for_update().get(pk=review.site_id)
+    review = SiteReview.objects.select_for_update().get(pk=review.pk)
+    if review.status != "submitted" or review.work_snapshot:
+        return review
+    if review.snapshot_digest != accepted_snapshot_digest(site):
+        raise ValidationError(_("Принятые работы изменились. Попросите отправить объект на проверку заново."))
+    review.work_snapshot = review_work_snapshot(site)
+    review.save(update_fields=["work_snapshot"])
+    _audit(
+        actor=actor,
+        action="review_snapshot_prepared",
+        target=review,
+        after={"digest": review.snapshot_digest, "work_snapshot": review.work_snapshot},
     )
     return review
 

@@ -102,6 +102,7 @@
   </section>
 {% endif %}
 
+{% if not hide_completed %}
 <!-- ЕДИНАЯ СВОДНАЯ ТАБЛИЦА ВЫПОЛНЕННЫХ РАБОТ (ONE AGGREGATED TABLE) -->
 <section class="time-card">
   <h2>{% trans "Выполненные работы · принятые итоги" %}</h2>
@@ -145,6 +146,7 @@
   </div>
 </section>
 
+{% endif %}
 <!-- СВЁРНУТАЯ ИСТОРИЯ ДНЕВНЫХ РАБОТ (COLLAPSIBLE DAILY HISTORY) -->
 <details class="time-card customer-daily-history" {% if chosen_date %}open{% endif %}>
   <summary style="cursor: pointer; padding: 4px 0;">

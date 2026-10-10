@@ -17,6 +17,7 @@ from features.mbg_reports.completion_projection import project_accepted_entries
 from features.mbg_reports.models import MbgDailyReport, MbgReportRevision
 from features.projects.models import AcObject, ProjectGroup
 from features.projects.read_models import site_work_plan
+from features.work_catalog.models import WorkType
 
 from .models import PlanProposal, SiteReview
 from .policies import membership_for
@@ -103,9 +104,9 @@ def filtered_sites_for_actor(
     if sort == "name":
         queryset = queryset.order_by("name", "pk")
     else:  # default activity: latest changes based on actual report dates
-        queryset = queryset.annotate(
-            latest_report_date=Max("mbg_reports__work_date")
-        ).order_by(F("latest_report_date").desc(nulls_last=True), "-pk")
+        queryset = queryset.annotate(latest_report_date=Max("mbg_reports__work_date")).order_by(
+            F("latest_report_date").desc(nulls_last=True), "-pk"
+        )
 
     return queryset
 
@@ -284,7 +285,8 @@ def works_journal_days(
             1
             for entry in snapshot.get("entries", [])
             if not (
-                entry.get("is_break") or entry.get("work_type_code") == "mittagspause"
+                entry.get("is_break")
+                or entry.get("work_type_code") == "mittagspause"
                 or entry.get("internal_only", False)
             )
         )
@@ -373,6 +375,7 @@ class CustomerSiteDetail:
     completed_rows: tuple
     review: SiteReview | None
     review_stale: bool
+    review_rows: tuple
     proposals: tuple[PlanProposal, ...]
 
 
@@ -397,5 +400,15 @@ def customer_site_detail(site):
         completed_rows=accepted_completion_rows(site),
         review=review,
         review_stale=stale,
+        review_rows=tuple(
+            {
+                **row,
+                "unit_label": dict(WorkType.Unit.choices).get(row["unit"], row["unit"]),
+                **review.item_decisions.get(row["key"], {}),
+            }
+            for row in review.work_snapshot
+        )
+        if review
+        else (),
         proposals=tuple(PlanProposal.objects.filter(site=site).select_related("proposed_by", "decided_by")),
     )

@@ -132,16 +132,28 @@ def test_review_requires_fresh_accepted_snapshot_and_return_reason(actors):
         actor=manager,
         version=1,
         action="accept",
-        snapshot={"status": "accepted", "entries": []},
+        snapshot={
+            "status": "accepted",
+            "entries": [
+                {
+                    "work_type_code": "cable",
+                    "description": "Kabel verlegen",
+                    "unit": "m",
+                    "work_item_id": 1,
+                    "completed_quantity": "25",
+                    "quantity": "25",
+                }
+            ],
+        },
     )
     review = submit_for_review(actor=manager, site=site_a)
     assert review.status == "submitted"
     with pytest.raises(ValidationError):
-        decide_review(actor=alice, site=site_a, accept=False, reason="")
+        decide_review(actor=alice, site=site_a, **review_decisions(site_a, rejected=""))
     report.version = 2
     report.save(update_fields=["version"])
     with pytest.raises(ValidationError):
-        decide_review(actor=alice, site=site_a, accept=True)
+        decide_review(actor=alice, site=site_a, **review_decisions(site_a))
     assert SiteReview.objects.get(site=site_a).status == "submitted"
 
 
@@ -210,13 +222,29 @@ def test_review_accept_return_resubmit_and_audit_are_separate_from_site_status(a
         actor=manager,
         version=1,
         action="accept",
-        snapshot={"status": "accepted", "entries": []},
+        snapshot={
+            "status": "accepted",
+            "entries": [
+                {
+                    "work_type_code": "cable",
+                    "description": "Kabel verlegen",
+                    "unit": "m",
+                    "work_item_id": 1,
+                    "completed_quantity": "25",
+                    "quantity": "25",
+                }
+            ],
+        },
     )
     submit_for_review(actor=manager, site=site_a)
-    decision = decide_review(actor=alice, site=site_a, accept=False, reason="Kabel fehlt")
-    assert (decision.status, decision.remark, site_a.status) == ("returned", "Kabel fehlt", "not_started")
+    decision = decide_review(actor=alice, site=site_a, **review_decisions(site_a, rejected="Kabel fehlt"))
+    assert (decision.status, decision.remark, site_a.status) == (
+        "returned",
+        "Kabel verlegen: Kabel fehlt",
+        "not_started",
+    )
     submit_for_review(actor=manager, site=site_a)
-    decision = decide_review(actor=alice, site=site_a, accept=True)
+    decision = decide_review(actor=alice, site=site_a, **review_decisions(site_a))
     assert decision.status == "accepted" and decision.remark == ""
     assert CustomerAuditEvent.objects.filter(client=site_a.group.client, action="review_decided").count() == 2
 
@@ -316,8 +344,12 @@ def test_manual_catalog_position_is_proposed_then_admin_creates_it_once(actors):
     manager, alice, *_rest, site_a, _site_b = actors
     work_type = WorkType.objects.get(code="uv-montage")
     proposal = propose_manual_item(
-        actor=alice, site=site_a, work_type=work_type, label="Zusatz UV-PV",
-        planned_quantity="2", with_underconstruction=False,
+        actor=alice,
+        site=site_a,
+        work_type=work_type,
+        label="Zusatz UV-PV",
+        planned_quantity="2",
+        with_underconstruction=False,
     )
     assert SiteWorkItem.objects.filter(site=site_a).count() == 0
     review_plan(actor=manager, proposal=proposal, approve=True, reason="Zusatz geprüft")
@@ -326,7 +358,11 @@ def test_manual_catalog_position_is_proposed_then_admin_creates_it_once(actors):
         review_plan(actor=manager, proposal=proposal, approve=True, reason="Doppelt")
     with pytest.raises(ValidationError):
         propose_manual_item(
-            actor=alice, site=site_a, work_type=work_type, label="Ungültig", planned_quantity="0",
+            actor=alice,
+            site=site_a,
+            work_type=work_type,
+            label="Ungültig",
+            planned_quantity="0",
         )
     hourly = WorkType.objects.filter(unit="hour").first()
     if hourly:
@@ -339,8 +375,9 @@ def test_internal_project_services_emit_same_customer_audit(actors):
     save_group(actor=manager, group_id=group_a.pk, data={"name": "Anlage A neu"})
     save_object(actor=manager, group=group_a, object_id=site_a.pk, data={"address": "Berlin"})
     work_type = WorkType.objects.get(code="uv-montage")
-    item = save_site_work_item(actor=manager, site=site_a, work_type=work_type,
-                               label="Montage UV-PV", planned_quantity="1")
+    item = save_site_work_item(
+        actor=manager, site=site_a, work_type=work_type, label="Montage UV-PV", planned_quantity="1"
+    )
     set_site_status(actor=manager, site=site_a, status="started")
     actions = set(CustomerAuditEvent.objects.filter(client=group_a.client).values_list("action", flat=True))
     assert {"group_updated", "site_updated", "work_item_created", "site_status_changed"} <= actions
@@ -368,3 +405,15 @@ def test_group_without_client_is_not_audited(actors):
     group = save_group(actor=manager, data={"name": "Ohne Auftraggeber"})
     save_group(actor=manager, group_id=group.pk, data={"name": "Ohne Auftraggeber 2"})
     assert not CustomerAuditEvent.objects.filter(target_id=group.pk, target_type="ProjectGroup").exists()
+
+
+def review_decisions(site, rejected=None):
+    review = SiteReview.objects.get(site=site)
+    return {
+        "snapshot_digest": review.snapshot_digest,
+        "submission_token": review.submitted_at.isoformat(),
+        "decisions": {
+            row["key"]: {"decision": "accepted" if rejected is None else "rejected", "comment": rejected or ""}
+            for row in review.work_snapshot
+        },
+    }

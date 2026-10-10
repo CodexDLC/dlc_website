@@ -1,0 +1,37 @@
+{% load i18n %}
+<section class="time-card customer-review" id="customer-review">
+  <h2>{% trans "Проверка заказчиком" %}</h2>
+  <p>{% if detail.review %}{{ detail.review.get_status_display }}{% else %}{% trans "Не отправлено" %}{% endif %}</p>
+  {% if detail.review_stale %}<p class="time-alert" role="alert">{% trans "Работы изменились, требуется повторная отправка" %}</p>{% endif %}
+  {% for error in review_errors %}<p class="time-alert" role="alert">{{ error }}</p>{% endfor %}
+  {% if detail.review %}
+    <p class="time-hint">{% trans "Проверьте каждую работу. Если работа не принята, укажите замечание под ней." %}</p>
+    <form method="post" action="{% url 'customer_portal:review_decision' site.pk %}" data-item-review>
+      {% csrf_token %}<input type="hidden" name="submission_token" value="{{ detail.review.submitted_at.isoformat }}"><input type="hidden" name="snapshot_digest" value="{{ detail.review.snapshot_digest }}">
+      <div class="review-table">
+        <div class="review-heading" aria-hidden="true"><span>{% trans "Работа" %}</span><span>{% trans "Выполненный объём" %}</span><span>{% trans "Принято" %}</span><span>{% trans "Не принято" %}</span></div>
+        {% for row in detail.review_rows %}
+        <fieldset class="review-item" data-review-item>
+          <legend class="review-name">{{ row.name }}</legend>
+          <div class="review-volume"><span class="review-mobile-label">{% trans "Выполненный объём" %}: </span>{% if row.quantity != None %}{{ row.quantity }} {% trans row.unit_label %}{% else %}{% trans "Объём не подтверждён" %}{% endif %}{% if row.route or row.cable_type %}<small>{{ row.route }} {{ row.cable_type }}</small>{% endif %}</div>
+          {% if not manager and detail.review.status == 'submitted' and not detail.review_stale %}
+            <label class="review-choice"><input type="radio" name="decision-{{ row.key }}" value="accepted" required {% if row.decision == 'accepted' %}checked{% endif %}><span>{% trans "Принято" %}</span></label>
+            <label class="review-choice"><input type="radio" name="decision-{{ row.key }}" value="rejected" required {% if row.decision == 'rejected' %}checked{% endif %}><span>{% trans "Не принято" %}</span></label>
+            <div class="review-comment" data-review-comment><label for="review-comment-{{ row.key }}">{% trans "Что нужно исправить?" %}</label><textarea id="review-comment-{{ row.key }}" name="comment-{{ row.key }}" rows="2" maxlength="2000" {% if row.decision == 'rejected' %}required{% endif %}>{{ row.comment }}</textarea></div>
+          {% else %}
+            <div class="review-choice">{% if row.decision == 'accepted' %}✓ {% trans "Принято" %}{% else %}—{% endif %}</div><div class="review-choice">{% if row.decision == 'rejected' %}✕ {% trans "Не принято" %}{% else %}—{% endif %}</div>
+            {% if row.comment %}<p class="review-comment">{{ row.comment }}</p>{% endif %}
+          {% endif %}
+        </fieldset>
+        {% empty %}<p class="time-hint">{% trans "Нет подтверждённых позиций для приёмки. DLC должен уточнить состав работ." %}</p>{% endfor %}
+      </div>
+      {% if not manager and detail.review.status == 'submitted' and not detail.review_stale and detail.review_rows %}
+      <div class="review-footer">
+        <p role="status" aria-live="polite">{% trans "Принято" %}: <strong data-count="accepted">0</strong> · {% trans "Не принято" %}: <strong data-count="rejected">0</strong> · {% trans "Без решения" %}: <strong data-count="undecided">{{ detail.review_rows|length }}</strong></p>
+        <button class="time-button" type="submit">{% trans "Сохранить результат приёмки" %}</button>
+      </div>
+      {% endif %}
+    </form>
+  {% endif %}
+  {% if manager %}<form method="post" action="{% url 'customer_portal:review_submit' site.pk %}">{% csrf_token %}<button class="time-button" type="submit">{% trans "Отправить на проверку" %}</button></form>{% endif %}
+</section>

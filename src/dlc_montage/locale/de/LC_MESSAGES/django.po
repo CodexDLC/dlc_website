@@ -5281,3 +5281,39 @@ msgstr "Fotos anzeigen"
 #: features/projects/templates/projects/includes/_object_common_top.html
 msgid "Fotos ausblenden"
 msgstr "Fotos ausblenden"
+
+msgid "Проверьте каждую работу. Если работа не принята, укажите замечание под ней."
+msgstr "Prüfen Sie jede Arbeit. Bei nicht abgenommenen Arbeiten tragen Sie den Mangel direkt darunter ein."
+
+msgid "Выполненный объём"
+msgstr "Ausgeführte Menge"
+
+msgid "Не принято"
+msgstr "Nicht abgenommen"
+
+msgid "Что нужно исправить?"
+msgstr "Was muss nachgebessert werden?"
+
+msgid "Объём не подтверждён"
+msgstr "Menge nicht bestätigt"
+
+msgid "Без решения"
+msgstr "Noch offen"
+
+msgid "Сохранить результат приёмки"
+msgstr "Abnahmeergebnis speichern"
+
+msgid "Нет подтверждённых позиций для приёмки. DLC должен уточнить состав работ."
+msgstr "Keine bestätigten Arbeitspositionen zur Abnahme vorhanden. DLC muss den Leistungsumfang klären."
+
+msgid "Проверьте каждую работу перед сохранением."
+msgstr "Prüfen Sie jede Arbeit vor dem Speichern."
+
+msgid "Для каждой непринятой работы укажите, что нужно исправить."
+msgstr "Geben Sie für jede nicht abgenommene Arbeit an, was nachgebessert werden muss."
+
+msgid "Замечание не должно превышать 2000 символов."
+msgstr "Ein Mangelhinweis darf höchstens 2000 Zeichen enthalten."
+
+msgid "Проверка была отправлена заново. Обновите страницу перед сохранением."
+msgstr "Die Abnahme wurde erneut angefordert. Aktualisieren Sie die Seite vor dem Speichern."

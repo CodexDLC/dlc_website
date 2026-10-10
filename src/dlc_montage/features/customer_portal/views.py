@@ -556,17 +556,40 @@ def review_submit(request, site_id):
 def review_decision(request, site_id):
     """Заказчик подтверждает отсутствие замечаний или возвращает с причиной."""
     site = get_object_or_404(sites_for_actor(request.user), pk=site_id)
-    if request.POST.get("decision") not in {"accept", "return"}:
+    if is_manager(request.user):
         raise PermissionDenied
+    detail = customer_site_detail(site)
+    decisions = {
+        row["key"]: {
+            "decision": request.POST.get(f"decision-{row['key']}", ""),
+            "comment": request.POST.get(f"comment-{row['key']}", ""),
+        }
+        for row in detail.review_rows
+    }
     try:
         decide_review(
             actor=request.user,
             site=site,
-            accept=request.POST.get("decision") == "accept",
-            reason=request.POST.get("reason", ""),
+            decisions=decisions,
+            snapshot_digest=request.POST.get("snapshot_digest", ""),
+            submission_token=request.POST.get("submission_token", ""),
         )
     except ValidationError as exc:
-        messages.error(request, "; ".join(exc.messages))
+        detail = replace(detail, review_rows=tuple({**row, **decisions[row["key"]]} for row in detail.review_rows))
+        request.cabinet_module = "customer"
+        return render(
+            request,
+            "customer_portal/site.html",
+            {
+                "detail": detail,
+                "site": site,
+                "manager": False,
+                "review_errors": exc.messages,
+                "photo_summary": get_cached_photo_summary(site),
+                "files": ProjectFile.objects.filter(site=site, customer_visible=True, content_type="application/pdf"),
+            },
+            status=400,
+        )
     return redirect("customer_portal:site", site_id=site_id)
 
 
