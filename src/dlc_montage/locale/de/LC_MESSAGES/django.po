@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DLC Montage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-10 14:41+0200\n"
+"POT-Creation-Date: 2026-10-10 15:01+0200\n"
 "PO-Revision-Date: 2026-10-10 14:09+0200\n"
 "Last-Translator: DLC Montage\n"
 "Language-Team: de\n"
@@ -5270,99 +5270,6 @@ msgstr "Serverfehler"
 msgid "Something went wrong on our end. Please try again later."
 msgstr "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."
 
-#: .\templates\includes\_footer.html:8 .\templates\includes\_header.html:12
-#: .\templates\main\home.html:34
-msgid "Kontakt"
-msgstr "Kontakt"
-
-#: .\templates\includes\_header.html:11
-msgid "Navigation"
-msgstr "Navigation"
-
-#: .\templates\includes\_header.html:14
-msgid "Kundenportal"
-msgstr "Kundenportal"
-
 #: .\templates\includes\_language_switcher.html:3
 msgid "Sprache"
 msgstr "Sprache"
-
-#: .\templates\main\contacts.html:5
-msgid "Contacts"
-msgstr "Kontakt"
-
-#: .\templates\main\contacts.html:12
-msgid "Contact Us"
-msgstr "Kontaktieren Sie uns"
-
-#: .\templates\main\contacts.html:13
-msgid "We'd love to hear from you. Send us a message!"
-msgstr "Wir freuen uns auf Ihre Nachricht!"
-
-#: .\templates\main\contacts.html:33
-msgid "Add your contact form here."
-msgstr "Fügen Sie hier Ihr Kontaktformular ein."
-
-#: .\templates\main\home.html:3 .\templates\main\home.html:25
-msgid "PV-Montage"
-msgstr "PV-Montage"
-
-#: .\templates\main\home.html:9
-msgid "Gemeinsam Solarprojekte umsetzen."
-msgstr "Gemeinsam Solarprojekte umsetzen."
-
-#: .\templates\main\home.html:10
-msgid "PV-Montage und Koordination der AC- und DC-Arbeiten auf Ihrer Baustelle."
-msgstr "PV-Montage und Koordination der AC- und DC-Arbeiten auf Ihrer Baustelle."
-
-#: .\templates\main\home.html:11
-msgid "Projekt besprechen"
-msgstr "Projekt besprechen"
-
-#: .\templates\main\home.html:21
-msgid "Was wir machen"
-msgstr "Was wir machen"
-
-#: .\templates\main\home.html:22
-msgid "Montage. Abstimmung. Zusammenarbeit."
-msgstr "Montage. Abstimmung. Zusammenarbeit."
-
-#: .\templates\main\home.html:25
-msgid "Montagearbeiten für Photovoltaikprojekte."
-msgstr "Montagearbeiten für Photovoltaikprojekte."
-
-#: .\templates\main\home.html:26
-msgid "AC / DC"
-msgstr "AC / DC"
-
-#: .\templates\main\home.html:26
-msgid "Abstimmung der AC- und DC-Arbeiten vor Ort."
-msgstr "Abstimmung der AC- und DC-Arbeiten vor Ort."
-
-#: .\templates\main\home.html:27
-msgid "Baustellenkoordination"
-msgstr "Baustellenkoordination"
-
-#: .\templates\main\home.html:27
-msgid "Klare Absprachen mit den Beteiligten auf der Baustelle."
-msgstr "Klare Absprachen mit den Beteiligten auf der Baustelle."
-
-#: .\templates\main\home.html:35
-msgid "Ihr Projekt beginnt mit einem Gespräch."
-msgstr "Ihr Projekt beginnt mit einem Gespräch."
-
-#: .\templates\main\home.html:36
-msgid "Sprechen wir über Ihr Vorhaben und die nächsten Schritte."
-msgstr "Sprechen wir über Ihr Vorhaben und die nächsten Schritte."
-
-#: .\templates\main\home.html:40
-msgid "E-Mail schreiben"
-msgstr "E-Mail schreiben"
-
-#: .\templates\main\home.html:43
-msgid "Jetzt anrufen"
-msgstr "Jetzt anrufen"
-
-#: .\templates\main\home.html:45
-msgid "Die Kontaktdaten werden ergänzt."
-msgstr "Die Kontaktdaten werden ergänzt."

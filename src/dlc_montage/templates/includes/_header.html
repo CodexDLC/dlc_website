@@ -1,17 +1,16 @@
-{% load i18n %}
 <header class="public-header">
     <div class="container public-header-inner">
         <a href="{% url 'home' %}" class="public-logo">
             {% if site_settings.logo_url %}
-                <img src="{{ site_settings.logo_url }}" alt="{{ site_settings.company_name|default:'DLC Montage' }}" width="160" height="40">
+                <img src="{{ site_settings.logo_url }}" alt="{{ site_settings.company_name|default:public_copy.brand }}" width="160" height="40">
             {% else %}
-                <span class="public-logo-mark" aria-hidden="true"></span><span>{{ site_settings.company_name|default:"DLC Montage" }}</span>
+                <span class="public-logo-mark" aria-hidden="true"></span><span>{{ site_settings.company_name|default:public_copy.brand }}</span>
             {% endif %}
         </a>
-        <nav class="public-header-actions" aria-label="{% trans 'Navigation' %}">
-            <a class="public-header-contact" href="{% if request.resolver_match.url_name == 'home' %}#kontakt{% else %}{% url 'contacts' %}{% endif %}">{% trans "Kontakt" %}</a>
+        <nav class="public-header-actions" aria-label="{{ public_copy.navigation_label }}">
+            <a class="public-header-contact" href="{% if request.resolver_match.url_name == 'home' %}#kontakt{% else %}{% url 'contacts' %}{% endif %}">{{ public_copy.contact_label }}</a>
             {% include "includes/_language_switcher.html" %}
-            <a class="public-cabinet-link" href="{% url 'cabinet:account_login' %}">{% trans "Kundenportal" %}<span aria-hidden="true">↗</span></a>
+            <a class="public-cabinet-link" href="{% url 'cabinet:account_login' %}">{{ public_copy.portal_label }}<span aria-hidden="true">↗</span></a>
         </nav>
     </div>
 </header>

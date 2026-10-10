@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-    
+    <title>{% block title %}{% firstof seo.seo_title site_settings.company_name public_copy.brand 'DLC Montage' %}{% endblock title %}</title>
     {% include "includes/_meta.html" %}
     {% include "includes/_analytics_head.html" %}
 

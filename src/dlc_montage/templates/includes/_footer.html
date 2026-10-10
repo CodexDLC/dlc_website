@@ -1,11 +1,10 @@
-{% load i18n %}
 <footer class="public-footer">
     <div class="container public-footer-inner">
-        <p class="public-footer-brand">&copy; {% now "Y" %} {{ site_settings.company_name|default:"DLC Montage" }}</p>
+        <p class="public-footer-brand">&copy; {% now "Y" %} {{ site_settings.company_name|default:public_copy.brand }}</p>
         <div class="public-footer-links">
             {% if site_settings.email %}<a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a>{% endif %}
             {% if site_settings.phone %}<a href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a>{% endif %}
-            <a href="{% url 'home' %}#kontakt">{% trans "Kontakt" %}</a>
+            <a href="{% url 'home' %}#kontakt">{{ public_copy.contact_label }}</a>
         </div>
     </div>
 </footer>

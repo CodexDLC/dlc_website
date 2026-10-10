@@ -20,6 +20,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.i18n",
                 "system.context_processors.deployment",
+                "features.main.context_processors.public_site_content",
                 "codex_django.system.context_processors.site_settings",
                 "codex_django.system.context_processors.static_content",
                 "codex_django.core.context_processors.seo_settings",
