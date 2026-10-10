@@ -1,1 +1,26 @@
-.review-heading,.review-item{display:grid;grid-template-columns:minmax(0,1fr) 140px 120px 120px;gap:12px;align-items:center}.review-heading{padding:12px;font-weight:600;background:var(--cab-bg,#f1f5f9)}.review-item{margin:0;padding:16px 12px;border:0;border-bottom:1px solid var(--cab-border,#e2e8f0);min-width:0;position:relative}.review-name{float:left;width:auto;font-weight:600;padding:0;overflow-wrap:anywhere}.review-choice{display:flex;gap:8px;align-items:center;justify-content:center;min-height:44px;cursor:pointer}.review-choice input{width:20px;height:20px;accent-color:var(--cab-primary,#00a86b)}.review-choice span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.review-volume small{display:block;color:var(--cab-muted,#64748b)}.review-comment{grid-column:1/-1;margin:0;padding:12px;background:var(--cab-bg,#f8fafc);border-left:3px solid #b45309}.review-comment label{display:block;margin-bottom:8px;font-weight:600}.review-comment textarea{display:block;width:100%;box-sizing:border-box;min-height:75px;padding:10px;border:1px solid var(--cab-border,#cbd5e1);border-radius:6px;background:var(--cab-surface,#fff);color:inherit;font:inherit}.review-comment[hidden]{display:none}.review-footer{margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.review-mobile-label{display:none}@media(max-width:700px){.review-heading{display:none}.review-item{grid-template-columns:1fr 1fr;padding:16px 0;gap:10px}.review-name,.review-volume{grid-column:1/-1}.review-mobile-label{display:inline}.review-choice{justify-content:flex-start;padding:8px;border:1px solid var(--cab-border,#cbd5e1);border-radius:6px}.review-choice span{position:static;width:auto;height:auto;clip-path:none}.review-footer .time-button{width:100%}}
+.customer-review { font-size:var(--dlc-font-size-body); }
+.review-heading,.review-item { display:grid; grid-template-columns:minmax(0,1fr) 8rem 6rem 6rem; gap:var(--dlc-space-md); align-items:center; }
+.review-heading { padding:var(--dlc-space-sm) var(--dlc-space-md); font-weight:600; background:var(--cab-topbar-bg); border-bottom:1px solid var(--cab-border); }
+.review-item { margin:0; padding:var(--dlc-space-xs) var(--dlc-space-md); border:0; border-bottom:1px solid var(--cab-border); min-width:0; position:relative; }
+.review-name { float:left; width:auto; margin:0; padding:0; font-size:inherit; line-height:1.4; font-weight:600; overflow-wrap:anywhere; }
+.time-page .review-choice { display:flex; gap:var(--dlc-space-sm); align-items:center; justify-content:center; min-height:2rem; margin:0; font-size:inherit; cursor:pointer; }
+.review-choice .form-check-input { flex:none; width:var(--dlc-control-choice); height:var(--dlc-control-choice); margin:0; }
+.review-choice .form-check-input:checked { background-color:var(--cab-primary); border-color:var(--cab-primary); }
+.review-choice span { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+.review-volume small { display:block; color:var(--cab-text-muted); }
+.review-comment { grid-column:1/-1; margin:0 0 var(--dlc-space-sm); padding:var(--dlc-space-sm) var(--dlc-space-md); background:var(--cab-topbar-bg); border-left:2px solid var(--cab-primary); }
+.time-page .review-comment label { margin:0 0 var(--dlc-space-xs); font-size:inherit; font-weight:600; }
+.time-page .review-comment .form-control { margin:0; min-height:4rem; padding:var(--dlc-space-sm); border-radius:var(--cab-radius); font-size:inherit; }
+.review-comment[hidden] { display:none; }
+.review-footer { margin-top:var(--dlc-space-md); display:flex; align-items:center; justify-content:space-between; gap:var(--dlc-space-md); flex-wrap:wrap; }
+.review-footer p { margin:0; }
+.review-mobile-label { display:none; }
+@media(max-width:700px) {
+  .review-heading { display:none; }
+  .review-item { grid-template-columns:1fr 1fr; padding:var(--dlc-space-md) 0; gap:var(--dlc-space-sm); }
+  .review-name,.review-volume { grid-column:1/-1; }
+  .review-mobile-label { display:inline; }
+  .time-page .review-choice { justify-content:flex-start; min-height:var(--dlc-touch-target); padding:0 var(--dlc-space-sm); border:1px solid var(--cab-border); border-radius:var(--cab-radius); }
+  .review-choice span { position:static; width:auto; height:auto; clip-path:none; }
+  .review-footer .btn { width:100%; min-height:var(--dlc-touch-target); white-space:normal; }
+}

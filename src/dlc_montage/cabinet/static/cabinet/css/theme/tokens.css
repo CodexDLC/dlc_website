@@ -25,6 +25,14 @@
   --cab-text:             #1e293b;
   --cab-text-muted:       #64748b;
 
+  /* Shared DLC sizing */
+  --dlc-font-size-body: .875rem;
+  --dlc-space-xs: .25rem;
+  --dlc-space-sm: .5rem;
+  --dlc-space-md: .75rem;
+  --dlc-control-choice: 1rem;
+  --dlc-touch-target: 2.75rem;
+
   /* Misc */
   --cab-radius:           8px;
   --cab-font:             'Inter', system-ui, sans-serif;

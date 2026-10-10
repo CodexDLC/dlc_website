@@ -12,7 +12,7 @@
 .time-grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
 .time-wide { grid-column:1/-1; }
 .time-page label { display:block; font-size:13px; font-weight:600; margin-bottom:8px; }
-.time-page input:not([type=checkbox]):not([type=hidden]), .time-page select, .time-page textarea {
+.time-page input:not([type=checkbox]):not([type=radio]):not([type=hidden]), .time-page select, .time-page textarea {
  display:block; width:100%; min-height:46px; padding:10px 12px; margin-top:7px;
  border:1px solid var(--cab-border); border-radius:var(--cab-radius);
  background:var(--cab-topbar-bg); color:var(--cab-text); font:inherit; font-weight:400; }
