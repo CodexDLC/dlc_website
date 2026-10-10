@@ -13,15 +13,29 @@ from django.db.models import Count, F, Max, Q
 
 from features.integrations.nextcloud.services import get_site_photo_cache_key
 from features.internal_time.policies import is_manager
-from features.mbg_reports.completion_projection import project_accepted_entries
 from features.mbg_reports.models import MbgDailyReport, MbgReportRevision
 from features.projects.models import AcObject, ProjectGroup
 from features.projects.read_models import site_work_plan
 from features.work_catalog.models import WorkType
 
-from .models import PlanProposal, SiteReview
+from .completion_projection import project_customer_entries
+from .models import CustomerAuditEvent, PlanProposal, SiteReview
 from .policies import membership_for
 from .services import accepted_snapshot_digest
+
+
+def audit_events_for_actor(actor):
+    """Показать заказчику решения, сохранив технический аудит для менеджера."""
+    queryset = CustomerAuditEvent.objects.select_related("actor", "client")
+    if is_manager(actor):
+        return queryset
+    membership = membership_for(actor)
+    if membership is None:
+        return queryset.none()
+    return queryset.filter(
+        client_id=membership.client_id,
+        action__in=("plan_proposed", "plan_reviewed", "review_decided"),
+    )
 
 
 def groups_for_actor(actor):
@@ -155,27 +169,14 @@ def accepted_daily_work(site, *, iso_year: int | None = None, iso_week: int | No
             iso = work_date.isocalendar()
             if (iso.year, iso.week) != (iso_year, iso_week):
                 continue
-        for entry in snapshot.get("entries", []):
-            if entry.get("is_break") or entry.get("work_type_code") == "mittagspause":
-                continue
-            if entry.get("internal_only", False):
-                continue
-            completed_quantity = entry.get("completed_quantity")
-            is_hourly = entry.get("calculation_rule") in {"actual", "zero"} or entry.get("unit") in {"Std.", "hour"}
-            quantity = (
-                str(entry.get("actual_person_hours") or "0")
-                if is_hourly
-                else str(completed_quantity)
-                if completed_quantity is not None
-                else "ungeklärt"
-            )
+        for row in project_customer_entries([(_report_id, _version, work_date, snapshot)]):
             rows.append(
                 CustomerDailyWork(
                     work_date=str(work_date),
-                    description=str(entry.get("description", "")),
-                    quantity=quantity,
-                    unit=str(entry.get("unit", "")),
-                    actual_person_hours=Decimal(str(entry.get("actual_person_hours") or "0")),
+                    description=row.name,
+                    quantity=str(row.quantity) if row.quantity is not None else "ungeklärt",
+                    unit=row.unit,
+                    actual_person_hours=row.actual_person_hours,
                 )
             )
     return tuple(rows)
@@ -202,7 +203,7 @@ def accepted_completion_rows(site, *, iso_year: int | None = None, iso_week: int
     snapshots = _current_accepted_snapshots(site)
     if iso_year is not None and iso_week is not None:
         snapshots = tuple(s for s in snapshots if s[2].isocalendar()[:2] == (iso_year, iso_week))
-    return project_accepted_entries(snapshots, include_internal=False)
+    return project_customer_entries(snapshots)
 
 
 def customer_available_weeks(site) -> tuple[tuple[int, int], ...]:
@@ -405,7 +406,7 @@ def customer_site_detail(site):
         review_rows=tuple(
             {
                 **row,
-                "unit_label": dict(WorkType.Unit.choices).get(row["unit"], row["unit"]),
+                "unit_label": {**dict(WorkType.Unit.choices), "section": "участок"}.get(row["unit"], row["unit"]),
                 **review.item_decisions.get(row["key"], {}),
             }
             for row in review.work_snapshot

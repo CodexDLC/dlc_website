@@ -28,10 +28,11 @@ from .exports import (
     site_workbook,
 )
 from .forms import CustomerGroupForm, CustomerPdfForm, CustomerSiteForm, ManualItemForm, MembershipForm
-from .models import ClientMembership, CustomerAuditEvent, PlanProposal, SiteReview
+from .models import ClientMembership, PlanProposal, SiteReview
 from .policies import membership_for, require_customer_group, require_customer_site
 from .selectors import (
     attach_site_plan_progress,
+    audit_events_for_actor,
     customer_documents_context,
     customer_site_detail,
     filtered_groups_for_actor,
@@ -328,12 +329,10 @@ def documents(request):
 
 @login_required
 def audit(request):
-    """Показать предметный аудит своей компании без событий выдачи доступа."""
+    """Показать историю решений своей компании через разрешённую проекцию."""
     _require_portal(request.user)
     request.cabinet_module = "customer"
-    queryset = CustomerAuditEvent.objects.select_related("actor", "client")
-    if not is_manager(request.user):
-        queryset = queryset.filter(client_id=membership_for(request.user).client_id).exclude(action="membership_saved")
+    queryset = audit_events_for_actor(request.user)
     return render(
         request,
         "customer_portal/audit.html",

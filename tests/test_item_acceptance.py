@@ -251,3 +251,64 @@ def test_backfill_refuses_changed_accepted_revision(submitted):
         backfill_review_snapshot(actor=manager, review=review)
     review.refresh_from_db()
     assert review.work_snapshot == []
+
+
+def test_refresh_pending_physical_snapshot_preserves_digest_and_invalidates_old_tab(submitted):
+    from features.customer_portal.services import refresh_pending_review_snapshot
+
+    manager, customer, _, site, _, _, review = submitted
+    old_token = review.submitted_at.isoformat()
+    old_digest = review.snapshot_digest
+    for row in review.work_snapshot:
+        for source in row["sources"]:
+            source["actual_person_hours"] = "9"
+    review.save(update_fields=["work_snapshot"])
+    updated = refresh_pending_review_snapshot(actor=manager, review=review)
+    assert updated.snapshot_digest == old_digest
+    assert updated.submitted_at.isoformat() != old_token
+    assert updated.item_decisions == {}
+    assert all("actual_person_hours" not in s for r in updated.work_snapshot for s in r["sources"])
+    with pytest.raises(ValidationError):
+        decide_review(actor=customer, site=site, snapshot_digest=old_digest,
+                      submission_token=old_token, decisions=payload(updated))
+
+
+def test_refresh_rejects_decided_or_changed_sources_and_customer_actor(submitted):
+    from features.customer_portal.services import refresh_pending_review_snapshot
+
+    manager, customer, _, _, _, _, review = submitted
+    with pytest.raises(PermissionDenied):
+        refresh_pending_review_snapshot(actor=customer, review=review)
+    original = deepcopy(review.work_snapshot)
+    review.work_snapshot[0]["sources"][0]["entry_index"] = 999
+    review.save(update_fields=["work_snapshot"])
+    with pytest.raises(ValidationError):
+        refresh_pending_review_snapshot(actor=manager, review=review)
+    review.work_snapshot = original
+    review.item_decisions = payload(review)
+    review.save(update_fields=["work_snapshot", "item_decisions"])
+    with pytest.raises(ValidationError):
+        refresh_pending_review_snapshot(actor=manager, review=review)
+
+
+def test_refresh_command_dry_run_and_apply_are_atomic(submitted):
+    from io import StringIO
+
+    from django.core.management import call_command
+
+    manager, _, _, _, _, _, review = submitted
+    review.work_snapshot[0]["sources"][0]["actual_person_hours"] = "9"
+    review.save(update_fields=["work_snapshot"])
+    before = deepcopy(review.work_snapshot)
+    original_time = review.submitted_at
+    events_before = CustomerAuditEvent.objects.count()
+    output = StringIO()
+    call_command("refresh_review_physical_snapshots", actor=manager.username, stdout=output)
+    review.refresh_from_db()
+    assert "dry run" in output.getvalue()
+    assert review.work_snapshot == before and review.submitted_at == original_time
+    assert CustomerAuditEvent.objects.count() == events_before
+    call_command("refresh_review_physical_snapshots", actor=manager.username, apply=True, stdout=StringIO())
+    review.refresh_from_db()
+    assert review.work_snapshot != before and review.submitted_at != original_time
+    assert CustomerAuditEvent.objects.count() == events_before + 1

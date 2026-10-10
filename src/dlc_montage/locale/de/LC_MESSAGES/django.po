@@ -5320,3 +5320,9 @@ msgstr "Die Abnahme wurde erneut angefordert. Aktualisieren Sie die Seite vor de
 
 msgid "На приёмке"
 msgstr "Zur Abnahme"
+
+msgid "участок"
+msgstr "Abschnitt"
+
+msgid "section"
+msgstr "Abschnitt"

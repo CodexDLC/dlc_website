@@ -482,7 +482,9 @@ def review_work_snapshot(site):
                 "route": row.route,
                 "cable_type": row.cable_type,
                 "work_item_id": row.work_item_id,
-                "sources": list(row.sources),
+                "sources": [{k: v for k, v in source.items()
+                             if k not in {"actual_person_hours", "normative_person_hours"}}
+                            for source in row.sources],
             }
         )
     return rows
@@ -507,6 +509,40 @@ def backfill_review_snapshot(*, actor, review):
         target=review,
         after={"digest": review.snapshot_digest, "work_snapshot": review.work_snapshot},
     )
+    return review
+
+
+@transaction.atomic
+def refresh_pending_review_snapshot(*, actor, review):
+    """Обновить только нерешённую приёмку с неизменным составом источников."""
+    if not is_manager(actor):
+        raise PermissionDenied
+    site = AcObject.objects.select_for_update().get(pk=review.site_id)
+    review = SiteReview.objects.select_for_update().get(pk=review.pk)
+    if review.status != "submitted" or review.item_decisions:
+        raise ValidationError("Only submitted reviews without decisions can be refreshed.")
+    if review.snapshot_digest != accepted_snapshot_digest(site):
+        raise ValidationError("Accepted report digest changed; resubmission is required.")
+    replacement = review_work_snapshot(site)
+
+    def sources(rows):
+        return {
+            (s.get("report_id"), s.get("report_version"), s.get("entry_index"))
+            for row in rows for s in row.get("sources", [])
+            if str(s.get("description", "")).strip().casefold() != "mittagspause"
+        }
+
+    if review.work_snapshot and sources(review.work_snapshot) != sources(replacement):
+        raise ValidationError("Review source composition changed; resubmission is required.")
+    if replacement == review.work_snapshot:
+        return review
+    before = {"work_snapshot": review.work_snapshot, "submitted_at": review.submitted_at.isoformat()}
+    review.work_snapshot = replacement
+    review.submitted_at = timezone.now()
+    review.save(update_fields=["work_snapshot", "submitted_at"])
+    _audit(actor=actor, action="review_snapshot_refreshed", target=review, before=before,
+           after={"digest": review.snapshot_digest, "work_snapshot": replacement,
+                  "submitted_at": review.submitted_at.isoformat()})
     return review
 
 

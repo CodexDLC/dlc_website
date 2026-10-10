@@ -113,7 +113,7 @@
           <th>{% trans "Работа" %}</th>
           <th>{% trans "Объём" %}</th>
           <th>{% trans "Единица" %}</th>
-          <th>{% trans "Чел.-ч" %}</th>
+          {% if not is_customer_view %}<th>{% trans "Чел.-ч" %}</th>{% endif %}
           <th>{% trans "Основание" %}</th>
         </tr>
       </thead>
@@ -123,7 +123,7 @@
             <td>{{ row.name }}</td>
             <td>{{ row.quantity|default_if_none:"не подтверждено" }}</td>
             <td>{% trans row.unit %}</td>
-            <td>{{ row.actual_person_hours }}</td>
+            {% if not is_customer_view %}<td>{{ row.actual_person_hours }}</td>{% endif %}
             <td>
               {% if row.kind == 'linked' %}
                 {% trans "Связано с планом" %}
@@ -138,7 +138,7 @@
           </tr>
         {% empty %}
           <tr>
-            <td colspan="5">{% trans "Принятых выполненных работ пока нет." %}</td>
+            <td colspan="{% if is_customer_view %}4{% else %}5{% endif %}">{% trans "Принятых выполненных работ пока нет." %}</td>
           </tr>
         {% endfor %}
       </tbody>
@@ -162,7 +162,7 @@
           <th>{% trans "Дата" %}</th>
           <th>{% trans "Работа" %}</th>
           <th>{% trans "Объём" %}</th>
-          <th>{% trans "Чел.-ч" %}</th>
+          {% if not is_customer_view %}<th>{% trans "Чел.-ч" %}</th>{% endif %}
         </tr>
       </thead>
       <tbody>
@@ -171,11 +171,11 @@
             <td>{{ row.work_date }}</td>
             <td>{{ row.description }}{% if not is_customer_view and row.internal_only %} <span class="cust-badge">{% trans "Только внутренний учёт" %}</span>{% endif %}</td>
             <td>{{ row.quantity }} {% trans row.unit %}</td>
-            <td>{{ row.actual_person_hours }}</td>
+            {% if not is_customer_view %}<td>{{ row.actual_person_hours }}</td>{% endif %}
           </tr>
         {% empty %}
           <tr>
-            <td colspan="4">{% trans "Принятых дневных работ пока нет." %}</td>
+            <td colspan="{% if is_customer_view %}3{% else %}4{% endif %}">{% trans "Принятых дневных работ пока нет." %}</td>
           </tr>
         {% endfor %}
       </tbody>
