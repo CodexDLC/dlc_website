@@ -76,6 +76,8 @@ compose up -d --wait db redis
 compose run --rm --no-deps --interactive=false -T migrate
 compose run --rm --no-deps --interactive=false -T collectstatic
 compose up -d --wait web
+ln -s "$release" "/srv/dlc/.current-$sha"
+mv -Tf "/srv/dlc/.current-$sha" /srv/dlc/current
 compose ps
 echo "DLC release started: $sha"
 echo 'Verify the public HTTPS URL separately. Existing database and uploaded files are preserved.'
