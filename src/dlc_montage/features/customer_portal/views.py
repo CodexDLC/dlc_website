@@ -281,8 +281,6 @@ def reviews(request):
         .order_by("-submitted_at", "-pk")
     )
     page_obj = Paginator(queryset, 20).get_page(request.GET.get("page"))
-    for review in page_obj:
-        review.site.cached_photo_summary = get_cached_photo_summary(review.site)
     return render(
         request,
         "customer_portal/reviews.html",

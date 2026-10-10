@@ -375,7 +375,14 @@ def test_documents_search_and_split_pagination_and_button_titles(ux_setup, clien
     assert "Dokument_06.pdf" not in res_search.content.decode()
 
 
-def test_reviews_grid_and_empty_help(ux_setup, client):
+def test_reviews_grid_and_empty_help(ux_setup, client, monkeypatch):
+    def forbidden_photo_lookup(*args, **kwargs):
+        raise AssertionError("Review list must not access Nextcloud or photo summaries")
+
+    monkeypatch.setattr("features.customer_portal.views.get_cached_photo_summary", forbidden_photo_lookup)
+    monkeypatch.setattr(
+        "features.integrations.nextcloud.client.NextcloudWebDAVClient.list_folder", forbidden_photo_lookup
+    )
     ctx = ux_setup
     client.force_login(ctx["alice"])
 
@@ -395,3 +402,4 @@ def test_reviews_grid_and_empty_help(ux_setup, client):
     # 20 на страницу
     assert "page=2" in content
     assert "Prüfung 1" in content
+    assert "cust-badge--photo" not in content
