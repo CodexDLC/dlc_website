@@ -11,11 +11,11 @@
 
 
 :root {
-  
+
   --cab-primary:          #3b82f6;
   --cab-primary-dark:     #2563eb;
 
-  
+
   --cab-sidebar-bg:       #1e293b;
   --cab-sidebar-text:     #94a3b8;
   --cab-sidebar-active:   #ffffff;
@@ -23,16 +23,16 @@
   --cab-sidebar-width:    260px;
   --cab-sidebar-width-sm: 60px;
 
-  
+
   --cab-topbar-height:    60px;
   --cab-topbar-bg:        #ffffff;
   --cab-topbar-border:    #e2e8f0;
 
-  
+
   --cab-content-bg:       #f8fafc;
   --cab-border:           #e2e8f0;
 
-  
+
   --cab-text:             #1e293b;
   --cab-text-muted:       #64748b;
 
@@ -44,7 +44,7 @@
   --dlc-control-choice: 1rem;
   --dlc-touch-target: 2.75rem;
 
-  
+
   --cab-radius:           8px;
   --cab-font:             'Inter', system-ui, sans-serif;
 }
@@ -94,6 +94,32 @@
 
 
 
+
+.cab-navigation-loading {
+  position: fixed;
+  inset: 0 0 auto;
+  height: var(--dlc-space-xs);
+  z-index: 1100;
+  overflow: hidden;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--cab-primary) 18%, transparent);
+}
+.cab-navigation-loading[hidden] { display: none; }
+.cab-navigation-loading::after {
+  content: "";
+  display: block;
+  width: 35%;
+  height: 100%;
+  background: var(--cab-primary);
+  animation: cab-navigation-progress 1.2s ease-in-out infinite;
+}
+@keyframes cab-navigation-progress {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(390%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cab-navigation-loading::after { animation: none; width: 100%; }
+}
 
 .crm-topbar {
   gap: 0.5rem;

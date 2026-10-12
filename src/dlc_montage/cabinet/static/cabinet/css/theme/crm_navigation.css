@@ -1,5 +1,31 @@
 /* Internal CRM shell: permanent top-level spaces and a contextual sidebar. */
 
+.cab-navigation-loading {
+  position: fixed;
+  inset: 0 0 auto;
+  height: var(--dlc-space-xs);
+  z-index: 1100;
+  overflow: hidden;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--cab-primary) 18%, transparent);
+}
+.cab-navigation-loading[hidden] { display: none; }
+.cab-navigation-loading::after {
+  content: "";
+  display: block;
+  width: 35%;
+  height: 100%;
+  background: var(--cab-primary);
+  animation: cab-navigation-progress 1.2s ease-in-out infinite;
+}
+@keyframes cab-navigation-progress {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(390%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cab-navigation-loading::after { animation: none; width: 100%; }
+}
+
 .crm-topbar {
   gap: 0.5rem;
 }
