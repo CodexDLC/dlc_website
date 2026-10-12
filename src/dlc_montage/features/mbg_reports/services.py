@@ -13,11 +13,40 @@ from features.internal_time.calculations import duration_minutes
 from features.internal_time.policies import is_manager
 from features.projects.models import AcObject, SiteWorkItem
 from features.projects.progress import mark_site_started
+from features.reporting.validation import (
+    EntryInput,
+    ReportValidationError,
+    validate_report_context,
+    validate_report_entries,
+)
 from features.staff.models import Employee
 from features.work_catalog.models import WorkType
 
 from .calculations import calculate_position
 from .models import MbgDailyReport, MbgReportRevision, MbgWorkEntry
+
+
+def _validate_entries(entries, workforce_ids, *, entry_count=None):
+    """Translate shared validation errors for the working report UI."""
+    validation_messages = {
+        "entries_count": _("Добавьте от 1 до 100 строк."),
+        "workforce": _("Добавьте сотрудников в состав рабочего дня."),
+        "time_grid": _("Окончание должно быть позже начала, время вводится шагом 15 минут."),
+        "participants": _("Укажите хотя бы одного сотрудника."),
+        "participants_outside_workforce": _("Для работы можно выбрать только сотрудников из состава рабочего дня."),
+        "quantity": _("Количество должно быть больше нуля."),
+        "route_required": _("Для выбранной работы укажите путь."),
+        "cable_required": _("Для прокладки выберите тип кабеля."),
+        "cable_unexpected": _("Тип кабеля доступен только для позиции прокладки."),
+        "overlap": _("У сотрудника пересекаются строки MBG."),
+    }
+    try:
+        if entry_count is None:
+            validate_report_entries(entries, workforce_ids=workforce_ids)
+        else:
+            validate_report_context(entry_count, workforce_ids)
+    except ReportValidationError as exc:
+        raise ValidationError(validation_messages[exc.code]) from exc
 
 
 def _plain_decimal(value):
@@ -118,7 +147,7 @@ def save_report(
     if work_date > timezone.localdate():
         raise ValidationError(_("Нельзя заполнить будущий день."))
     if not entries or len(entries) > 100:
-        raise ValidationError(_("Добавьте от 1 до 100 строк."))
+        _validate_entries([], set(), entry_count=len(entries))
     report = MbgDailyReport.objects.select_for_update().get(pk=report_id) if report_id else None
     if report is None and site.status == "completed":
         raise ValidationError(_("Standort завершён. Сначала верните его в работу."))
@@ -133,20 +162,14 @@ def save_report(
             return existing
     workforce_ids = {employee.pk for employee in workforce}
     if not workforce_ids:
-        raise ValidationError(_("Добавьте сотрудников в состав рабочего дня."))
+        _validate_entries([], workforce_ids, entry_count=len(entries))
     people = list(Employee.objects.select_for_update().filter(pk__in=workforce_ids).order_by("pk"))
     if len(people) != len(workforce_ids) or any(e.employment_status != "active" or not e.has_ac_access for e in people):
         raise ValidationError(_("В составе рабочего дня могут быть только действующие сотрудники AC."))
     prepared = []
     for row in entries:
         start, end = row["starts_at"], row["ends_at"]
-        if start >= end or start.second or end.second or start.minute % 15 or end.minute % 15:
-            raise ValidationError(_("Окончание должно быть позже начала, время вводится шагом 15 минут."))
         participants = list(row["participants"])
-        if not participants:
-            raise ValidationError(_("Укажите хотя бы одного сотрудника."))
-        if {employee.pk for employee in participants} - workforce_ids:
-            raise ValidationError(_("Для работы можно выбрать только сотрудников из состава рабочего дня."))
         work = row.get("work_type")
         if not work:
             raise ValidationError(_("Выберите вид работ."))
@@ -154,16 +177,23 @@ def save_report(
         if not work.is_active or not work.supports_direction("ac"):
             raise ValidationError(_("Выберите активный вид работ AC."))
         quantity = row.get("quantity")
-        if quantity is None or quantity <= 0:
-            raise ValidationError(_("Количество должно быть больше нуля."))
         cable_type = row.get("cable_type")
         route = row.get("route")
-        if work.requires_route and not route:
-            raise ValidationError(_("Для выбранной работы укажите путь."))
-        if work.requires_cable_type and not cable_type:
-            raise ValidationError(_("Для прокладки выберите тип кабеля."))
-        if not work.requires_cable_type and cable_type:
-            raise ValidationError(_("Тип кабеля доступен только для позиции прокладки."))
+        _validate_entries(
+            [
+                EntryInput(
+                    starts_at=start,
+                    ends_at=end,
+                    participant_ids=frozenset(employee.pk for employee in participants),
+                    quantity=quantity,
+                    requires_route=work.requires_route,
+                    has_route=bool(route),
+                    requires_cable_type=work.requires_cable_type,
+                    has_cable_type=bool(cable_type),
+                )
+            ],
+            workforce_ids,
+        )
         work_item = row.get("work_item")
         completed_quantity = row.get("completed_quantity")
         if (work_item is None) != (completed_quantity is None):
@@ -225,12 +255,23 @@ def save_report(
                 "totals": totals,
             }
         )
-    for i, row in enumerate(prepared):
-        for other in prepared[:i]:
-            row_ids = {employee.pk for employee in row["participants"]}
-            other_ids = {employee.pk for employee in other["participants"]}
-            if row_ids & other_ids and row["starts_at"] < other["ends_at"] and row["ends_at"] > other["starts_at"]:
-                raise ValidationError(_("У сотрудника пересекаются строки MBG."))
+    _validate_entries(
+        [
+            EntryInput(
+                starts_at=row["starts_at"],
+                ends_at=row["ends_at"],
+                participant_ids=frozenset(employee.pk for employee in row["participants"]),
+                quantity=row["quantity"],
+                requires_route=row["work_type"].requires_route,
+                has_route=bool(row["route"]),
+                requires_cable_type=row["work_type"].requires_cable_type,
+                has_cable_type=bool(row["cable_type"]),
+            )
+            for row in prepared
+        ],
+        workforce_ids,
+    )
+    for row in prepared:
         if (
             MbgWorkEntry.objects.filter(
                 participants__in=row["participants"],

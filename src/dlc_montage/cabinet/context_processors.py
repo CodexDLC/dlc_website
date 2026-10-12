@@ -22,11 +22,13 @@ def crm_navigation(request: HttpRequest) -> dict[str, object]:
         allowed.update({"administration", "customer"})
     elif membership:
         allowed = {"customer"}
+    if request.user.is_authenticated and request.user.is_active:
+        allowed.add("demo")
     return {
         "SITE_NAME": "DLC Montage",
         "crm_topbar_entries": [
             cabinet_registry.get_module_topbar(slug)
-            for slug in ("customer", *(workspace.slug for workspace in WORKSPACES))
+            for slug in ("customer", *(workspace.slug for workspace in WORKSPACES), "demo")
             if slug in allowed and cabinet_registry.get_module_topbar(slug) is not None
         ]
     }

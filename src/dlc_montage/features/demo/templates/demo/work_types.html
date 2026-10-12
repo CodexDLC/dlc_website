@@ -1,0 +1,9 @@
+{% extends 'demo/base.html' %}
+{% block demo_content %}
+<div class="demo-section-heading"><h2>Tätigkeiten</h2><a class="btn btn-primary btn-sm" href="{% url 'demo:work_type_new' %}">Tätigkeit hinzufügen</a></div>
+<p class="demo-note">Verwenden Sie die Beispiele oder erstellen Sie eigene Tätigkeiten für Ihren Bericht.</p>
+<div class="card"><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th scope="col">Tätigkeit</th><th scope="col">Einheit</th><th scope="col"><span class="visually-hidden">Aktion</span></th></tr></thead><tbody>
+{% for work_type in work_types %}<tr><td>{{ work_type.name_de }}{% if not work_type.is_active %} <span class="badge text-bg-secondary">Inaktiv</span>{% endif %}{% if work_type.is_break %} <span class="badge text-bg-secondary">Pause</span>{% endif %}</td><td>{{ work_type.get_unit_display }}</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="{% url 'demo:work_type_edit' work_type.pk %}">Bearbeiten<span class="visually-hidden">: {{ work_type.name_de }}</span></a></td></tr>{% empty %}<tr><td colspan="3">Noch keine Tätigkeiten vorhanden. Fügen Sie Ihre erste Tätigkeit hinzu.</td></tr>{% endfor %}
+</tbody></table></div></div>
+<a class="btn btn-primary btn-sm mt-3" href="{% url 'demo:report_new' %}">Stundennachweis erstellen →</a>
+{% endblock %}

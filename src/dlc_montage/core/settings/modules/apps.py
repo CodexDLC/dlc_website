@@ -61,6 +61,7 @@ LOCAL_APPS = [
     "features.management_reports",
     "features.project_media",
     "features.customer_portal",
+    "features.demo",
     "features.telegram_access",
 ]
 

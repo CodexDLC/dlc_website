@@ -32,6 +32,7 @@ urlpatterns: list[Any] = [
     path("llms_en.txt", TemplateView.as_view(template_name="llms_en.txt", content_type="text/plain")),
 ]
 urlpatterns += i18n_patterns(
+    path("cabinet/demo/", include("features.demo.urls")),
     path("cabinet/customer/", include("features.customer_portal.urls")),
     path("cabinet/ac/files/", file_index, {"direction": "ac"}),
     path("cabinet/dc/files/", file_index, {"direction": "dc"}),

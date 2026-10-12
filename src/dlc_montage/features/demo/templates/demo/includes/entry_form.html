@@ -1,0 +1,14 @@
+<fieldset class="demo-entry" data-demo-entry>
+  <legend>Arbeitsposition <span data-entry-number>{{ forloop.counter }}</span></legend>
+  {% for field in entry_form.hidden_fields %}{{ field }}{% endfor %}
+  {{ entry_form.non_field_errors }}
+  <div class="demo-grid">
+    {% include 'demo/includes/field.html' with field=entry_form.work_type %}
+    {% include 'demo/includes/field.html' with field=entry_form.participants %}
+    {% include 'demo/includes/field.html' with field=entry_form.starts_at %}
+    {% include 'demo/includes/field.html' with field=entry_form.ends_at %}
+    {% include 'demo/includes/field.html' with field=entry_form.quantity %}
+    {% include 'demo/includes/field.html' with field=entry_form.description %}
+  </div>
+  <div class="demo-entry-footer"><label class="demo-delete">{{ entry_form.DELETE }} Position entfernen</label><output class="demo-note" data-duration aria-live="polite"></output></div>
+</fieldset>

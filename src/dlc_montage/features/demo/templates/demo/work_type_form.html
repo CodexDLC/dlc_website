@@ -1,0 +1,6 @@
+{% extends 'demo/base.html' %}
+{% block demo_content %}
+<h2>{% if work_type %}Tätigkeit bearbeiten{% else %}Tätigkeit hinzufügen{% endif %}</h2>
+<form method="post" class="card demo-panel demo-form-narrow">{% csrf_token %}{{ form.non_field_errors }}{% for field in form.visible_fields %}{% include 'demo/includes/field.html' with field=field %}{% endfor %}{% for field in form.hidden_fields %}{{ field }}{% endfor %}
+<div class="demo-actions"><button type="submit" class="btn btn-primary btn-sm">Speichern</button><a class="btn btn-outline-secondary btn-sm" href="{% url 'demo:work_types' %}">Abbrechen</a></div></form>
+{% endblock %}

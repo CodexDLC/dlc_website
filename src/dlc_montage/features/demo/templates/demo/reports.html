@@ -1,0 +1,7 @@
+{% extends 'demo/base.html' %}
+{% block demo_content %}
+<div class="demo-section-heading"><h2>Stundennachweise</h2><a class="btn btn-primary btn-sm" href="{% url 'demo:report_new' %}">Bericht erstellen</a></div>
+<div class="card"><div class="table-responsive"><table class="table align-middle mb-0"><thead><tr><th scope="col">Datum</th><th scope="col">Baustelle</th><th scope="col">Projekt-Nr.</th><th scope="col"><span class="visually-hidden">Aktion</span></th></tr></thead><tbody>
+{% for report in reports %}<tr><td>{{ report.date|date:'d.m.Y' }}</td><td><a href="{% url 'demo:report_detail' report.pk %}">{{ report.site_name }}</a></td><td>{{ report.project_number|default:'—' }}</td><td class="text-end"><a class="btn btn-outline-primary btn-sm" href="{% url 'demo:report_edit' report.pk %}">Bearbeiten</a></td></tr>{% empty %}<tr><td colspan="4">Noch kein Bericht vorhanden. Erstellen Sie Ihren ersten Stundennachweis.</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

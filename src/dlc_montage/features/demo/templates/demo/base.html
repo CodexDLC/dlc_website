@@ -1,0 +1,19 @@
+{% extends "cabinet/base_cabinet.html" %}{% load static %}
+{% block title %}Demo · Stundennachweis{% endblock %}
+{% block cabinet_content %}
+<link rel="stylesheet" href="{% static 'demo/css/demo.bundle.css' %}">
+<div class="demo-page" lang="de">
+  <header class="demo-heading">
+    <div><span class="badge text-bg-secondary">Demo</span><h1>Digitaler Stundennachweis</h1><p>Erstellen Sie einen digitalen Stundennachweis im gewohnten Format.</p></div>
+    <details class="demo-reset"><summary>Beispiel zurücksetzen</summary><p>Ihre Demo-Berichte und eigenen Tätigkeiten werden durch das Startbeispiel ersetzt.</p><form method="post" action="{% url 'demo:reset' %}">{% csrf_token %}<button class="btn btn-outline-danger btn-sm" type="submit">Demo-Daten jetzt zurücksetzen</button></form></details>
+  </header>
+  <p class="demo-note">Ihre Demo-Daten sind vom Arbeitsbereich unabhängig. Berichte werden nicht an MBG übermittelt.</p>
+  <nav class="nav nav-tabs mb-3" aria-label="Demo-Bereiche">
+    <a class="nav-link {% if request.resolver_match.url_name == 'work_types' or request.resolver_match.url_name == 'work_type_new' or request.resolver_match.url_name == 'work_type_edit' %}active{% endif %}" href="{% url 'demo:work_types' %}">Tätigkeiten</a>
+    <a class="nav-link {% if request.resolver_match.url_name != 'work_types' and request.resolver_match.url_name != 'work_type_new' and request.resolver_match.url_name != 'work_type_edit' %}active{% endif %}" href="{% url 'demo:reports' %}">Stundennachweis</a>
+  </nav>
+  {% for message in messages %}<div class="alert alert-info" role="status">{{ message }}</div>{% endfor %}
+  {% block demo_content %}{% endblock %}
+</div>
+{% endblock %}
+{% block extra_js %}{{ block.super }}<script src="{% static 'demo/js/demo.bundle.js' %}" defer></script>{% endblock %}

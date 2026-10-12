@@ -40,28 +40,41 @@ def text_cell(cell, value):
     cell.data_type = "s"
 
 
-def _apply_company_header_block(sheet, start_col=5, end_col=7, max_rows=3):
+def _apply_company_header_block(sheet, start_col=5, end_col=7, max_rows=3, company_header=None):
     """Разместить контактный блок компании справа вверху."""
+    header = (
+        company_header
+        if company_header is not None
+        else {
+            "company_name": COMPANY_NAME,
+            "contact": COMPANY_CONTACT,
+            "phone": COMPANY_PHONE,
+            "email": COMPANY_EMAIL,
+        }
+    )
     sheet.merge_cells(start_row=1, start_column=start_col, end_row=1, end_column=end_col)
-    text_cell(sheet.cell(1, start_col), COMPANY_NAME)
+    text_cell(sheet.cell(1, start_col), header.get("company_name", ""))
     sheet.cell(1, start_col).font = Font(name=FONT_FAMILY, size=13, bold=True, color=COLOR_NAVY_900)
     sheet.cell(1, start_col).alignment = Alignment(horizontal="right", vertical="center")
 
     if max_rows == 3:
         sheet.merge_cells(start_row=2, start_column=start_col, end_row=2, end_column=end_col)
-        text_cell(sheet.cell(2, start_col), COMPANY_CONTACT)
+        text_cell(sheet.cell(2, start_col), header.get("contact", ""))
         sheet.cell(2, start_col).font = Font(name=FONT_FAMILY, size=9.5, color=COLOR_GRAY_600)
         sheet.cell(2, start_col).alignment = Alignment(horizontal="right", vertical="center")
 
         sheet.merge_cells(start_row=3, start_column=start_col, end_row=3, end_column=end_col)
-        text_cell(sheet.cell(3, start_col), f"{COMPANY_PHONE}  ·  {COMPANY_EMAIL}")
+        text_cell(
+            sheet.cell(3, start_col),
+            "  ·  ".join(value for value in (header.get("phone", ""), header.get("email", "")) if value),
+        )
         sheet.cell(3, start_col).font = Font(name=FONT_FAMILY, size=9, color=COLOR_GRAY_600)
         sheet.cell(3, start_col).alignment = Alignment(horizontal="right", vertical="center")
     else:
         company_lines = [
-            (2, COMPANY_CONTACT),
-            (3, COMPANY_PHONE),
-            (4, COMPANY_EMAIL),
+            (2, header.get("contact", "")),
+            (3, header.get("phone", "")),
+            (4, header.get("email", "")),
         ]
         for row_idx, text in company_lines:
             sheet.merge_cells(start_row=row_idx, start_column=start_col, end_row=row_idx, end_column=end_col)
@@ -126,7 +139,9 @@ def build_weekly_workbook(snapshot):
     summary["B2"].font = Font(name=FONT_FAMILY, size=10, color=COLOR_GRAY_900)
 
     # Контакты компании справа (строки 1-3)
-    _apply_company_header_block(summary, start_col=5, end_col=7, max_rows=3)
+    _apply_company_header_block(
+        summary, start_col=5, end_col=7, max_rows=3, company_header=snapshot.get("company_header")
+    )
 
     summary_headers = ["Anlage", "Standort", "P/Nr", "Adresse", "Arbeitstage", "Mitarbeiter", "Stunden"]
     for column, label in enumerate(summary_headers, 1):
@@ -248,7 +263,7 @@ def build_weekly_workbook(snapshot):
             sheet.cell(row, 2).font = Font(name=FONT_FAMILY, size=10, color=COLOR_GRAY_900)
 
         # Контакты компании справа
-        _apply_company_header_block(sheet, start_col=5, end_col=7)
+        _apply_company_header_block(sheet, start_col=5, end_col=7, company_header=snapshot.get("company_header"))
 
         headers = ["Datum", "Name", "Beginn", "Ende", "Weg", "Mont (h)", "Beschreibung der Tätigkeit"]
         for col, label in enumerate(headers, 1):

@@ -24,6 +24,7 @@ data/
 media/
 logs/
 outputs/
+.codex-remote-attachments/
 pdfs/
 scratch/
 tmp/
