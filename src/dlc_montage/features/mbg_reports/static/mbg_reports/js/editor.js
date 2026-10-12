@@ -121,11 +121,11 @@
     const details = card.querySelector("[data-work-details]");
     const routeField = card.querySelector('[data-work-parameter="route"]');
     const cableField = card.querySelector('[data-work-parameter="cable"]');
-    route.required = requirements.route;
-    cable.required = requirements.cable;
-    routeField.hidden = !requirements.route && !route.value;
-    cableField.hidden = !requirements.cable && !cable.value;
-    if (requirements.route || requirements.cable) details.open = true;
+    if (route) route.required = requirements.route;
+    if (cable) cable.required = requirements.cable;
+    if (routeField) routeField.hidden = !requirements.route && !route?.value;
+    if (cableField) cableField.hidden = !requirements.cable && !cable?.value;
+    if (details && (requirements.route || requirements.cable)) details.open = true;
     return requirements;
   }
 
@@ -155,7 +155,7 @@
   async function loadWorkItems(clearSelection = false) {
     const form = document.querySelector("#mbg-day-form");
     const site = form?.querySelector("[data-mbg-site]")?.value || "";
-    if (!form) return;
+    if (!form?.dataset.workItemUrl) return;
     if (workItemController) workItemController.abort();
     if (clearSelection) {
       document.querySelectorAll('[name$="-work_item"]').forEach(select => { select.value = ""; });
@@ -307,13 +307,18 @@
   async function loadAvailability() {
     const form = document.querySelector("#mbg-day-form");
     const workforce = document.querySelector("[data-day-workforce]");
-    const workDate = form?.querySelector('[name="work_date"]')?.value;
+    const workDate = form?.querySelector(`[name="${form.dataset.dateField || 'work_date'}"]`)?.value;
     if (availabilityController) availabilityController.abort();
     availabilityByEmployee = new Map();
     availabilityReady = false;
     if (!form || !workforce || !workDate || !selectedOptions(workforce).length) {
       renderAvailability([]);
       setAvailabilityState("empty");
+      return;
+    }
+    if (!form.dataset.availabilityUrl) {
+      availabilityReady = true;
+      checkConflicts();
       return;
     }
     const params = new URLSearchParams({work_date: workDate});
@@ -368,6 +373,9 @@
     const body = document.querySelector("[data-work-summary-body]");
     if (!body) return;
     body.replaceChildren();
+    const excludeBreaks = document.querySelector('#mbg-day-form')?.dataset.previewBreaks === 'exclude';
+    let durationTotal = 0;
+    let personHoursTotal = 0;
     document.querySelectorAll("[data-work-card]").forEach(card => {
       const work = card.querySelector('[name$="-work_type"]');
       const start = card.querySelector('[name$="-starts_at"]');
@@ -379,8 +387,18 @@
       row.insertCell().textContent = `${start.value || "—"}–${end.value || "—"}`;
       row.insertCell().textContent = entryDescription(card);
       row.insertCell().textContent = people.map(option => option.textContent).join(", ");
-      row.insertCell().textContent = personHours(start.value, end.value, people.length);
+      const isBreak = excludeBreaks && work.selectedOptions[0]?.dataset.isBreak === 'true';
+      row.insertCell().textContent = isBreak ? '0' : personHours(start.value, end.value, people.length);
+      const duration = minutes(end.value) - minutes(start.value);
+      if (!isBreak && Number.isFinite(duration) && duration > 0 && people.length) {
+        durationTotal += duration / 60;
+        personHoursTotal += duration * people.length / 60;
+      }
     });
+    const durationOutput = document.querySelector('[data-summary-duration]');
+    const hoursOutput = document.querySelector('[data-summary-person-hours]');
+    if (durationOutput) durationOutput.textContent = durationTotal.toLocaleString('de-DE', {maximumFractionDigits: 2});
+    if (hoursOutput) hoursOutput.textContent = personHoursTotal.toLocaleString('de-DE', {maximumFractionDigits: 2});
     document.querySelector("[data-work-summary-empty]").hidden = body.rows.length > 0;
     checkConflicts();
   }
@@ -406,7 +424,8 @@
   });
   document.addEventListener("change", event => {
     if (event.target.matches("[data-day-workforce], [data-entry-participants]")) enforceAndRenderPickers();
-    if (event.target.matches("[data-day-workforce], [name=work_date]")) loadAvailability();
+    const dateField = document.querySelector('#mbg-day-form')?.dataset.dateField || 'work_date';
+    if (event.target.matches(`[data-day-workforce], [name="${dateField}"]`)) loadAvailability();
     if (event.target.matches("[data-mbg-site]")) {
       loadSiteHistory();
       loadWorkItems(true);

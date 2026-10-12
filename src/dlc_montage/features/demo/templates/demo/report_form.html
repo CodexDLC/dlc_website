@@ -1,17 +1,7 @@
-{% extends 'demo/base.html' %}
+{% extends 'demo/base.html' %}{% load static %}
 {% block demo_content %}
-<h2>{% if report %}Stundennachweis bearbeiten{% else %}Stundennachweis erstellen{% endif %}</h2>
-<form method="post" class="demo-report-form" data-demo-form>{% csrf_token %}
-  {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
-  <section class="card demo-panel"><h3>1. Baustelle und Mannschaft</h3><div class="demo-grid">{% for field in form.visible_fields %}{% include 'demo/includes/field.html' with field=field %}{% endfor %}</div>{% for field in form.hidden_fields %}{{ field }}{% endfor %}</section>
-  <section class="card demo-panel"><h3>2. Ausgeführte Arbeiten</h3><p class="demo-note">Zeiten im 15-Minuten-Raster. Wählen Sie pro Position die beteiligten Mitarbeiter. Für mehrere Personen halten Sie am Computer Strg oder Cmd gedrückt.</p>
-    {{ formset.management_form }}
-    {% if formset.non_form_errors %}<div class="alert alert-danger" role="alert">{{ formset.non_form_errors }}</div>{% endif %}
-    <div data-demo-entries>{% for entry_form in formset %}{% include 'demo/includes/entry_form.html' with entry_form=entry_form %}{% endfor %}</div>
-    <template data-demo-empty-entry>{% include 'demo/includes/entry_form.html' with entry_form=formset.empty_form %}</template>
-    <button type="button" class="btn btn-outline-primary btn-sm" data-demo-add>Position hinzufügen</button>
-    <p class="demo-note mt-2" data-demo-limit role="status"></p>
-  </section>
-  <div class="demo-actions"><button type="submit" class="btn btn-primary btn-sm">Speichern und Vorschau öffnen</button><a class="btn btn-outline-secondary btn-sm" href="{% url 'demo:reports' %}">Abbrechen</a></div>
-</form>
+<link rel="stylesheet" href="{% static 'internal_time/css/reports.css' %}">
+<link rel="stylesheet" href="{% static 'mbg_reports/css/editor.css' %}">
+<div class="time-page">{% include 'demo/_report_editor.html' %}</div>
 {% endblock %}
+{% block extra_js %}{{ block.super }}<script src="{% static 'mbg_reports/js/editor.js' %}" defer></script>{% endblock %}

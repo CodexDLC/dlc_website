@@ -1,5 +1,6 @@
 #mbg-day-form { padding-bottom:96px; }
 .mbg-editor-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(290px,340px); gap:22px; align-items:start; }
+.mbg-editor-layout--standalone { grid-template-columns:minmax(0,1fr); }
 .mbg-site-history { position:sticky; top:calc(var(--cab-topbar-height) + 18px); overflow:hidden;
  border:1px solid var(--cab-border); border-radius:var(--cab-radius); background:var(--cab-topbar-bg);
  box-shadow:0 8px 24px #0f172a0d; }

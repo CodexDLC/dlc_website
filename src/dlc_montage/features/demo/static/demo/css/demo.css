@@ -1,8 +1,8 @@
 .demo-page { color: var(--cab-text); font-size: var(--dlc-font-size-body); }
 .demo-page h1 { font-size: 1.5rem; margin: var(--dlc-space-sm) 0; }
 .demo-page h2 { font-size: 1.125rem; margin: 0 0 var(--dlc-space-md); }
-.demo-page h3, .demo-page legend { font-size: 1rem; font-weight: 600; }
-.demo-heading, .demo-section-heading, .demo-actions, .demo-entry-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--dlc-space-md); flex-wrap: wrap; }
+.demo-page h3 { font-size: 1rem; font-weight: 600; }
+.demo-heading, .demo-section-heading, .demo-actions { display: flex; align-items: center; justify-content: space-between; gap: var(--dlc-space-md); flex-wrap: wrap; }
 .demo-heading { align-items: flex-start; margin-bottom: var(--dlc-space-sm); }
 .demo-heading p { margin-bottom: 0; }
 .demo-note { color: var(--cab-text-muted); font-size: var(--dlc-font-size-body); }
@@ -10,15 +10,10 @@
 .demo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--dlc-space-md); }
 .demo-field label { display: block; font-weight: 500; margin-bottom: var(--dlc-space-xs); }
 .demo-field input:not([type=checkbox]), .demo-field select, .demo-field textarea { width: 100%; font: inherit; border: 1px solid var(--cab-border); border-radius: var(--cab-radius); padding: var(--dlc-space-sm); background: var(--cab-topbar-bg); color: var(--cab-text); }
-.demo-field select[multiple] { min-height: 6rem; }
 .demo-field textarea { min-height: 4rem; }
 .demo-field :is(input,select,textarea):focus-visible, .demo-reset summary:focus-visible { outline: 2px solid var(--cab-primary); outline-offset: 2px; }
 .demo-form-narrow { max-width: 42rem; }
 .demo-form-narrow .demo-field { margin-bottom: var(--dlc-space-md); }
-.demo-entry { border: 1px solid var(--cab-border); border-radius: var(--cab-radius); padding: var(--dlc-space-md); margin-bottom: var(--dlc-space-md); }
-.demo-entry legend { float: none; width: auto; padding: 0 var(--dlc-space-xs); margin-bottom: 0; }
-.demo-entry-footer { margin-top: var(--dlc-space-sm); }
-.demo-delete { display: inline-flex; align-items: center; gap: var(--dlc-space-sm); min-height: var(--dlc-touch-target); }
 .demo-actions { justify-content: flex-start; }
 .demo-errors, .demo-page .errorlist { color: var(--bs-danger); margin-bottom: var(--dlc-space-sm); }
 .demo-reset { max-width: 24rem; border: 1px solid var(--cab-border); border-radius: var(--cab-radius); padding: var(--dlc-space-sm); }
