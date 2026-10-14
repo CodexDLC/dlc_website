@@ -16,11 +16,11 @@ class MultiplePhotoField(forms.FileField):
         if not data:
             return super().clean(None, initial)
         uploads = data if isinstance(data, (list, tuple)) else [data]
-        if len(uploads) > 20:
+        if len(uploads) > 100:
             message = (
-                "Выберите не больше 20 фотографий за одну загрузку."
+                "Выберите не больше 100 фотографий за одну загрузку."
                 if (get_language() or "").startswith("ru")
-                else "Wählen Sie höchstens 20 Fotos pro Upload."
+                else "Wählen Sie höchstens 100 Fotos pro Upload."
             )
             raise ValidationError(message)
         return [super(MultiplePhotoField, self).clean(upload, initial) for upload in uploads]

@@ -212,18 +212,18 @@ def test_upload_form_validates_entire_batch_before_storage():
     assert good.tell() == 0
 
 
-def test_upload_form_rejects_empty_and_more_than_twenty_photos():
+def test_upload_form_rejects_empty_and_more_than_one_hundred_photos():
     assert not PhotoUploadForm(files={}).is_valid()
-    photos = [SimpleUploadedFile(f"{index}.png", b"fixture") for index in range(21)]
+    photos = [SimpleUploadedFile(f"{index}.png", b"fixture") for index in range(101)]
     form = PhotoUploadForm(files={"photos": photos})
     assert not form.is_valid()
-    assert "20" in str(form.errors)
+    assert "100" in str(form.errors)
 
 
 def test_upload_form_returns_all_valid_images():
     content = BytesIO()
     Image.new("RGB", (2, 2), "green").save(content, format="PNG")
-    photos = [SimpleUploadedFile(f"{index}.png", content.getvalue(), content_type="image/png") for index in range(2)]
+    photos = [SimpleUploadedFile(f"{index}.png", content.getvalue(), content_type="image/png") for index in range(100)]
     form = PhotoUploadForm(files={"photos": photos})
     assert form.is_valid(), form.errors
     assert form.cleaned_data["photos"] == photos

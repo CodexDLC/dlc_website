@@ -241,3 +241,32 @@ def test_put_is_conditional_and_rejects_redirects():
     assert request.call_args.kwargs["allow_redirects"] is False
     assert request.call_args.kwargs["headers"]["If-None-Match"] == "*"
     response.close.assert_called_once()
+
+def test_sequential_upload_json_saves_original_and_queues_mirror(setup_upload, client, monkeypatch):
+    from django.urls import reverse
+    actor, site, storage, data = setup_upload
+    monkeypatch.setattr('features.integrations.nextcloud.client.NextcloudWebDAVClient.put_file',
+                        lambda *a, **k: pytest.fail('Nextcloud must remain background-only'))
+    client.force_login(actor)
+    response = client.post(reverse('site_photos:upload', args=[site.pk]),
+        {'photos': SimpleUploadedFile('original.jpg', data)}, HTTP_ACCEPT='application/json')
+    assert response.status_code == 200
+    result = response.json()
+    assert result['errors'] == []
+    assert len(result['uploaded']) == 1
+    photo = SitePhoto.objects.get(pk=result['uploaded'][0]['id'])
+    assert storage.open(photo.image.name).read() == data
+    assert photo.mirror_status == 'queued'
+    assert response['Cache-Control'] == 'private, no-store'
+
+
+def test_sequential_upload_json_validation_failure_has_no_storage_writes(setup_upload, client):
+    from django.urls import reverse
+    actor, site, _, _ = setup_upload
+    client.force_login(actor)
+    response = client.post(reverse('site_photos:upload', args=[site.pk]),
+        {'photos': SimpleUploadedFile('broken.png', b'invalid')}, HTTP_ACCEPT='application/json')
+    assert response.status_code == 400
+    assert response.json()['uploaded'] == []
+    assert response.json()['errors']
+    assert SitePhoto.objects.count() == 0

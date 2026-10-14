@@ -30,13 +30,21 @@
     </section>
   {% endif %}
   <section class="time-card">
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" data-photo-upload data-language="{{ photo_language }}">
       {% csrf_token %}
       {{ form.non_field_errors }}
       <div class="time-field">{{ form.photos.label_tag }}{{ form.photos }}{{ form.photos.errors }}</div>
-      <p class="time-hint">{% if photo_language == 'ru' %}JPEG, PNG или WebP, до 20 МБ и 40 мегапикселей на фотографию. До 20 фотографий и 100 МБ за одну загрузку. Доступ имеют только участники объекта.{% else %}JPEG, PNG oder WebP, höchstens 20 MB und 40 Megapixel pro Foto. Bis zu 20 Fotos und insgesamt 100 MB pro Upload. Nur berechtigte Standort-Teilnehmer haben Zugriff.{% endif %}</p>
+      <p class="time-hint">{% if photo_language == 'ru' %}JPEG, PNG или WebP, до 20 МБ и 40 мегапикселей на фотографию. Выберите сразу все фотографии: они загрузятся последовательно, по одной, с показом прогресса. Доступ имеют только участники объекта.{% else %}JPEG, PNG oder WebP, höchstens 20 MB und 40 Megapixel pro Foto. Wählen Sie alle Fotos auf einmal: Sie werden nacheinander mit Fortschrittsanzeige hochgeladen. Nur berechtigte Standort-Teilnehmer haben Zugriff.{% endif %}</p>
+      <noscript><p class="time-hint">{% if photo_language == 'ru' %}Без JavaScript — до 100 фотографий и 100 МБ за одну отправку.{% else %}Ohne JavaScript: höchstens 100 Fotos und 100 MB pro Upload.{% endif %}</p></noscript>
+      <div data-upload-progress hidden>
+        <p data-upload-status role="status" aria-live="polite"></p>
+        <label for="photo-file-progress">{% if photo_language == 'ru' %}Текущая фотография{% else %}Aktuelles Foto{% endif %}</label>
+        <progress id="photo-file-progress" data-file-progress max="100" value="0"></progress>
+        <ul data-upload-errors></ul>
+      </div>
       <button class="time-button" type="submit">{% if photo_language == 'ru' %}Загрузить фотографии{% else %}Fotos hochladen{% endif %}</button>
     </form>
   </section>
 </div>
+<script src="{% static 'project_media/js/photo_upload.js' %}" defer></script>
 {% endblock %}

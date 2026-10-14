@@ -126,6 +126,7 @@ def upload(request, site_id):
         raise PermissionDenied
     request.cabinet_module = "customer" if membership_for(request.user) else "ac"
     form = PhotoUploadForm(request.POST or None, request.FILES or None)
+    json_upload = request.headers.get("Accept") == "application/json"
     uploaded, errors = [], []
     if request.method == "POST" and form.is_valid():
         for file in form.cleaned_data["photos"]:
@@ -141,8 +142,25 @@ def upload(request, site_id):
                     else "Das Foto konnte nicht gespeichert werden. Bitte erneut hochladen."
                 )
                 errors.append({"name": file.name, "message": message})
-        if not errors:
+        if not errors and not json_upload:
             return redirect(_return_url(request, site))
+    if request.method == "POST" and json_upload:
+        if not form.is_valid():
+            errors = [
+                {"name": "", "message": message}
+                for messages_for_field in form.errors.values()
+                for message in messages_for_field
+            ]
+        response = JsonResponse(
+            {
+                "uploaded": [{"id": photo.pk, "name": photo.original_name} for photo in uploaded],
+                "errors": errors,
+                "return_url": _return_url(request, site),
+            },
+            status=400 if errors else 200,
+        )
+        response["Cache-Control"] = "private, no-store"
+        return response
     return render(
         request,
         "project_media/photo_upload.html",
