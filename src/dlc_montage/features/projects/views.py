@@ -147,8 +147,10 @@ def object_list(request):
         raise PermissionDenied
 
     from django.core.paginator import Paginator
+    from django.db.models import Count
 
-    from features.customer_portal.selectors import attach_site_plan_progress, get_cached_photo_summary
+    from features.customer_portal.selectors import attach_site_plan_progress
+    from features.project_media.models import SitePhoto
 
     from .selectors import filtered_ac_objects
 
@@ -174,8 +176,15 @@ def object_list(request):
     )
     page_obj = Paginator(sites_qs, 20).get_page(request.GET.get("page"))
 
+    saved_counts = {
+        row["site_id"]: row["count"]
+        for row in SitePhoto.objects.filter(site_id__in=[site.pk for site in page_obj])
+        .values("site_id")
+        .annotate(count=Count("pk"))
+    }
     for s in page_obj:
-        s.cached_photo_summary = get_cached_photo_summary(s)
+        count = saved_counts.get(s.pk, 0)
+        s.cached_photo_summary = {"status": "ok", "count": count} if count else None
     attach_site_plan_progress(page_obj.object_list)
 
     ac_groups = visible_groups(request.user, "ac").exclude(status="deleted").order_by("name", "pk")
@@ -253,10 +262,10 @@ def site_detail(request, group_id, pk):
     site = get_object_or_404(AcObject.objects.select_related("group"), pk=pk, group=group)
     request.cabinet_module = "ac"
     from features.customer_portal.selectors import accepted_completion_rows
-    from features.integrations.nextcloud.services import get_site_photo_summary
     from features.mbg_reports.models import MbgDailyReport
     from features.mbg_reports.selectors import site_position_summary
     from features.project_media.models import ProjectFile
+    from features.project_media.photo_selectors import get_site_photo_summary
 
     reports = list(
         MbgDailyReport.objects.filter(site=site)
@@ -266,7 +275,7 @@ def site_detail(request, group_id, pk):
     )
     positions = [row for row in site_position_summary(site) if row.quantity or row.actual_person_hours or row.amount]
     completed_rows = accepted_completion_rows(site)
-    photo_summary = get_site_photo_summary(site)
+    photo_summary = get_site_photo_summary(site, include_photos=request.GET.get("show_photos") == "1")
     customer_files = list(ProjectFile.objects.filter(site=site, customer_visible=True, content_type="application/pdf"))
     daily_work = internal_daily_work(site)
 

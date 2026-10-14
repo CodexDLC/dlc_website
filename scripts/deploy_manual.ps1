@@ -72,10 +72,11 @@ compose() {
 }
 compose config --quiet
 compose build web
+compose build photo-worker
 compose up -d --wait db redis
 compose run --rm --no-deps --interactive=false -T migrate
 compose run --rm --no-deps --interactive=false -T collectstatic
-compose up -d --wait web
+compose up -d --wait web photo-worker
 test -d /var/www/dlc-static || { echo 'Prepare the public static directory before deployment.' >&2; exit 1; }
 docker cp "$(compose ps -q web):/app/staticfiles/." /var/www/dlc-static/
 ln -s "$release" "/srv/dlc/.current-$sha"

@@ -34,6 +34,7 @@ urlpatterns: list[Any] = [
 urlpatterns += i18n_patterns(
     path("cabinet/demo/", include("features.demo.urls")),
     path("cabinet/customer/", include("features.customer_portal.urls")),
+    path("cabinet/photos/", include("features.project_media.photo_urls")),
     path("cabinet/ac/files/", file_index, {"direction": "ac"}),
     path("cabinet/dc/files/", file_index, {"direction": "dc"}),
     path("cabinet/project-files/", include("features.project_media.urls")),

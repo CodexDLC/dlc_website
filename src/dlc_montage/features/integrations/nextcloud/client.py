@@ -1,5 +1,6 @@
 """Низкоуровневый клиент WebDAV для работы с хранилищем Nextcloud MBG."""
 
+from time import monotonic
 from typing import Any
 from urllib.parse import quote, unquote
 
@@ -160,10 +161,15 @@ class NextcloudWebDAVClient:
 
                 # Проверяем, коллекция (папка) ли это
                 is_dir = False
+                etag = modified = ""
                 propstat = resp.find("{DAV:}propstat")
                 if propstat is not None:
                     prop = propstat.find("{DAV:}prop")
                     if prop is not None:
+                        etag_node = prop.find("{DAV:}getetag")
+                        modified_node = prop.find("{DAV:}getlastmodified")
+                        etag = (etag_node.text or "") if etag_node is not None else ""
+                        modified = (modified_node.text or "") if modified_node is not None else ""
                         resourcetype = prop.find("{DAV:}resourcetype")
                         if resourcetype is not None and resourcetype.find("{DAV:}collection") is not None:
                             is_dir = True
@@ -176,6 +182,8 @@ class NextcloudWebDAVClient:
                     "relative_path": rel,
                     "name": name,
                     "is_directory": is_dir,
+                    "etag": etag,
+                    "modified": modified,
                 })
 
             return items
@@ -190,7 +198,9 @@ class NextcloudWebDAVClient:
             if res is not None:
                 res.close()
 
-    def get_file(self, relative_path: str, max_size: int = 25 * 1024 * 1024) -> tuple[bytes, str]:
+    def get_file(
+        self, relative_path: str, max_size: int = 25 * 1024 * 1024, *, deadline_seconds: float | None = None,
+    ) -> tuple[bytes, str]:
         """Безопасно скачать файл из Nextcloud без перехода по редиректам.
 
         Возвращает кортеж (content_bytes, content_type).
@@ -203,6 +213,7 @@ class NextcloudWebDAVClient:
             raise NextcloudWebDAVError(f"Invalid path traversal in file path: {relative_path}")
 
         url = self._full_url(clean, is_collection=False)
+        deadline = monotonic() + deadline_seconds if deadline_seconds is not None else None
         res = None
         try:
             res = requests.get(
@@ -231,6 +242,8 @@ class NextcloudWebDAVClient:
 
             content = bytearray()
             for chunk in res.iter_content(chunk_size=65536):
+                if deadline is not None and monotonic() >= deadline:
+                    raise NextcloudWebDAVError("Photo download exceeded its time budget")
                 content.extend(chunk)
                 if len(content) > max_size:
                     raise NextcloudWebDAVError(f"Payload exceeded maximum allowed {max_size}")

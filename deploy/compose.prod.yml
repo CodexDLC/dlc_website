@@ -1,5 +1,5 @@
 # DLC Montage — Production Container Environment
-# Aggregates infra and django layers; hardened for production deployment.
+# Aggregates infra, django and worker layers; hardened for production deployment.
 #
 # ==============================================================================
 # Production Reverse Proxy Boundary:
@@ -19,4 +19,5 @@ include:
   - path:
       - compose.infra.yml
       - compose.django.yml
+      - compose.workers.yml
       - compose.prod.override.yml

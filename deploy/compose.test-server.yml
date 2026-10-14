@@ -4,5 +4,6 @@ include:
   - path:
       - compose.infra.yml
       - compose.django.yml
+      - compose.workers.yml
       - compose.prod.override.yml
       - compose.test-server.override.yml

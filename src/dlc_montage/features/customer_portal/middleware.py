@@ -30,7 +30,7 @@ class CustomerBoundaryMiddleware:
         if parts[0] == "cabinet":
             if len(parts) == 1:
                 return redirect("customer_portal:home")
-            if parts[1] in {"customer", "demo", "login", "logout", "password"}:
+            if parts[1] in {"customer", "demo", "photos", "login", "logout", "password"}:
                 return None
             raise PermissionDenied
         if parts[0] in {"admin", "system", "conversations"}:

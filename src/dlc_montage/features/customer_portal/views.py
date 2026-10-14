@@ -16,6 +16,7 @@ from django.views.decorators.http import require_http_methods, require_POST
 
 from features.internal_time.policies import is_manager
 from features.project_media.models import ProjectFile
+from features.project_media.photo_selectors import get_site_photo_summary
 from features.project_media.views import file_response
 from features.projects.forms import TypicalPlanForm
 from features.projects.read_models import typical_plan_preview
@@ -29,7 +30,7 @@ from .exports import (
 )
 from .forms import CustomerGroupForm, CustomerPdfForm, CustomerSiteForm, ManualItemForm, MembershipForm
 from .models import ClientMembership, PlanProposal, SiteReview
-from .policies import membership_for, require_customer_group, require_customer_site
+from .policies import membership_for, require_customer_group
 from .selectors import (
     attach_site_plan_progress,
     audit_events_for_actor,
@@ -37,7 +38,6 @@ from .selectors import (
     customer_site_detail,
     filtered_groups_for_actor,
     filtered_sites_for_actor,
-    get_cached_photo_summary,
     groups_for_actor,
     sites_for_actor,
     works_journal_days,
@@ -182,36 +182,6 @@ def objects(request):
             "groups": groups_for_actor(request.user),
         },
     )
-
-
-@login_required
-def site_photo(request, site_id, filename):
-    """Безопасное проксирование фотофиксации объекта из Nextcloud."""
-    _require_portal(request.user)
-    site = get_object_or_404(sites_for_actor(request.user), pk=site_id)
-    require_customer_site(request.user, site)
-
-    clean_filename = filename.strip()
-    if not clean_filename or "/" in clean_filename or "\\" in clean_filename or ".." in clean_filename:
-        raise Http404(_("Ungültiger Dateiname."))
-
-    from features.integrations.nextcloud.client import NextcloudWebDAVError
-    from features.integrations.nextcloud.services import fetch_site_photo
-
-    try:
-        data, mime_type = fetch_site_photo(site=site, filename=clean_filename)
-    except FileNotFoundError:
-        raise Http404(_("Foto nicht gefunden.")) from None
-    except ValueError:
-        return HttpResponseBadRequest(_("Ungültiges Dateiformat oder Inhalt."))
-    except NextcloudWebDAVError:
-        return HttpResponse("Fotospeicher vorübergehend nicht erreichbar.", status=502)
-
-    response = HttpResponse(data, content_type=mime_type)
-    response["X-Content-Type-Options"] = "nosniff"
-    response["Content-Security-Policy"] = "default-src 'none'; sandbox"
-    response["Cache-Control"] = "private, no-store"
-    return response
 
 
 @login_required
@@ -371,9 +341,7 @@ def site_detail(request, site_id):
     site = get_object_or_404(sites_for_actor(request.user), pk=site_id)
     request.cabinet_module = "customer"
     detail = customer_site_detail(site)
-    from features.integrations.nextcloud.services import get_site_photo_summary
-
-    photo_summary = get_site_photo_summary(site)
+    photo_summary = get_site_photo_summary(site, include_photos=request.GET.get("show_photos") == "1")
     files = ProjectFile.objects.filter(site=site, customer_visible=True, content_type="application/pdf")
 
     chosen_date = request.GET.get("date", "").strip()[:10]
@@ -582,7 +550,7 @@ def review_decision(request, site_id):
                 "site": site,
                 "manager": False,
                 "review_errors": exc.messages,
-                "photo_summary": get_cached_photo_summary(site),
+                "photo_summary": get_site_photo_summary(site, include_photos=False),
                 "files": ProjectFile.objects.filter(site=site, customer_visible=True, content_type="application/pdf"),
             },
             status=400,

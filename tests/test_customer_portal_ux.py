@@ -183,7 +183,7 @@ def test_objects_grid_pagination_and_filters_and_sorting(ux_setup, client, monke
     def no_network(*args, **kwargs):
         raise AssertionError("Object list must not contact photo storage")
 
-    monkeypatch.setattr("features.customer_portal.views.get_cached_photo_summary", no_network)
+    monkeypatch.setattr("features.customer_portal.views.get_site_photo_summary", no_network)
     ctx = ux_setup
     client.force_login(ctx["alice"])
 
@@ -372,7 +372,7 @@ def test_reviews_grid_and_empty_help(ux_setup, client, monkeypatch):
     def forbidden_photo_lookup(*args, **kwargs):
         raise AssertionError("Review list must not access Nextcloud or photo summaries")
 
-    monkeypatch.setattr("features.customer_portal.views.get_cached_photo_summary", forbidden_photo_lookup)
+    monkeypatch.setattr("features.customer_portal.views.get_site_photo_summary", forbidden_photo_lookup)
     monkeypatch.setattr(
         "features.integrations.nextcloud.client.NextcloudWebDAVClient.list_folder", forbidden_photo_lookup
     )

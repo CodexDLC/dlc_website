@@ -1,0 +1,44 @@
+# Background photo synchronization; build web before this derivative runtime.
+services:
+  photo-worker:
+    build:
+      context: ..
+      dockerfile: deploy/worker/Dockerfile
+      args:
+        DLC_DJANGO_IMAGE: dlc-montage-django:${DLC_IMAGE_TAG:?Provide the immutable release image tag}
+    image: dlc-montage-photo-worker:${DLC_IMAGE_TAG:?Provide the immutable release image tag}
+    environment:
+      DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-dlc_montage.core.settings.prod}
+      DATABASE_URL: postgres://${DLC_DB_USER:-dlc_montage}:${DLC_DB_PASSWORD:?Provide the database password}@db:5432/${DLC_DB_NAME:-dlc_montage}
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:?Provide the Django secret key}
+      FIELD_ENCRYPTION_KEY: ${FIELD_ENCRYPTION_KEY:?Provide a private encryption key explicitly}
+      DEBUG: "False"
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,web}
+      PRIVATE_MEDIA_ROOT: /app/data/private
+      PRIVATE_STORAGE_BACKEND: ${PRIVATE_STORAGE_BACKEND:-local}
+      PHOTOS_STORAGE_BACKEND: ${PHOTOS_STORAGE_BACKEND:-local}
+      PRIVATE_S3_BUCKET: ${PRIVATE_S3_BUCKET:-}
+      PRIVATE_S3_ENDPOINT: ${PRIVATE_S3_ENDPOINT:-}
+      PRIVATE_S3_REGION: ${PRIVATE_S3_REGION:-}
+      PRIVATE_S3_ACCESS_KEY: ${PRIVATE_S3_ACCESS_KEY:-}
+      PRIVATE_S3_SECRET_KEY: ${PRIVATE_S3_SECRET_KEY:-}
+      NEXTCLOUD_WEBDAV_URL: ${NEXTCLOUD_WEBDAV_URL:-}
+      NEXTCLOUD_USER: ${NEXTCLOUD_USER:-}
+      NEXTCLOUD_PASSWORD: ${NEXTCLOUD_PASSWORD:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import pathlib, time; heartbeat = pathlib.Path('/tmp/dlc-photo-worker-heartbeat'); assert heartbeat.is_file() and 0 <= time.time() - heartbeat.stat().st_mtime < 900"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    volumes:
+      - dlc_private_data:/app/data/private
+    networks:
+      - dlc_network
+    restart: unless-stopped

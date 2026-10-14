@@ -4,14 +4,12 @@ from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
-from typing import Any, Sequence
+from typing import Sequence
 
-from django.core.cache import cache
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.db.models import Count, F, Max, Q
 
-from features.integrations.nextcloud.services import get_site_photo_cache_key
 from features.internal_time.policies import is_manager
 from features.mbg_reports.models import MbgDailyReport, MbgReportRevision
 from features.projects.models import AcObject, ProjectGroup
@@ -383,11 +381,6 @@ class CustomerSiteDetail:
     review_stale: bool
     review_rows: tuple
     proposals: tuple[PlanProposal, ...]
-
-
-def get_cached_photo_summary(site: AcObject) -> dict[str, Any] | None:
-    """Вернуть только закешированную сводку фотофиксации без сетевых вызовов WebDAV."""
-    return cache.get(get_site_photo_cache_key(site))
 
 
 def customer_site_detail(site):

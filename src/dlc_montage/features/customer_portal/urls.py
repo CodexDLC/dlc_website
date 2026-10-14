@@ -22,7 +22,6 @@ urlpatterns = [
     path("groups/<int:group_id>/accepted-work.xlsx", views.group_work_xlsx, name="group_work_xlsx"),
     path("groups/<int:group_id>/timesheet.xlsx", views.group_timesheet_xlsx, name="group_timesheet_xlsx"),
     path("sites/<int:site_id>/", views.site_detail, name="site"),
-    path("sites/<int:site_id>/photos/<str:filename>", views.site_photo, name="site_photo"),
     path("sites/<int:site_id>/edit/<int:group_id>/", views.site_edit, name="site_edit"),
     path("sites/<int:site_id>/plan/propose/", views.plan_proposal, name="plan_proposal"),
     path("sites/<int:site_id>/plan/propose-item/", views.manual_item_proposal, name="manual_item_proposal"),

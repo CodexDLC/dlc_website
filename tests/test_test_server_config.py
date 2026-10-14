@@ -70,6 +70,7 @@ def test_test_server_compose_requires_site_and_storage_configuration(tmp_path):
                 "FIELD_ENCRYPTION_KEY=synthetic-encryption-key",
                 "ALLOWED_HOSTS=test.invalid",
                 "CSRF_TRUSTED_ORIGINS=https://test.invalid",
+                "DLC_IMAGE_TAG=synthetic-release",
             )
         ),
         encoding="utf-8",

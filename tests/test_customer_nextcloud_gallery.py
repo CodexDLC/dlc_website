@@ -7,8 +7,7 @@ from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.urls import reverse
 from features.customer_portal.exports import group_workbook, site_workbook
-from features.customer_portal.models import ClientMembership
-from features.customer_portal.selectors import customer_site_detail, get_cached_photo_summary
+from features.customer_portal.selectors import customer_site_detail
 from features.customer_portal.services import grant_membership
 from features.integrations.nextcloud.client import NextcloudWebDAVClient, NextcloudWebDAVError
 from features.integrations.nextcloud.services import (
@@ -322,145 +321,6 @@ def test_fetch_site_photo_guards(portal_setup):
         fetch_site_photo(site, "unlisted.jpg", client=mock_client)
 
 
-# ---------------------------------------------------------------------------
-# 3. HTTP View тесты: права доступа, изоляция, безопасный прокси
-# ---------------------------------------------------------------------------
-
-
-@patch("features.integrations.nextcloud.services.NextcloudWebDAVClient")
-def test_customer_photo_proxy_own_client_success(mock_client_cls, portal_setup, client):
-    """Свой пользователь (Alice) получает фото через безопасный прокси."""
-    alice = portal_setup["alice"]
-    site_a = portal_setup["site_a"]
-
-    mock_client = mock_client_cls.return_value
-    mock_client.list_folder.return_value = [
-        {"name": "roof.jpg", "is_directory": False},
-    ]
-    mock_client.get_file.return_value = (VALID_JPEG, "image/jpeg")
-
-    client.force_login(alice)
-    url = reverse("customer_portal:site_photo", kwargs={"site_id": site_a.pk, "filename": "roof.jpg"})
-    response = client.get(url)
-
-    assert response.status_code == 200
-    assert response["Content-Type"] == "image/jpeg"
-    assert response["X-Content-Type-Options"] == "nosniff"
-    assert "sandbox" in response["Content-Security-Policy"]
-    assert response["Cache-Control"] == "private, no-store"
-    assert response.content == VALID_JPEG
-
-    # Проверка, что в ответе нет паролей или приватных URL хранилища
-    assert b"password" not in response.content.lower()
-    assert "authorization" not in response.headers
-
-
-def test_customer_photo_proxy_foreign_client_denied(portal_setup, client):
-    """Чужой заказчик (Bob) не имеет доступа к фото объекта Alice."""
-    bob = portal_setup["bob"]
-    site_a = portal_setup["site_a"]
-
-    client.force_login(bob)
-    url = reverse("customer_portal:site_photo", kwargs={"site_id": site_a.pk, "filename": "roof.jpg"})
-    response = client.get(url)
-    assert response.status_code == 404
-
-
-def test_customer_photo_proxy_inactive_user_denied(portal_setup, client):
-    """Неактивный пользователь или отозванное членство не могут смотреть фото."""
-    alice = portal_setup["alice"]
-    site_a = portal_setup["site_a"]
-
-    ClientMembership.objects.filter(user=alice).update(is_active=False)
-    client.force_login(alice)
-    url = reverse("customer_portal:site_photo", kwargs={"site_id": site_a.pk, "filename": "roof.jpg"})
-    response = client.get(url)
-    assert response.status_code == 403
-
-
-def test_customer_photo_proxy_unauthenticated_redirects(portal_setup, client):
-    """Неавторизованный пользователь перенаправляется на логин."""
-    site_a = portal_setup["site_a"]
-    url = reverse("customer_portal:site_photo", kwargs={"site_id": site_a.pk, "filename": "roof.jpg"})
-    response = client.get(url)
-    assert response.status_code == 302
-
-
-@patch("features.integrations.nextcloud.services.NextcloudWebDAVClient")
-@pytest.mark.parametrize("internal", [False, True])
-@pytest.mark.parametrize("language,show_label,hide_label", [
-    ("ru", "Показать фотографии", "Скрыть фотографии"),
-    ("de", "Fotos anzeigen", "Fotos ausblenden"),
-])
-def test_site_photos_are_revealed_on_request(
-    mock_client_cls, portal_setup, client, internal, language, show_label, hide_label
-):
-    """Both site pages show a count first and request private previews only after Show."""
-    alice = portal_setup["alice"]
-    site_a = portal_setup["site_a"]
-
-    mock_client = mock_client_cls.return_value
-    mock_client.list_folder.return_value = [
-        {"name": "overview.jpg", "is_directory": False},
-        {"name": "inverter.png", "is_directory": False},
-    ]
-
-    from django.utils.translation import override
-
-    client.force_login(portal_setup["manager"] if internal else alice)
-    with override(language):
-        url = (
-            reverse("projects:site_detail", kwargs={"group_id": site_a.group_id, "pk": site_a.pk})
-            if internal else reverse("customer_portal:site", kwargs={"site_id": site_a.pk})
-        )
-        response = client.get(url, {"date": "2026-10-09"}, HTTP_ACCEPT_LANGUAGE=language)
-        assert response.status_code == 200
-        collapsed = response.content.decode("utf-8")
-        assert "📸 2" in collapsed
-        assert show_label in collapsed
-        assert "overview.jpg" not in collapsed
-        assert "inverter.png" not in collapsed
-        assert "show_photos=1" in collapsed
-        assert "date=2026-10-09" in collapsed
-        assert reverse("customer_portal:site_photo", args=[site_a.pk, "overview.jpg"]) not in collapsed
-        mock_client.get_file.assert_not_called()
-        response = client.get(url, {"show_photos": "1", "date": "2026-10-09"}, HTTP_ACCEPT_LANGUAGE=language)
-        hidden_again = client.get(url, {"date": "2026-10-09"}).content.decode("utf-8")
-        assert show_label in hidden_again
-        assert "overview.jpg" not in hidden_again
-
-    assert response.status_code == 200
-    content = response.content.decode("utf-8")
-    assert hide_label in content
-    assert "📸 2" in content
-    assert "overview.jpg" in content
-    assert "inverter.png" in content
-    # Наличие Lightbox диалога и data-атрибутов
-    assert "data-media-dialog" in content
-    assert "data-media-preview" in content
-    # Убедиться, что прямые URL Nextcloud не утекли в HTML
-    assert "remote.php/dav" not in content
-
-
-@patch("features.integrations.nextcloud.services.NextcloudWebDAVClient")
-def test_customer_site_detail_shows_unavailable_state(mock_client_cls, portal_setup, client):
-    """При ошибке облака экран объекта выводит явное предупреждение о недоступности."""
-    alice = portal_setup["alice"]
-    site_a = portal_setup["site_a"]
-
-    mock_client = mock_client_cls.return_value
-    mock_client.list_folder.side_effect = NextcloudWebDAVError("Cloud unreachable")
-
-    client.force_login(alice)
-    response = client.get(reverse("customer_portal:site", kwargs={"site_id": site_a.pk}))
-
-    assert response.status_code == 200
-    content = response.content.decode("utf-8")
-    assert "Хранилище фотографий временно недоступно" in content
-    # Не должно вводить в заблуждение, что фото отсутствуют
-    assert "Нет фотографий" not in content
-
-
 def test_customer_objects_never_contacts_photo_storage(portal_setup, client, monkeypatch):
     """The object list remains available even when external photo storage fails."""
     def unavailable(*args, **kwargs):
@@ -517,22 +377,6 @@ def test_cache_key_path_aware_and_rename_causes_fresh_listing_and_no_old_path(po
     mock_client.get_file.reset_mock()
     fetch_site_photo(site, "roof.jpg", client=mock_client)
     mock_client.get_file.assert_called_once_with(f"{new_folder}/roof.jpg")
-
-
-def test_cached_badges_obtain_by_authorized_site_object(portal_setup):
-    """Кешированный бейдж получается по объекту сайта, а не по голому int pk."""
-    site = portal_setup["site_a"]
-    cache.clear()
-
-    cache.set(
-        get_site_photo_cache_key(site),
-        {"status": "ok", "is_available": True, "has_photos": True, "count": 5},
-        timeout=900,
-    )
-
-    badge = get_cached_photo_summary(site)
-    assert badge is not None
-    assert badge["count"] == 5
 
 
 def test_customer_site_detail_selector_has_no_photo_io(portal_setup):

@@ -1,0 +1,59 @@
+{% load i18n %}
+{% get_current_language as photo_language %}
+<section class="time-card" id="site-photos"
+         data-gallery-url="{% url 'site_photos:gallery' site.pk %}"
+         data-refresh-url="{% url 'site_photos:refresh' site.pk %}"
+         data-sync-status="{{ photo_summary.sync_status }}"
+         data-expanded="{{ show_photos|yesno:'true,false' }}"
+         data-language="{{ photo_language }}"
+         data-show-label="{% trans 'Fotos anzeigen' %}"
+         data-hide-label="{% trans 'Fotos ausblenden' %}">
+  <div class="time-inline spread" style="flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+    <h2 style="margin:0;">{% trans 'Fotos der Baustelle' %} <span data-photo-count>{% if photo_summary.count %}({{ photo_summary.count }}){% endif %}</span></h2>
+    <span class="cust-badge cust-badge--photo-ok" data-photo-badge>📸 {% blocktrans count count=photo_summary.count|default:0 %}{{ count }} Foto vorhanden{% plural %}{{ count }} Fotos vorhanden{% endblocktrans %}</span>
+    <button type="button" class="time-button secondary sm" style="min-height:44px;" data-photo-toggle
+            aria-controls="site-photo-gallery" aria-expanded="{{ show_photos|yesno:'true,false' }}" {% if not photo_summary.count %}hidden{% endif %}>
+      {% if show_photos %}{% trans 'Fotos ausblenden' %}{% else %}{% trans 'Fotos anzeigen' %}{% endif %}
+    </button>
+    <button type="button" class="time-button secondary sm" style="min-height:44px;" data-photo-refresh>
+      {% if photo_language == 'ru' %}Проверить новые фотографии{% else %}Neue Fotos prüfen{% endif %}
+    </button>
+  </div>
+  {% if csrf_token %}<div hidden>{% csrf_token %}</div>{% endif %}
+  <p class="time-hint" data-photo-status role="status" aria-live="polite" aria-atomic="true">
+    {% if photo_summary.sync_status == 'unavailable' or photo_summary.sync_status == 'not_configured' %}
+      {% if photo_language == 'ru' %}Хранилище фотографий временно недоступно. Сохранённые фотографии доступны.{% else %}Fotospeicher vorübergehend nicht erreichbar. Gespeicherte Fotos bleiben verfügbar.{% endif %}
+    {% elif photo_summary.sync_status == 'queued' or photo_summary.sync_status == 'processing' or photo_summary.sync_status == 'pending' %}
+      {% if photo_language == 'ru' %}Проверяем новые фотографии в фоне…{% else %}Neue Fotos werden im Hintergrund geprüft…{% endif %}
+    {% elif photo_summary.sync_status == 'partial' %}
+      {% if photo_language == 'ru' %}Часть новых фотографий пока не сохранена. Сохранённые фотографии доступны.{% else %}Einige neue Fotos wurden noch nicht gespeichert. Gespeicherte Fotos bleiben verfügbar.{% endif %}
+    {% elif not photo_summary.count %}
+      {% if photo_language == 'ru' %}Сохранённых фотографий пока нет.{% else %}Noch keine gespeicherten Fotos.{% endif %}
+    {% endif %}
+  </p>
+  <div id="site-photo-gallery" class="project-media-grid" aria-label="{% trans 'Fotos des Standorts' %}" {% if not show_photos %}hidden{% endif %}>
+    {% if show_photos %}
+      {% for photo in photo_summary.photos %}
+        <article class="project-media-card" data-site-photo-id="{{ photo.id }}" data-site-photo-version="{{ photo.version }}">
+          {% if photo.is_previewable %}
+            <button type="button" class="project-media-preview project-media-image" data-media-preview data-preview-kind="image"
+                    data-preview-url="{% url 'site_photos:image' site.pk photo.id %}?v={{ photo.version|urlencode }}" data-preview-title="{{ photo.name }}"
+                    aria-label="{% trans 'Foto öffnen:' %} {{ photo.name }}">
+              <img src="{% url 'site_photos:image' site.pk photo.id %}?v={{ photo.version|urlencode }}" alt="{{ photo.name }}" loading="lazy">
+            </button>
+          {% else %}
+            <div class="project-media-preview project-media-document"><i class="bi bi-file-earmark-image" aria-hidden="true"></i><span>{{ photo.extension|upper|slice:'1:' }}</span></div>
+          {% endif %}
+          <div class="project-media-info">
+            <h3 style="margin:0 0 4px; font-size:15px; overflow-wrap:anywhere;">{{ photo.name }}</h3>
+            <p class="time-hint">{{ photo.extension|upper|slice:'1:' }} {% trans '· Standort-Foto' %}</p>
+            {% if photo.is_previewable %}
+              <div class="project-media-actions"><button type="button" class="time-button secondary sm" data-media-preview data-preview-kind="image"
+                data-preview-url="{% url 'site_photos:image' site.pk photo.id %}?v={{ photo.version|urlencode }}" data-preview-title="{{ photo.name }}">{% trans 'Ansehen' %}</button></div>
+            {% endif %}
+          </div>
+        </article>
+      {% endfor %}
+    {% endif %}
+  </div>
+</section>

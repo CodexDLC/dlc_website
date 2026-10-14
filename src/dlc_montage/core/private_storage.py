@@ -6,6 +6,13 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
 
+def photos_storage():
+    """Resolve the independently configured private photograph storage."""
+    from django.core.files.storage import storages
+
+    return storages["photos"]
+
+
 def private_storage():
     if "private" in getattr(settings, "STORAGES", {}):
         from django.core.files.storage import storages
