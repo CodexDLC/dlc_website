@@ -1,4 +1,5 @@
 .project-media-upload summary { cursor:pointer; color:var(--cab-primary); }
+#site-photos [hidden] { display:none !important; }
 .project-media-upload[open] summary { margin-bottom:22px; }
 .project-media-filters { display:grid; grid-template-columns:minmax(180px,1fr) minmax(220px,1.5fr) auto auto;
  align-items:end; gap:14px; }

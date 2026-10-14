@@ -6,6 +6,7 @@ from pathlib import Path
 from django.core.management.base import BaseCommand
 
 from features.project_media.photo_services import process_pending_photo_syncs
+from features.project_media.photo_uploads import process_pending_photo_mirrors
 
 
 class Command(BaseCommand):
@@ -22,7 +23,9 @@ class Command(BaseCommand):
         heartbeat.parent.mkdir(parents=True, exist_ok=True)
         while True:
             heartbeat.touch()
-            processed = process_pending_photo_syncs(limit=1)
+            mirrored = process_pending_photo_mirrors(limit=1)
+            heartbeat.touch()
+            processed = process_pending_photo_syncs(limit=1) + mirrored
             heartbeat.touch()
             if options["once"]:
                 self.stdout.write(f"Processed {processed} photo sync batch(es).")

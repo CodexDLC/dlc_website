@@ -18,6 +18,9 @@ from features.integrations.nextcloud.client import NextcloudWebDAVClient
 from features.integrations.nextcloud.photo_sync import list_site_photos
 
 from .models import SitePhoto, SitePhotoSyncState
+
+# Public upload service lives separately from the inbound Nextcloud importer.
+from .photo_uploads import upload_site_photo  # noqa: F401
 from .services import validate_upload
 
 CHECK_INTERVAL = 60
@@ -82,6 +85,16 @@ def _save_photo(site, source, content):
         "size": len(content),
     }
     if old and old.checksum == checksum:
+        if not old.thumbnail:
+            from .photo_uploads import build_thumbnail
+
+            old.thumbnail.save("preview.webp", ContentFile(build_thumbnail(content)), save=False)
+            try:
+                old.thumbnail_content_type = "image/webp"
+                old.save(update_fields=["thumbnail", "thumbnail_content_type"])
+            except Exception:
+                old.thumbnail.storage.delete(old.thumbnail.name)
+                raise
         SitePhoto.objects.filter(pk=old.pk).update(
             source_etag=source["etag"],
             source_modified=source["modified"],
@@ -89,17 +102,26 @@ def _save_photo(site, source, content):
         )
         return False
     photo = SitePhoto(site=site, source_id=source_id, **values)
-    photo.image.save(source["name"], upload, save=False)
+    from .photo_uploads import _cleanup_new_files, build_thumbnail, save_new_photo_file
+
+    preview = build_thumbnail(content)
     try:
+        save_new_photo_file(photo, "image", source["name"], upload)
+        save_new_photo_file(photo, "thumbnail", "preview.webp", ContentFile(preview))
         with transaction.atomic():
             SitePhoto.objects.update_or_create(
                 site=site,
                 source_id=source_id,
-                defaults={**values, "image": photo.image.name},
+                defaults={
+                    **values,
+                    "image": photo.image.name,
+                    "thumbnail": photo.thumbnail.name,
+                    "thumbnail_content_type": "image/webp",
+                },
             )
     except Exception:
         # Only this newly written object is discarded. Existing copies are retained.
-        photo.image.storage.delete(photo.image.name)
+        _cleanup_new_files(photo)
         raise
     return True
 
@@ -142,7 +164,13 @@ def sync_site_photos(site, *, client=None, force=False):
             next_cursor += 1
             source_id = sha256(source["path"].encode()).hexdigest()
             old = SitePhoto.objects.filter(site=site, source_id=source_id).first()
+            if old and old.source_kind == "uploaded":
+                unchanged += 1
+                continue
             if old and source["etag"] and old.source_etag == source["etag"]:
+                if not old.thumbnail:
+                    with old.image.open("rb") as original:
+                        _save_photo(site, source, original.read(20 * 1024 * 1024 + 1))
                 unchanged += 1
                 continue
             try:

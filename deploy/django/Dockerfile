@@ -74,4 +74,4 @@ HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
 EXPOSE 8000
 
 # Default web runtime command (Gunicorn)
-CMD ["gunicorn", "dlc_montage.core.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--access-logfile", "-", "--error-logfile", "-"]
+CMD ["gunicorn", "dlc_montage.core.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-"]

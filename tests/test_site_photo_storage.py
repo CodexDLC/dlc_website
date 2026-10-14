@@ -63,6 +63,7 @@ def photo_setup(monkeypatch):
     site = AcObject.objects.create(group=group, name="Haus 1", project_number="2026-901")
     storage = InMemoryStorage()
     monkeypatch.setattr(SitePhoto._meta.get_field("image"), "storage", storage)
+    monkeypatch.setattr(SitePhoto._meta.get_field("thumbnail"), "storage", storage)
     return site, PhotoSource(site), storage
 
 

@@ -276,6 +276,7 @@ def site_detail(request, group_id, pk):
     positions = [row for row in site_position_summary(site) if row.quantity or row.actual_person_hours or row.amount]
     completed_rows = accepted_completion_rows(site)
     photo_summary = get_site_photo_summary(site, include_photos=request.GET.get("show_photos") == "1")
+    from features.project_media.photo_policies import can_upload_site_photos
     customer_files = list(ProjectFile.objects.filter(site=site, customer_visible=True, content_type="application/pdf"))
     daily_work = internal_daily_work(site)
 
@@ -291,6 +292,7 @@ def site_detail(request, group_id, pk):
             "work_plan": site_work_plan(site),
             "completed_rows": completed_rows,
             "photo_summary": photo_summary,
+            "can_upload_photo": can_upload_site_photos(request.user, site),
             "show_photos": request.GET.get("show_photos") == "1",
             "files": customer_files,
             "daily_work": daily_work,

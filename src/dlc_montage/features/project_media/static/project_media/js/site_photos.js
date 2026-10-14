@@ -19,7 +19,7 @@
       ongoing: "Die Prüfung läuft im Hintergrund weiter. Prüfen Sie neue Fotos später erneut.",
       error: "Fotos konnten nicht geprüft werden. Bitte erneut versuchen.",
     };
-    const pending = new Set(["queued", "processing", "busy", "pending"]);
+    const pending = new Set(["queued", "processing", "busy", "pending", "mirroring"]);
     let expanded = section.dataset.expanded === "true";
     let timer, polls = 0, stopped = false, checking = false;
     const controllers = new Set();
@@ -42,6 +42,7 @@
         section.querySelector(selector).textContent = incoming.querySelector(selector).textContent;
       }
       toggle.hidden = incoming.querySelector("[data-photo-toggle]").hidden;
+      section.querySelector("[data-photo-archive]").hidden = incoming.querySelector("[data-photo-archive]").hidden;
       if (requestedExpanded && expanded) {
         const existing = new Map(Array.from(gallery.children, card => [card.dataset.sitePhotoId, card]));
         const received = new Set();
@@ -49,6 +50,11 @@
         for (const card of incoming.querySelectorAll("[data-site-photo-id]")) {
           received.add(card.dataset.sitePhotoId);
           const saved = existing.get(card.dataset.sitePhotoId);
+          if (saved && saved.dataset.sitePhotoVersion === card.dataset.sitePhotoVersion) {
+            const currentMirror = saved.querySelector("[data-photo-mirror]");
+            const incomingMirror = card.querySelector("[data-photo-mirror]");
+            if (currentMirror && incomingMirror) currentMirror.textContent = incomingMirror.textContent;
+          }
           const node = saved && saved.outerHTML === card.outerHTML ? saved : document.importNode(card, true);
           if (saved && node !== saved) saved.replaceWith(node);
           const next = previous ? previous.nextElementSibling : gallery.firstElementChild;

@@ -342,6 +342,7 @@ def site_detail(request, site_id):
     request.cabinet_module = "customer"
     detail = customer_site_detail(site)
     photo_summary = get_site_photo_summary(site, include_photos=request.GET.get("show_photos") == "1")
+    from features.project_media.photo_policies import can_upload_site_photos
     files = ProjectFile.objects.filter(site=site, customer_visible=True, content_type="application/pdf")
 
     chosen_date = request.GET.get("date", "").strip()[:10]
@@ -357,6 +358,7 @@ def site_detail(request, site_id):
         {
             "detail": detail,
             "photo_summary": photo_summary,
+            "can_upload_photo": can_upload_site_photos(request.user, site),
             "show_photos": request.GET.get("show_photos") == "1",
             "site": site,
             "files": files,

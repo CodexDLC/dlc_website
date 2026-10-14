@@ -18,10 +18,23 @@
     <button type="button" class="time-button secondary sm" style="min-height:44px;" data-photo-refresh>
       {% if photo_language == 'ru' %}Проверить новые фотографии{% else %}Neue Fotos prüfen{% endif %}
     </button>
+    {% if can_upload_photo %}
+      <a class="time-button secondary sm" style="min-height:44px;" href="{% url 'site_photos:upload' site.pk %}">
+        {% if photo_language == 'ru' %}Загрузить фотографии{% else %}Fotos hochladen{% endif %}
+      </a>
+    {% endif %}
+    <a class="time-button secondary sm" style="min-height:44px;" data-photo-archive download
+       href="{% url 'site_photos:archive' site.pk %}" {% if not photo_summary.count %}hidden{% endif %}>
+      {% if photo_language == 'ru' %}Скачать фотографии (ZIP){% else %}Fotos als ZIP herunterladen{% endif %}
+    </a>
   </div>
   {% if csrf_token %}<div hidden>{% csrf_token %}</div>{% endif %}
   <p class="time-hint" data-photo-status role="status" aria-live="polite" aria-atomic="true">
-    {% if photo_summary.sync_status == 'unavailable' or photo_summary.sync_status == 'not_configured' %}
+    {% if photo_summary.sync_status == 'mirroring' %}
+      {% if can_upload_photo %}
+        {% if photo_language == 'ru' %}Фотографии доступны. Копия в Nextcloud отправляется в фоне.{% else %}Fotos sind verfügbar. Die Kopie wird im Hintergrund an Nextcloud gesendet.{% endif %}
+      {% endif %}
+    {% elif photo_summary.sync_status == 'unavailable' or photo_summary.sync_status == 'not_configured' %}
       {% if photo_language == 'ru' %}Хранилище фотографий временно недоступно. Сохранённые фотографии доступны.{% else %}Fotospeicher vorübergehend nicht erreichbar. Gespeicherte Fotos bleiben verfügbar.{% endif %}
     {% elif photo_summary.sync_status == 'queued' or photo_summary.sync_status == 'processing' or photo_summary.sync_status == 'pending' %}
       {% if photo_language == 'ru' %}Проверяем новые фотографии в фоне…{% else %}Neue Fotos werden im Hintergrund geprüft…{% endif %}
@@ -39,7 +52,12 @@
             <button type="button" class="project-media-preview project-media-image" data-media-preview data-preview-kind="image"
                     data-preview-url="{% url 'site_photos:image' site.pk photo.id %}?v={{ photo.version|urlencode }}" data-preview-title="{{ photo.name }}"
                     aria-label="{% trans 'Foto öffnen:' %} {{ photo.name }}">
-              <img src="{% url 'site_photos:image' site.pk photo.id %}?v={{ photo.version|urlencode }}" alt="{{ photo.name }}" loading="lazy">
+              {% if photo.has_thumbnail %}
+                <img src="{% url 'site_photos:thumbnail' site.pk photo.id %}?v={{ photo.version|urlencode }}" alt="{{ photo.name }}" loading="lazy">
+              {% else %}
+                <i class="bi bi-image" aria-hidden="true"></i>
+                <span>{% if photo_language == 'ru' %}Открыть фотографию{% else %}Foto öffnen{% endif %}</span>
+              {% endif %}
             </button>
           {% else %}
             <div class="project-media-preview project-media-document"><i class="bi bi-file-earmark-image" aria-hidden="true"></i><span>{{ photo.extension|upper|slice:'1:' }}</span></div>
@@ -47,9 +65,26 @@
           <div class="project-media-info">
             <h3 style="margin:0 0 4px; font-size:15px; overflow-wrap:anywhere;">{{ photo.name }}</h3>
             <p class="time-hint">{{ photo.extension|upper|slice:'1:' }} {% trans '· Standort-Foto' %}</p>
+            {% if can_upload_photo and photo.mirror_status %}
+              <p class="time-hint" data-photo-mirror>
+                {% if photo_language == 'ru' %}Копия в Nextcloud:{% else %}Kopie in Nextcloud:{% endif %}
+                {% if photo.mirror_status == 'ok' or photo.mirror_status == 'synced' %}
+                  {% if photo_language == 'ru' %}отправлено{% else %}gesendet{% endif %}
+                {% elif photo.mirror_status == 'failed' or photo.mirror_status == 'unavailable' %}
+                  {% if photo_language == 'ru' %}ошибка отправки{% else %}Senden fehlgeschlagen{% endif %}
+                {% else %}
+                  {% if photo_language == 'ru' %}отправляется{% else %}wird gesendet{% endif %}
+                {% endif %}
+              </p>
+            {% endif %}
             {% if photo.is_previewable %}
-              <div class="project-media-actions"><button type="button" class="time-button secondary sm" data-media-preview data-preview-kind="image"
-                data-preview-url="{% url 'site_photos:image' site.pk photo.id %}?v={{ photo.version|urlencode }}" data-preview-title="{{ photo.name }}">{% trans 'Ansehen' %}</button></div>
+              <div class="project-media-actions">
+                <button type="button" class="time-button secondary sm" data-media-preview data-preview-kind="image"
+                  data-preview-url="{% url 'site_photos:image' site.pk photo.id %}?v={{ photo.version|urlencode }}" data-preview-title="{{ photo.name }}">{% trans 'Ansehen' %}</button>
+                <a class="time-button secondary sm" download href="{% url 'site_photos:image' site.pk photo.id %}?download=1&amp;v={{ photo.version|urlencode }}">
+                  {% if photo_language == 'ru' %}Скачать{% else %}Herunterladen{% endif %}
+                </a>
+              </div>
             {% endif %}
           </div>
         </article>

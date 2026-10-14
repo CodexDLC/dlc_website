@@ -14,6 +14,14 @@ class NextcloudWebDAVError(Exception):
     """Базовое исключение сетевых операций WebDAV."""
 
 
+class NextcloudUploadPermanentError(NextcloudWebDAVError):
+    """A forbidden or invalid destination must not be retried automatically."""
+
+
+class NextcloudUploadConflict(NextcloudWebDAVError):
+    """An existing remote object requires checksum proof before treating PUT as complete."""
+
+
 class NextcloudWebDAVClient:
     """Адаптер протокола WebDAV для взаимодействия с Nextcloud."""
 
@@ -64,7 +72,7 @@ class NextcloudWebDAVClient:
             current = f"{current}/{part}" if current else part
             url = self._full_url(current, is_collection=True)
             try:
-                res = requests.request("MKCOL", url, auth=self.auth, timeout=self.timeout)
+                res = requests.request("MKCOL", url, auth=self.auth, timeout=self.timeout, allow_redirects=False)
                 # 201 = Created, 405 = Method Not Allowed (already exists)
                 if res.status_code in (201, 405):
                     continue
@@ -103,9 +111,7 @@ class NextcloudWebDAVClient:
                 timeout=self.timeout,
                 allow_redirects=False,
             )
-            is_redirect = (getattr(res, "is_redirect", False) is True) or (
-                res.status_code in (301, 302, 303, 307, 308)
-            )
+            is_redirect = (getattr(res, "is_redirect", False) is True) or (res.status_code in (301, 302, 303, 307, 308))
             if is_redirect:
                 logger.warning(
                     "Nextcloud PROPFIND rejected redirect: path='{}', status={}", relative_path, res.status_code
@@ -116,14 +122,14 @@ class NextcloudWebDAVClient:
                 logger.info("Nextcloud PROPFIND folder not found: path='{}'", relative_path)
                 return []
             if res.status_code not in (200, 207):
+                if res.status_code in {401, 403}:
+                    raise NextcloudUploadPermanentError("Remote folder access was rejected")
                 logger.warning(
                     "Nextcloud PROPFIND failed: path='{}', status={}",
                     relative_path,
                     res.status_code,
                 )
-                raise NextcloudWebDAVError(
-                    f"PROPFIND failed for '{relative_path}' with HTTP status {res.status_code}"
-                )
+                raise NextcloudWebDAVError(f"PROPFIND failed for '{relative_path}' with HTTP status {res.status_code}")
 
             root = ET.fromstring(res.text)
             items = []
@@ -136,7 +142,7 @@ class NextcloudWebDAVClient:
                     continue
                 decoded = unquote(href_node.text)
                 if decoded.startswith(base_prefix):
-                    rel = decoded[len(base_prefix):]
+                    rel = decoded[len(base_prefix) :]
                 elif decoded.startswith("/remote.php/dav/files/"):
                     # Чужой или подозрительный href за пределами пространства пользователя
                     logger.warning("Nextcloud PROPFIND hostile or foreign href ignored: '{}'", decoded)
@@ -154,9 +160,7 @@ class NextcloudWebDAVClient:
                     continue
 
                 if clean_expected and not rel.startswith(clean_expected + "/"):
-                    logger.warning(
-                        "Nextcloud PROPFIND href outside requested collection ignored: '{}'", rel
-                    )
+                    logger.warning("Nextcloud PROPFIND href outside requested collection ignored: '{}'", rel)
                     continue
 
                 # Проверяем, коллекция (папка) ли это
@@ -178,13 +182,15 @@ class NextcloudWebDAVClient:
                 if not name or name in {".", ".."}:
                     continue
 
-                items.append({
-                    "relative_path": rel,
-                    "name": name,
-                    "is_directory": is_dir,
-                    "etag": etag,
-                    "modified": modified,
-                })
+                items.append(
+                    {
+                        "relative_path": rel,
+                        "name": name,
+                        "is_directory": is_dir,
+                        "etag": etag,
+                        "modified": modified,
+                    }
+                )
 
             return items
         except requests.RequestException as exc:
@@ -199,7 +205,11 @@ class NextcloudWebDAVClient:
                 res.close()
 
     def get_file(
-        self, relative_path: str, max_size: int = 25 * 1024 * 1024, *, deadline_seconds: float | None = None,
+        self,
+        relative_path: str,
+        max_size: int = 25 * 1024 * 1024,
+        *,
+        deadline_seconds: float | None = None,
     ) -> tuple[bytes, str]:
         """Безопасно скачать файл из Nextcloud без перехода по редиректам.
 
@@ -223,13 +233,9 @@ class NextcloudWebDAVClient:
                 allow_redirects=False,
                 stream=True,
             )
-            is_redirect = (getattr(res, "is_redirect", False) is True) or (
-                res.status_code in (301, 302, 303, 307, 308)
-            )
+            is_redirect = (getattr(res, "is_redirect", False) is True) or (res.status_code in (301, 302, 303, 307, 308))
             if is_redirect:
-                logger.warning(
-                    "Nextcloud GET rejected redirect: path='{}', status={}", clean, res.status_code
-                )
+                logger.warning("Nextcloud GET rejected redirect: path='{}', status={}", clean, res.status_code)
                 raise NextcloudWebDAVError(f"Redirect rejected for '{clean}': status {res.status_code}")
 
             if res.status_code != 200:
@@ -256,3 +262,33 @@ class NextcloudWebDAVClient:
         finally:
             if res is not None:
                 res.close()
+
+    def put_file(self, relative_path: str, content: bytes, *, content_type: str) -> str:
+        """Create a full image without redirects or overwriting existing remote files."""
+        clean = relative_path.strip("/")
+        if not clean or "\\" in clean or any(part in {".", ".."} for part in clean.split("/")):
+            raise NextcloudUploadPermanentError("Invalid upload destination")
+        if not content or len(content) > 20 * 1024 * 1024:
+            raise NextcloudUploadPermanentError("Invalid upload size")
+        response = None
+        try:
+            response = requests.put(
+                self._full_url(clean, is_collection=False),
+                data=content,
+                auth=self.auth,
+                headers={"Content-Type": content_type, "If-None-Match": "*"},
+                timeout=self.timeout,
+                allow_redirects=False,
+            )
+            if response.status_code in {200, 201, 204}:
+                return response.headers.get("ETag", "")[:255]
+            if response.status_code == 412:
+                raise NextcloudUploadConflict("Remote object already exists")
+            if response.status_code == 429 or response.status_code >= 500:
+                raise NextcloudWebDAVError("Temporary remote upload failure")
+            raise NextcloudUploadPermanentError("Remote upload was rejected")
+        except requests.RequestException as exc:
+            raise NextcloudWebDAVError("Remote upload network failure") from exc
+        finally:
+            if response is not None:
+                response.close()

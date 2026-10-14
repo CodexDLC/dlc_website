@@ -1,0 +1,42 @@
+{% extends "cabinet/base_cabinet.html" %}
+{% load i18n static %}
+{% block title %}{% trans 'Fotos hochladen' %} · {{ site.name }}{% endblock %}
+{% block cabinet_content %}
+{% get_current_language as photo_language %}
+<link rel="stylesheet" href="{% static 'internal_time/css/reports.css' %}">
+<link rel="stylesheet" href="{% static 'customer_portal/css/portal.css' %}">
+<div class="customer-portal-shell time-page">
+  <header class="time-heading">
+    <div>
+      <p class="time-eyebrow">{{ site.group.name }} · {{ site.name }}</p>
+      <h1>{% if photo_language == 'ru' %}Загрузить фотографии{% else %}Fotos hochladen{% endif %}</h1>
+    </div>
+    <a class="time-button secondary" href="{% if return_url %}{{ return_url }}{% else %}{% url 'projects:site_detail' site.group_id site.pk %}{% endif %}#site-photos">
+      {% if photo_language == 'ru' %}К фотографиям объекта{% else %}Zu den Standort-Fotos{% endif %}
+    </a>
+  </header>
+  {% if uploaded_photos %}
+    <section class="time-card" role="status">
+      <h2>{% if photo_language == 'ru' %}Сохранённые фотографии{% else %}Gespeicherte Fotos{% endif %}</h2>
+      <ul>{% for photo in uploaded_photos %}<li>{{ photo.original_name }}</li>{% endfor %}</ul>
+      <p class="time-hint">{% if photo_language == 'ru' %}Фотографии уже доступны в галерее. Копии отправляются в Nextcloud в фоне.{% else %}Die Fotos sind bereits in der Galerie verfügbar. Kopien werden im Hintergrund an Nextcloud gesendet.{% endif %}</p>
+    </section>
+  {% endif %}
+  {% if upload_errors %}
+    <section class="time-card" role="alert">
+      <h2>{% if photo_language == 'ru' %}Не удалось сохранить{% else %}Nicht gespeichert{% endif %}</h2>
+      <ul>{% for error in upload_errors %}<li>{{ error.name }}: {{ error.message }}</li>{% endfor %}</ul>
+      <p class="time-hint">{% if photo_language == 'ru' %}Выберите повторно только файлы из этого списка. Уже сохранённые фотографии загружать снова не нужно.{% else %}Wählen Sie nur die Dateien aus dieser Liste erneut. Bereits gespeicherte Fotos müssen nicht erneut hochgeladen werden.{% endif %}</p>
+    </section>
+  {% endif %}
+  <section class="time-card">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="time-field">{{ form.photos.label_tag }}{{ form.photos }}{{ form.photos.errors }}</div>
+      <p class="time-hint">{% if photo_language == 'ru' %}JPEG, PNG или WebP, до 20 МБ и 40 мегапикселей на фотографию. До 20 фотографий и 100 МБ за одну загрузку. Доступ имеют только участники объекта.{% else %}JPEG, PNG oder WebP, höchstens 20 MB und 40 Megapixel pro Foto. Bis zu 20 Fotos und insgesamt 100 MB pro Upload. Nur berechtigte Standort-Teilnehmer haben Zugriff.{% endif %}</p>
+      <button class="time-button" type="submit">{% if photo_language == 'ru' %}Загрузить фотографии{% else %}Fotos hochladen{% endif %}</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

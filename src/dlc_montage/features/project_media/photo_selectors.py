@@ -10,11 +10,16 @@ def get_site_photo_summary(site, *, include_photos=True):
     photos = SitePhoto.objects.filter(site=site)
     state = SitePhotoSyncState.objects.filter(site=site).first()
     count = photos.count()
+    mirror_pending = photos.filter(mirror_status__in=["queued", "processing"]).exists()
+    sync_status = state.status if state else "pending"
+    if mirror_pending and sync_status not in {"queued", "processing"}:
+        sync_status = "mirroring"
     successful = state is not None and state.status in {"ok", "partial"}
     status = "ok" if count or successful else (state.status if state else "pending")
     return {
         "status": status,
-        "sync_status": state.status if state else "pending",
+        "sync_status": sync_status,
+        "mirror_pending": mirror_pending,
         "is_available": bool(count or successful),
         "has_photos": count > 0,
         "count": count,
@@ -25,8 +30,10 @@ def get_site_photo_summary(site, *, include_photos=True):
                 "is_previewable": True,
                 "extension": Path(photo.original_name).suffix.lower(),
                 "version": photo.checksum[:16],
+                "has_thumbnail": bool(photo.thumbnail),
+                "mirror_status": photo.mirror_status,
             }
-            for photo in photos.only("pk", "original_name", "checksum")
+            for photo in photos.only("pk", "original_name", "checksum", "thumbnail", "mirror_status")
         ]
         if include_photos
         else [],

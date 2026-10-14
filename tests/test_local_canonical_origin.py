@@ -15,5 +15,5 @@ def test_local_preprod_has_one_public_http_origin():
 
 def test_nginx_preserves_browser_host_port():
     config = (ROOT / "deploy/nginx/nginx.conf").read_text(encoding="utf-8")
-    assert config.count("proxy_set_header Host $http_host;") == 2
+    assert config.count("proxy_set_header Host $http_host;") == 3
     assert "proxy_set_header Host $host;" not in config
