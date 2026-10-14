@@ -140,11 +140,10 @@ def attach_site_plan_progress(sites: Sequence[AcObject]) -> None:
         completed = sum(
             1
             for item in items
-            if item.pk in totals
-            and PlannedWorkRow(
+            if PlannedWorkRow(
                 item=item,
-                completed_quantity=totals[item.pk].completed_quantity,
-                actual_person_hours=totals[item.pk].actual_person_hours,
+                completed_quantity=totals[item.pk].completed_quantity if item.pk in totals else Decimal("0"),
+                actual_person_hours=totals[item.pk].actual_person_hours if item.pk in totals else Decimal("0"),
             ).is_completed
         )
         site.plan_progress = f"{completed}/{len(items)}"

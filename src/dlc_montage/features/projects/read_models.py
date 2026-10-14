@@ -52,6 +52,11 @@ class PlannedWorkRow:
     actual_person_hours: Decimal
     name: str = ""
 
+    def __post_init__(self):
+        """Уточнение плана не прибавляет повторно уже учтённый объём отчётов."""
+        clarified = self.item.clarified_completed_quantity or ZERO
+        object.__setattr__(self, "completed_quantity", max(self.completed_quantity, clarified))
+
     @property
     def remaining_quantity(self):
         return max(self.item.planned_quantity - self.completed_quantity, ZERO)

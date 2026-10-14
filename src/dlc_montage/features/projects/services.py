@@ -355,3 +355,31 @@ def apply_typical_site_plan(*, actor, site, config: TypicalPlanConfig, selected)
             )
         )
     return tuple(items)
+
+@transaction.atomic
+def clarify_completed_work_item(*, actor, item, quantity, reason):
+    """Зафиксировать явное уточнение выполненного объёма без изменения отчётов."""
+    if not is_manager(actor):
+        raise PermissionDenied
+    item = SiteWorkItem.objects.select_for_update().get(pk=item.pk)
+    if not item.is_required or not reason.strip():
+        raise ValidationError('A required plan item and an explicit clarification reason are necessary.')
+    try:
+        quantity = Decimal(str(quantity))
+    except (InvalidOperation, ValueError) as exc:
+        raise ValidationError('Invalid clarified physical quantity.') from exc
+    if not quantity.is_finite() or quantity <= 0:
+        raise ValidationError('The clarified physical quantity must be positive.')
+    before = work_item_snapshot(item)
+    item.clarified_completed_quantity = quantity
+    item.completion_clarification_reason = reason.strip()
+    item.completion_confirmed_at = timezone.now()
+    item.completion_confirmed_by = actor
+    item.full_clean()
+    item.save(update_fields=['clarified_completed_quantity', 'completion_clarification_reason',
+                             'completion_confirmed_at', 'completion_confirmed_by'])
+    after = work_item_snapshot(item)
+    if before != after:
+        record_event(actor=actor, action='work_completion_clarified', target=item,
+                     before=before, after=after, reason=reason.strip())
+    return item

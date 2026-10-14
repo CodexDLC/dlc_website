@@ -228,3 +228,41 @@ def test_http_status_guard_and_manager_item_controls(planned_site, client):
     ordinary = get_user_model().objects.create_user(username="readiness-viewer")
     client.force_login(ordinary)
     assert client.post(action_url, {"action": "reopen"}).status_code == 403
+
+
+def test_owner_clarification_completes_plan_without_report_or_added_hours(planned_site):
+    from features.projects.services import clarify_completed_work_item
+    manager, _, site, _, item = planned_site
+    clarify_completed_work_item(actor=manager, item=item, quantity='2', reason='Owner explicitly confirmed execution.')
+    row = site_work_plan(site).rows[0]
+    assert row.status == 'completed'
+    assert row.completed_quantity == 2
+    assert row.actual_person_hours == 0
+    assert site.mbg_reports.count() == 0
+    attach_site_plan_progress([site])
+    assert site.plan_progress == '1/1'
+    item.planned_quantity = Decimal('3')
+    item.save(update_fields=['planned_quantity'])
+    assert site_work_plan(site).rows[0].status == 'partial'
+
+
+def test_clarification_does_not_double_count_accepted_quantity(planned_site):
+    from features.projects.services import clarify_completed_work_item
+    manager, worker, site, work, item = planned_site
+    report = accept_one(manager, worker, site, work, item, delta=Decimal('2'))
+    snapshot = report.revisions.get(version=report.version).snapshot
+    clarify_completed_work_item(actor=manager, item=item, quantity='2', reason='Owner confirmed same execution.')
+    assert site_work_plan(site).rows[0].completed_quantity == 2
+    report.refresh_from_db()
+    assert report.revisions.get(version=report.version).snapshot == snapshot
+
+
+def test_clarification_requires_manager_reason_and_positive_quantity(planned_site):
+    from features.projects.services import clarify_completed_work_item
+    manager, _, _, _, item = planned_site
+    ordinary = get_user_model().objects.create_user(username='clarification-viewer')
+    with pytest.raises(PermissionDenied):
+        clarify_completed_work_item(actor=ordinary, item=item, quantity='2', reason='No permission.')
+    for quantity, reason in [('2', ''), ('0', 'Explicit'), ('NaN', 'Explicit')]:
+        with pytest.raises(ValidationError):
+            clarify_completed_work_item(actor=manager, item=item, quantity=quantity, reason=reason)

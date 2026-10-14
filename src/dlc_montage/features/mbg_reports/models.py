@@ -101,6 +101,23 @@ class MbgReportRevision(models.Model):
         constraints: ClassVar = [models.UniqueConstraint(fields=["report", "version"], name="unique_mbg_revision")]
 
 
+class PlanEntryReconciliation(models.Model):
+    """Аудируемая расшифровка строки только для прогресса плана, вне принятого отчёта."""
+
+    revision = models.ForeignKey(MbgReportRevision, on_delete=models.PROTECT, related_name="plan_reconciliations")
+    entry_index = models.PositiveIntegerField()
+    allocations = models.JSONField(default=list)
+    actor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    reason = models.TextField()
+    history = models.JSONField(default=list)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints: ClassVar = [
+            models.UniqueConstraint(fields=["revision", "entry_index"], name="unique_plan_entry_reconciliation")
+        ]
+
+
 def export_path(instance, filename):
     return f"reports/mbg/weekly/{instance.year}/KW{instance.week:02}/{uuid4().hex}.xlsx"
 

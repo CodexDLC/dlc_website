@@ -136,3 +136,24 @@ def test_invalid_quantity_keeps_reviewed_selection_and_value(empty_site, client)
     assert b'value="0"' in response.content
     assert b'name="include-uv-mount" checked' in response.content
     assert SiteWorkItem.objects.filter(site=site).count() == 0
+
+@pytest.mark.parametrize('capacity', [25, 30])
+def test_single_inverter_small_uv_has_no_control_cable(capacity):
+    config = TypicalPlanConfig(inverter_count=1, uv_capacity_kw=capacity, include_control=True)
+    with pytest.raises(ValueError, match='7x1,5'):
+        build_typical_plan(config)
+    assert not any(spec.key == 'control-line' for spec in build_typical_plan(
+        TypicalPlanConfig(inverter_count=1, uv_capacity_kw=capacity)))
+
+
+def test_two_inverter_uv_can_explicitly_include_control_cable():
+    specs = build_typical_plan(TypicalPlanConfig(inverter_count=2, uv_capacity_kw=55, include_control=True))
+    assert any(spec.key == 'control-line' for spec in specs)
+
+
+@pytest.mark.parametrize('capacity', [25, 30])
+def test_plan_form_rejects_control_for_single_inverter_small_uv(empty_site, capacity):
+    from features.projects.forms import TypicalPlanForm
+    form = TypicalPlanForm(data=form_data(inverter_count='1', uv_capacity_kw=str(capacity), include_control='on'))
+    assert not form.is_valid()
+    assert 'include_control' in form.errors

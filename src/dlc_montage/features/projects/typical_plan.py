@@ -7,6 +7,7 @@ from decimal import Decimal
 @dataclass(frozen=True)
 class TypicalPlanConfig:
     inverter_count: int = 1
+    uv_capacity_kw: int | None = None
     include_nh: bool = True
     include_nh_hv: bool = False
     wr_underconstruction: bool = False
@@ -39,6 +40,8 @@ def build_typical_plan(config: TypicalPlanConfig) -> tuple[TypicalWorkSpec, ...]
     """Создать отдельные физические позиции из выбранной конфигурации."""
     if not isinstance(config.inverter_count, int) or not 1 <= config.inverter_count <= 20:
         raise ValueError("Количество Wechselrichter должно быть от 1 до 20.")
+    if config.include_control and config.inverter_count == 1 and config.uv_capacity_kw in {25, 30}:
+        raise ValueError("Для UV-PV 25/30 кВт с одним инвертором кабель управления 7x1,5 не предусматривается.")
     specs = [
         TypicalWorkSpec("uv-mount", "Montage UV-PV", "uv-montage", with_underconstruction=config.uv_underconstruction),
         TypicalWorkSpec("uv-connect", "Anschluss UV-PV", "uv-anschluss"),

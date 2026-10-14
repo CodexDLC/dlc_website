@@ -50,6 +50,8 @@ def work_item_snapshot(item):
         "is_required": item.is_required,
         "not_required_reason": item.not_required_reason,
         "completion_confirmed": item.completion_confirmed_at is not None,
+        "clarified_completed_quantity": _plain(item.clarified_completed_quantity),
+        "completion_clarification_reason": item.completion_clarification_reason,
     }
 
 

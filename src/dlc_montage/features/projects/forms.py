@@ -4,6 +4,7 @@ from typing import ClassVar
 
 from core.forms import LocalizedFormMixin
 from django import forms
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 
 from features.internal_time.policies import is_manager
@@ -117,6 +118,11 @@ class TypicalPlanForm(LocalizedFormMixin, forms.Form):
     """Настройки предварительного типового AC-плана."""
 
     inverter_count = forms.IntegerField(label=_("Количество Wechselrichter"), min_value=1, max_value=20, initial=1)
+    uv_capacity_kw = forms.TypedChoiceField(
+        label="UV-PV (kW)",
+        choices=[("", "—"), ("25", "25"), ("30", "30"), ("55", "55")],
+        coerce=int, empty_value=None, required=False,
+    )
     include_nh = forms.BooleanField(label=_("Новый NH-Verteiler"), required=False, initial=True)
     include_nh_hv = forms.BooleanField(label=_("Кабель NH-Verteiler → HV"), required=False)
     wr_underconstruction = forms.BooleanField(label=_("Конструкция для Wechselrichter"), required=False)
@@ -162,6 +168,13 @@ class TypicalPlanForm(LocalizedFormMixin, forms.Form):
         data = super().clean()
         if data.get("include_nh_hv") and not data.get("include_nh"):
             self.add_error("include_nh_hv", _("Для кабеля NH → HV сначала выберите NH-Verteiler."))
+        if data.get("include_control") and data.get("inverter_count") == 1 and data.get("uv_capacity_kw") in {25, 30}:
+            self.add_error(
+                "include_control",
+                "Для UV-PV 25/30 кВт с одним инвертором кабель 7x1,5 не требуется."
+                if (get_language() or "").startswith("ru")
+                else "Bei UV-PV 25/30 kW mit einem Wechselrichter ist keine Steuerleitung 7x1,5 vorgesehen.",
+            )
         return data
 
     def to_config(self):

@@ -114,6 +114,10 @@
                 <tr>
                   <td>
                     <strong>{{ row.name }}</strong>
+                    {% if row.item.completion_clarification_reason %}
+                      {% get_current_language as clarification_language %}
+                      <small title="{{ row.item.completion_clarification_reason }}">{% if clarification_language == 'ru' %} · Выполнение уточнено отдельно от отчёта{% else %} · Ausführung separat zum Bericht bestätigt{% endif %}</small>
+                    {% endif %}
                     <small style="color: var(--cab-text-muted);"> · {{ row.item.work_type }}{% if row.item.route %} · {{ row.item.route }}{% endif %}{% if row.item.cable_type %} · {{ row.item.cable_type }}{% endif %}</small>
                   </td>
                   <td>{{ row.item.planned_quantity|floatformat:2 }} {% trans row.item.unit_snapshot %}</td>

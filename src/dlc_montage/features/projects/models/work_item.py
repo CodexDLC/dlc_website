@@ -22,6 +22,8 @@ class SiteWorkItem(models.Model):
     with_underconstruction = models.BooleanField(default=False)
     is_required = models.BooleanField(default=True)
     completion_confirmed_at = models.DateTimeField(null=True, blank=True)
+    clarified_completed_quantity = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    completion_clarification_reason = models.TextField(blank=True, default="")
     completion_confirmed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -42,6 +44,11 @@ class SiteWorkItem(models.Model):
     class Meta:
         ordering: ClassVar = ["site_id", "pk"]
         constraints: ClassVar = [
+            models.CheckConstraint(
+                condition=models.Q(clarified_completed_quantity__isnull=True)
+                | models.Q(clarified_completed_quantity__gt=Decimal("0")),
+                name="site_work_item_positive_clarification",
+            ),
             models.CheckConstraint(
                 condition=models.Q(planned_quantity__gt=Decimal("0")), name="site_work_item_positive_plan"
             )

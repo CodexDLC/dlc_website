@@ -5,8 +5,11 @@ from decimal import Decimal
 
 from django.db.models import F
 
+from features.projects.models import SiteWorkItem
+
 from .completion_projection import project_accepted_entries
-from .models import MbgDailyReport, MbgReportRevision
+from .models import MbgDailyReport, MbgReportRevision, PlanEntryReconciliation
+from .plan_reconciliation import reconciled_plan_snapshot
 
 
 @dataclass(frozen=True)
@@ -45,15 +48,28 @@ def accepted_work_item_progress(*, site_id, include_internal=True):
     """Считать текущие принятые снимки; старый объём оставить неразобранным."""
     reports = MbgDailyReport.objects.filter(site_id=site_id, status="accepted").order_by("work_date", "pk")
     revisions = {
-        (revision.report_id, revision.version): revision.snapshot
-        for revision in MbgReportRevision.objects.filter(
-            report__in=reports, version=F("report__version")
-        ).only("report_id", "version", "snapshot")
+        (revision.report_id, revision.version): revision
+        for revision in MbgReportRevision.objects.filter(report__in=reports, version=F("report__version"))
+        .select_related("report")
+        .only("report_id", "version", "snapshot", "report__site_id")
     }
+    mappings = {
+        (row.revision_id, row.entry_index): row
+        for row in PlanEntryReconciliation.objects.filter(revision__in=list(revisions.values()))
+    }
+    plan_items = (
+        {
+            item.pk: item
+            for item in SiteWorkItem.objects.filter(site_id=site_id).select_related("work_type", "cable_type", "route")
+        }
+        if mappings
+        else {}
+    )
     accepted = []
     excluded = []
     for report in reports:
-        snapshot = revisions.get((report.pk, report.version))
+        revision = revisions.get((report.pk, report.version))
+        snapshot = revision.snapshot if revision else None
         if not snapshot or snapshot.get("status") != "accepted":
             excluded.append(
                 ExcludedWorkReport(
@@ -63,6 +79,8 @@ def accepted_work_item_progress(*, site_id, include_internal=True):
                 )
             )
             continue
+        if mappings:
+            snapshot = reconciled_plan_snapshot(revision=revision, mappings=mappings, items=plan_items)
         accepted.append((report.pk, report.version, report.work_date, snapshot))
     projected = project_accepted_entries(accepted, include_internal=include_internal)
     items = tuple(
@@ -78,6 +96,7 @@ def accepted_work_item_progress(*, site_id, include_internal=True):
             actual_person_hours=row.actual_person_hours,
             reason="unit_mismatch" if row.kind == "unresolved_unit_mismatch" else "missing_work_item_or_delta",
         )
-        for row in projected if row.kind.startswith("unresolved")
+        for row in projected
+        if row.kind.startswith("unresolved")
     )
     return SiteWorkProgress(items=items, unresolved_entries=unresolved, excluded_reports=tuple(excluded))
