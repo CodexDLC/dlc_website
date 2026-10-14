@@ -1,4 +1,4 @@
-"""Planned work needs explicit, evidence-backed readiness decisions."""
+"""Accepted physical quantities close planned work independently of customer review."""
 
 from datetime import time
 from decimal import Decimal
@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import reverse
 from django.utils import timezone
+from features.customer_portal.selectors import attach_site_plan_progress
 from features.mbg_reports.services import review_report, save_report
 from features.projects.models import AcObject, ProjectGroup
 from features.projects.read_models import site_work_plan
@@ -42,6 +43,7 @@ def accept_one(manager, worker, site, work, item, *, delta=Decimal("1")):
         }],
     )
     review_report(actor=manager, report_id=report.pk, version=report.version, decision="accept")
+    report.refresh_from_db()
     return report
 
 
@@ -62,7 +64,6 @@ def test_explicit_completion_and_plan_guard(planned_site):
     with pytest.raises(ValidationError):
         set_work_item_lifecycle(actor=manager, item=item, action="confirm")
     replan(manager, site, work, item, 1)
-    set_work_item_lifecycle(actor=manager, item=item, action="confirm")
     assert site_work_plan(site).rows[0].status == "completed"
     assert site_work_plan(site).is_ready is True
     set_site_status(actor=manager, site=site, status="completed")
@@ -77,7 +78,6 @@ def test_readiness_rechecks_plan_and_accepted_report(planned_site):
     manager, worker, site, work, item = planned_site
     report = accept_one(manager, worker, site, work, item)
     replan(manager, site, work, item, 1)
-    set_work_item_lifecycle(actor=manager, item=item, action="confirm")
     replan(manager, site, work, item, 2)
     assert site_work_plan(site).is_ready is False
     replan(manager, site, work, item, 1)
@@ -92,6 +92,95 @@ def test_zero_delta_with_accepted_hours_is_partial_not_complete(planned_site):
     assert site_work_plan(site).rows[0].status == "partial"
     assert site_work_plan(site).rows[0].remaining_quantity == Decimal("2")
     assert site_work_plan(site).is_ready is False
+
+
+def test_full_accepted_quantity_closes_without_manual_or_customer_confirmation(planned_site):
+    manager, worker, site, work, item = planned_site
+    accept_one(manager, worker, site, work, item, delta=Decimal("2"))
+    item.refresh_from_db()
+    assert item.completion_confirmed_at is None
+    assert site_work_plan(site).rows[0].status == "completed"
+    assert site_work_plan(site).is_ready is True
+    attach_site_plan_progress([site])
+    assert site.plan_progress == "1/1"
+    assert site.plan_progress_percent == 100
+    assert not hasattr(site, "customer_review")
+
+
+def test_auto_completion_reopens_after_plan_increase_or_report_revocation(planned_site):
+    manager, worker, site, work, item = planned_site
+    report = accept_one(manager, worker, site, work, item, delta=Decimal("2"))
+    replan(manager, site, work, item, 3)
+    assert site_work_plan(site).rows[0].status == "partial"
+    attach_site_plan_progress([site])
+    assert site.plan_progress == "0/1"
+    replan(manager, site, work, item, 2)
+    assert site_work_plan(site).rows[0].status == "completed"
+    report.status = "returned"
+    report.save(update_fields=["status"])
+    assert site_work_plan(site).rows[0].status == "not_started"
+    attach_site_plan_progress([site])
+    assert site.plan_progress == "0/1"
+
+
+def test_obsolete_accepted_snapshot_does_not_close_current_report(planned_site):
+    manager, worker, site, work, item = planned_site
+    report = accept_one(manager, worker, site, work, item, delta=Decimal("2"))
+    report.version += 1
+    report.save(update_fields=["version"])
+    overview = site_work_plan(site)
+    assert overview.rows[0].status == "not_started"
+    assert overview.excluded_report_count == 1
+    assert overview.is_ready is False
+    attach_site_plan_progress([site])
+    assert site.plan_progress == "0/1"
+
+
+@pytest.mark.parametrize("status", ["draft", "submitted"])
+def test_unaccepted_report_does_not_close_planned_work(planned_site, status):
+    manager, worker, site, work, item = planned_site
+    report = accept_one(manager, worker, site, work, item, delta=Decimal("2"))
+    report.status = status
+    report.save(update_fields=["status"])
+    assert site_work_plan(site).rows[0].status == "not_started"
+    attach_site_plan_progress([site])
+    assert site.plan_progress == "0/1"
+
+
+def test_missing_physical_delta_cannot_close_work_from_accepted_hours(planned_site):
+    manager, worker, site, work, item = planned_site
+    report = accept_one(manager, worker, site, work, item, delta=Decimal("2"))
+    revision = report.revisions.get(version=report.version)
+    revision.snapshot["entries"][0]["completed_quantity"] = None
+    revision.save(update_fields=["snapshot"])
+    overview = site_work_plan(site)
+    assert overview.rows[0].status == "not_started"
+    assert overview.unresolved_count == 1
+    attach_site_plan_progress([site])
+    assert site.plan_progress == "0/1"
+
+
+def test_customer_progress_excludes_internal_only_accepted_work(planned_site):
+    manager, worker, site, work, item = planned_site
+    report = accept_one(manager, worker, site, work, item, delta=Decimal("2"))
+    revision = report.revisions.get(version=report.version)
+    revision.snapshot["entries"][0]["internal_only"] = True
+    revision.save(update_fields=["snapshot"])
+    assert site_work_plan(site).rows[0].status == "completed"
+    assert site_work_plan(site, include_internal=False).rows[0].status == "not_started"
+    attach_site_plan_progress([site])
+    assert site.plan_progress == "0/1"
+
+
+def test_zero_plan_never_closes_from_hours_or_no_evidence(planned_site):
+    _manager, _worker, site, _work, item = planned_site
+    from features.projects.read_models import PlannedWorkRow
+
+    item.planned_quantity = Decimal("0")
+    assert PlannedWorkRow(item, Decimal("0"), Decimal("0")).status == "not_started"
+    assert PlannedWorkRow(item, Decimal("0"), Decimal("1")).status == "partial"
+    attach_site_plan_progress([site])
+    assert site.plan_progress == "0/1"
 
 
 def test_not_required_reason_permissions_and_legacy_no_plan(planned_site):

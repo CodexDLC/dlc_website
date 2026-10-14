@@ -13,7 +13,7 @@ from django.db.models import Count, F, Max, Q
 from features.internal_time.policies import is_manager
 from features.mbg_reports.models import MbgDailyReport, MbgReportRevision
 from features.projects.models import AcObject, ProjectGroup
-from features.projects.read_models import site_work_plan
+from features.projects.read_models import PlannedWorkRow, site_work_plan
 from features.work_catalog.localization import WorkNameResolver
 from features.work_catalog.models import WorkType
 
@@ -140,9 +140,12 @@ def attach_site_plan_progress(sites: Sequence[AcObject]) -> None:
         completed = sum(
             1
             for item in items
-            if item.completion_confirmed_at
-            and item.pk in totals
-            and totals[item.pk].completed_quantity >= item.planned_quantity
+            if item.pk in totals
+            and PlannedWorkRow(
+                item=item,
+                completed_quantity=totals[item.pk].completed_quantity,
+                actual_person_hours=totals[item.pk].actual_person_hours,
+            ).is_completed
         )
         site.plan_progress = f"{completed}/{len(items)}"
         site.plan_progress_percent = round(completed / len(items) * 100) if items else 0

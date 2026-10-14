@@ -80,7 +80,8 @@
               <span class="cust-badge">{% trans 'P/Nr:' %} {{ site.project_number }}</span>
             {% endif %}
             {% if site.plan_progress %}
-              <span class="cust-badge cust-badge--progress" title="{% trans 'Принятый план' %}">📋 {{ site.plan_progress }}</span>
+              {% get_current_language as plan_language %}
+              <span class="cust-badge cust-badge--progress" title="{% if plan_language == 'ru' %}Завершённые работы по принятым отчётам / обязательные работы плана{% else %}Abgeschlossene Arbeiten laut freigegebenen Tagesberichten / Pflichtpositionen im Plan{% endif %}">📋 {{ site.plan_progress }}</span>
             {% endif %}
             {% if site.cached_photo_summary %}
               {% if site.cached_photo_summary.status == 'ok' %}

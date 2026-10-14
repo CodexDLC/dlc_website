@@ -136,15 +136,12 @@
                     <td>
                       <div class="time-inline" style="gap: 6px; flex-wrap: wrap;">
                         <a class="time-button quiet sm" href="{% url 'projects:work_item_edit' group.pk site.pk row.item.pk %}">{% trans "Редактировать" %}</a>
+                        {% if row.status == "not_required" %}
                         <form method="post" action="{% url 'projects:work_item_lifecycle' group.pk site.pk row.item.pk %}" style="margin: 0;">
                           {% csrf_token %}
-                          {% if row.status != "completed" and row.status != "not_required" %}
-                            <button class="time-button secondary sm" type="submit" name="action" value="confirm" {% if row.remaining_quantity %}disabled{% endif %}>{% trans "Подтвердить" %}</button>
-                          {% endif %}
-                          {% if row.status == "completed" or row.status == "not_required" %}
                             <button class="time-button secondary sm" type="submit" name="action" value="reopen">{% trans "Открыть" %}</button>
-                          {% endif %}
                         </form>
+                        {% endif %}
                         {% if row.status != "not_required" %}
                           <form method="post" action="{% url 'projects:work_item_lifecycle' group.pk site.pk row.item.pk %}" class="time-inline" style="margin: 0; gap: 4px;">
                             {% csrf_token %}

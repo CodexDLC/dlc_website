@@ -57,10 +57,15 @@ class PlannedWorkRow:
         return max(self.item.planned_quantity - self.completed_quantity, ZERO)
 
     @property
+    def is_completed(self):
+        """Полный положительный план закрывается принятым физическим объёмом."""
+        return self.item.planned_quantity > ZERO and self.completed_quantity >= self.item.planned_quantity
+
+    @property
     def status(self):
         if not self.item.is_required:
             return "not_required"
-        if self.item.completion_confirmed_at and self.completed_quantity >= self.item.planned_quantity:
+        if self.is_completed:
             return "completed"
         return "partial" if self.completed_quantity > ZERO or self.actual_person_hours > ZERO else "not_started"
 
