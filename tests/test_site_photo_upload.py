@@ -165,6 +165,34 @@ def test_mirror_full_only_and_inbound_listing_does_not_duplicate(setup_upload):
     assert len(source.files) == 1
 
 
+def test_removed_remote_folder_is_not_recreated_until_a_new_upload(setup_upload, monkeypatch):
+    _, site, storage, data = setup_upload
+    first = upload_one(setup_upload)
+    source = MirrorSource(site)
+    source.ensure_folder = Mock(return_value=True)
+    monkeypatch.setattr("features.project_media.photo_uploads.NextcloudWebDAVClient", lambda **kwargs: source)
+    assert process_pending_photo_mirrors() == 1
+    first.refresh_from_db()
+    assert first.mirror_status == "ok"
+    source.files.clear()  # Customer takes the files and removes the remote folder.
+    source.ensure_folder.reset_mock()
+
+    assert sync_site_photos(site, client=source, force=True).synced == 0
+    assert process_pending_photo_mirrors() == 0
+    source.ensure_folder.assert_not_called()
+    assert storage.open(first.image.name).read() == data
+    assert storage.exists(first.thumbnail.name)
+
+    second = upload_one(setup_upload)  # A new upload explicitly allows folder creation.
+    source.ensure_folder.assert_not_called()
+    assert process_pending_photo_mirrors() == 1
+    source.ensure_folder.assert_called_once_with(source.folder)
+    second.refresh_from_db()
+    assert second.mirror_status == "ok"
+    assert source.files == {second.source_path: data}
+    assert SitePhoto.objects.count() == 2
+
+
 def test_worker_failure_preserves_s3_and_has_bounded_retries(setup_upload, monkeypatch):
     _, site, storage, data = setup_upload
     photo = upload_one(setup_upload)

@@ -210,3 +210,15 @@ def test_network_failure_does_not_break_db_save(mock_request, manager_user, proj
     site = save_object(actor=manager_user, group=project_group, data=data)
     assert site.pk is not None
     assert AcObject.objects.filter(pk=site.pk).exists()
+
+
+@pytest.mark.django_db(transaction=True)
+def test_editing_existing_records_does_not_recreate_nextcloud_folders(manager_user, project_group, ac_site):
+    with patch("features.projects.services.ensure_group_folders") as group_create, patch(
+        "features.projects.services.ensure_site_folders"
+    ) as site_create:
+        save_group(actor=manager_user, group_id=project_group.pk, data={"has_dc": True})
+        save_object(actor=manager_user, group=project_group, object_id=ac_site.pk,
+                    data={"project_number": "2026-1039"})
+    group_create.assert_not_called()
+    site_create.assert_not_called()

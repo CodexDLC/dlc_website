@@ -50,7 +50,8 @@ def save_group(*, actor, data, group_id=None):
         record_event(actor=actor, action=action, target=group, before=before, after=after)
         if previous_client is not None and previous_client != group.client:
             record_event(actor=actor, action=action, target=group, before=before, after=after, client=previous_client)
-    transaction.on_commit(lambda: ensure_group_folders(group))
+    if not group_id:
+        transaction.on_commit(lambda: ensure_group_folders(group))
     return group
 
 
@@ -82,7 +83,8 @@ def save_object(*, actor, group, data, object_id=None):
     if data.get("status") == "completed":
         _submit_completed_site_for_review(actor=actor, site=obj)
     synchronize_ac_progress(group_id=group.pk)
-    transaction.on_commit(lambda: ensure_site_folders(obj))
+    if not object_id:
+        transaction.on_commit(lambda: ensure_site_folders(obj))
     return obj
 
 
