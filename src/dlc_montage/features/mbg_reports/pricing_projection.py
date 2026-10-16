@@ -27,6 +27,8 @@ class PriceResult:
 
 def price_completion_row(row: CompletionRow) -> PriceResult:
     """Вернуть финансовую оценку строки с нулевыми ставками по утверждённому регламенту."""
+    if row.kind == "photo_package":
+        return PriceResult("free", Decimal("0.00"), Decimal("0.00"))
     if row.kind == "hourly" and all(source["calculation_rule"] == "zero" for source in row.sources):
         return PriceResult("free", Decimal("0.00"), Decimal("0.00"))
     if row.kind == "flat" and all(source["work_type_code"] in AGREED_FLAT_RATES for source in row.sources):

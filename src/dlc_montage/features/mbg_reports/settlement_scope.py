@@ -9,7 +9,7 @@ from .reporting_dto import AcceptedReportingDataset
 
 def is_settlement_entry(*, internal_only=False, is_break=False, work_type_code="") -> bool:
     """Require explicit external scope and exclude all supported break markers."""
-    return not internal_only and not is_break and work_type_code not in {"mittagspause", "pause"}
+    return not internal_only and not is_break and work_type_code not in {"mittagspause", "pause", "freiraeumen"}
 
 
 def project_settlement_snapshots(snapshots) -> list[dict]:
@@ -19,7 +19,8 @@ def project_settlement_snapshots(snapshots) -> list[dict]:
         entries = [
             entry
             for entry in snapshot.get("entries", [])
-            if is_settlement_entry(
+            if entry.get("work_type_code") != "photo-documentation"
+            and is_settlement_entry(
                 internal_only=entry.get("internal_only", False),
                 is_break=entry.get("is_break", False),
                 work_type_code=entry.get("work_type_code", ""),
@@ -42,6 +43,7 @@ def project_settlement_dataset(dataset: AcceptedReportingDataset) -> AcceptedRep
     def project_summary(summary):
         days = []
         allowed_sources = set()
+        photo_seen = False
         for day in summary.day_facts:
             entries = tuple(
                 entry
@@ -52,9 +54,26 @@ def project_settlement_dataset(dataset: AcceptedReportingDataset) -> AcceptedRep
                     work_type_code=entry.work_type_code,
                 )
             )
+            allowed_sources.update((day.report_id, day.version, entry.entry_index) for entry in entries)
+            external_entries = []
+            for entry in entries:
+                if entry.work_type_code == "photo-documentation":
+                    if photo_seen:
+                        continue
+                    photo_seen = True
+                    entry = replace(
+                        entry,
+                        unit="psch.",
+                        quantity=Decimal("1"),
+                        actual_person_hours=Decimal("0"),
+                        starts_at="",
+                        ends_at="",
+                        amount=Decimal("0"),
+                    )
+                external_entries.append(entry)
+            entries = tuple(external_entries)
             if not entries:
                 continue
-            allowed_sources.update((day.report_id, day.version, entry.entry_index) for entry in entries)
             days.append(
                 replace(
                     day,
@@ -76,7 +95,7 @@ def project_settlement_dataset(dataset: AcceptedReportingDataset) -> AcceptedRep
                 row
                 for row in summary.position_rows
                 if row.sources
-                and all(
+                and (any if row.code == "photo-documentation" else all)(
                     (source["report_id"], source["report_version"], source["entry_index"]) in allowed_sources
                     for source in row.sources
                 )

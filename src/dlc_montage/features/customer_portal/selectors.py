@@ -287,15 +287,9 @@ def works_journal_days(
 
     for report, snapshot in batch.items:
         sites_by_id[report.site_id] = report.site
-        valid_rows = sum(
-            1
-            for entry in snapshot.get("entries", [])
-            if not (
-                entry.get("is_break")
-                or entry.get("work_type_code") == "mittagspause"
-                or entry.get("internal_only", False)
-            )
-        )
+        valid_rows = len(project_customer_entries([
+            (report.pk, report.version, report.work_date, snapshot)
+        ]))
         site_counts_by_date[report.work_date][report.site_id] += valid_rows
 
     day_groups = []

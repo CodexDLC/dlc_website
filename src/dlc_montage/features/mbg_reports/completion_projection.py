@@ -40,11 +40,14 @@ def project_accepted_entries(accepted_snapshots, include_internal=False):
     hourly = {}
     flat_entries = {}
     unresolved = []
+    photo_sources = {}
     for report_id, report_version, work_date, snapshot in accepted_snapshots:
         for index, entry in enumerate(snapshot.get("entries", [])):
             if entry.get("is_break") or entry.get("work_type_code") in {"mittagspause", "pause"}:
                 continue
-            if not include_internal and entry.get("internal_only", False):
+            if not include_internal and (
+                entry.get("internal_only", False) or entry.get("work_type_code") == "freiraeumen"
+            ):
                 continue
             hours = Decimal(str(entry.get("actual_person_hours", "0")))
             unit = entry.get("unit", "")
@@ -71,6 +74,17 @@ def project_accepted_entries(accepted_snapshots, include_internal=False):
                 "work_item_id": entry.get("work_item_id"),
                 "completed_quantity": entry.get("completed_quantity"),
             }
+            if not include_internal and source["work_type_code"] == "photo-documentation":
+                # A documentation package belongs to a site, not a worker/day/time chunk.
+                clean_source = {
+                    k: v
+                    for k, v in source.items()
+                    if k not in {"actual_person_hours", "normative_person_hours", "recorded_quantity"}
+                }
+                clean_source["unit"] = "psch."
+                clean_source["completed_quantity"] = "1"
+                photo_sources.setdefault(snapshot.get("site_id"), []).append(clean_source)
+                continue
             if entry.get("calculation_rule") in {"actual", "zero"} or unit in {"Std.", "hour"}:
                 hourly_name = _hourly_name(entry)
                 key = (source["work_type_code"], hourly_name, "Std.", route, cable_type)
@@ -95,24 +109,49 @@ def project_accepted_entries(accepted_snapshots, include_internal=False):
             else:
                 linked.setdefault(entry["work_item_id"], []).append((hours, source))
 
-    rows = []
+    rows = [
+        CompletionRow(
+            "photo_package",
+            None,
+            sources[0]["description"],
+            "psch.",
+            Decimal("1"),
+            Decimal("0"),
+            "",
+            "",
+            tuple(sources),
+        )
+        for sources in photo_sources.values()
+    ]
     for item_id, contributions in linked.items():
         units = {source["unit"] for _, source in contributions}
         if len(units) != 1:
             for hours, source in contributions:
                 unresolved.append(
                     CompletionRow(
-                        "unresolved_unit_mismatch", item_id, source["description"], source["unit"], None,
-                        hours, source["route"], source["cable_type"], (source,),
+                        "unresolved_unit_mismatch",
+                        item_id,
+                        source["description"],
+                        source["unit"],
+                        None,
+                        hours,
+                        source["route"],
+                        source["cable_type"],
+                        (source,),
                     )
                 )
             continue
         latest = contributions[-1][1]
         rows.append(
             CompletionRow(
-                "linked", item_id, latest["description"], latest["unit"],
+                "linked",
+                item_id,
+                latest["description"],
+                latest["unit"],
                 sum((Decimal(source["completed_quantity"]) for _, source in contributions), Decimal("0")),
-                sum((hours for hours, _ in contributions), Decimal("0")), latest["route"], latest["cable_type"],
+                sum((hours for hours, _ in contributions), Decimal("0")),
+                latest["route"],
+                latest["cable_type"],
                 tuple(source for _, source in contributions),
             )
         )
@@ -121,7 +160,14 @@ def project_accepted_entries(accepted_snapshots, include_internal=False):
         total_hours = sum((hours for _, hours, _ in contributions), Decimal("0"))
         rows.append(
             CompletionRow(
-                "flat", None, name, unit, total_qty, total_hours, route, cable_type,
+                "flat",
+                None,
+                name,
+                unit,
+                total_qty,
+                total_hours,
+                route,
+                cable_type,
                 tuple(source for _, _, source in contributions),
             )
         )
@@ -129,7 +175,14 @@ def project_accepted_entries(accepted_snapshots, include_internal=False):
         total_hours = sum((hours for hours, _ in contributions), Decimal("0"))
         rows.append(
             CompletionRow(
-                "hourly", None, name, unit, total_hours, total_hours, route, cable_type,
+                "hourly",
+                None,
+                name,
+                unit,
+                total_hours,
+                total_hours,
+                route,
+                cable_type,
                 tuple(source for _, source in contributions),
             )
         )

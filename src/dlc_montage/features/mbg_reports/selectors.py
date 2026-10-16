@@ -614,7 +614,8 @@ def site_position_summary_map(site_ids, *, include_internal=True):
                 )
             )
         performed_codes = {row.sources[0]["work_type_code"] for row in rows}
-        rows.extend(_catalog_zero_rows(performed_codes, works, active_cables))
+        visible_works = works if include_internal else [work for work in works if work.code != "freiraeumen"]
+        rows.extend(_catalog_zero_rows(performed_codes, visible_works, active_cables))
         result[site_id] = SitePositionSummary(tuple(rows), tuple(excluded[site_id]))
     return result
 

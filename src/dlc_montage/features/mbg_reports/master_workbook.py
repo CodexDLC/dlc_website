@@ -485,7 +485,7 @@ def build_master_settlement_workbook(
                 p_str = (
                     ", ".join(entry.participant_names) if entry.participant_names else ", ".join(day.workforce_names)
                 )
-                dur = float(entry.actual_person_hours)
+                dur = None if entry.work_type_code == "photo-documentation" else float(entry.actual_person_hours)
 
                 ws.cell(row_h, 1, r_kw).alignment = Alignment(horizontal="center", vertical="top")
                 ws.cell(row_h, 2, r_date_str).alignment = Alignment(horizontal="center", vertical="top")
@@ -592,6 +592,8 @@ def build_master_settlement_workbook(
                 qty_cell.alignment = Alignment(horizontal="center", vertical="top")
 
             hours_val = float(prow.actual_person_hours) if prow.actual_person_hours is not None else 0.0
+            if prow.code == "photo-documentation":
+                hours_val = None
             ws.cell(row_h, 5, hours_val).alignment = Alignment(horizontal="right", vertical="top")
             ws.cell(row_h, 5).number_format = "0.00"
 
