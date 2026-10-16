@@ -30,7 +30,9 @@ import django
 
 django.setup()
 
+from features.mbg_reports.google_sync import pad_generated_summary_rows, read_existing_summary_values
 from features.mbg_reports.reporting_selectors import load_accepted_reports_dataset
+from features.mbg_reports.settlement_scope import project_settlement_dataset
 from features.projects.models import AcObject
 from sheet_titles import assign_site_sheet_titles, match_existing_worksheet
 
@@ -54,7 +56,7 @@ def get_spreadsheet():
     return gc.open_by_key(sheet_id)
 
 
-def read_existing_payments(ws_summary, known_periods=None):
+def read_existing_payments(ws_summary, known_periods=None, *, existing_values=None):
     """Считать текущие статусы оплаты из Google Sheets, чтобы не затереть их.
 
     Возвращает словарь: (iso_year, iso_week, site_name) -> "Bezahlt" | "Offen".
@@ -63,11 +65,7 @@ def read_existing_payments(ws_summary, known_periods=None):
     если неоднозначно — выбрасывает RuntimeError до выполнения записи.
     """
     payments = {}
-    try:
-        all_vals = ws_summary.get_all_values()
-    except Exception as exc:
-        print(f"Error: Could not read existing payments from sheet: {exc}")
-        raise
+    all_vals = read_existing_summary_values(ws_summary) if existing_values is None else existing_values
 
     current_period = None
     for row in all_vals:
@@ -114,8 +112,13 @@ def sync_all(target_weeks=None):
     ws_summary = sh.worksheet("Übersicht")
 
     # Собираем актуальные данные через единый контракт принятых отчётов
-    dataset = load_accepted_reports_dataset(target_weeks=list(target_weeks))
-    existing_payments = read_existing_payments(ws_summary, known_periods=dataset.periods)
+    dataset = project_settlement_dataset(
+        load_accepted_reports_dataset(target_weeks=list(target_weeks) if target_weeks else None)
+    )
+    existing_values = read_existing_summary_values(ws_summary)
+    existing_payments = read_existing_payments(
+        ws_summary, known_periods=dataset.periods, existing_values=existing_values
+    )
     print(f"Found {len(existing_payments)} existing payment status entries in sheet.")
 
     all_sites_set = set(dataset.all_sites.keys())
@@ -296,6 +299,7 @@ def sync_all(target_weeks=None):
     )
 
     # Отправляем обновлённый массив строк на лист Übersicht в Google Sheets
+    summary_rows = pad_generated_summary_rows(summary_rows, len(existing_values))
     print(f"Updating 'Übersicht' with {len(summary_rows)} rows...")
     ws_summary.update(range_name=f"A1:J{len(summary_rows)}", values=summary_rows)
     print("Google Sheet 'Übersicht' updated successfully!")

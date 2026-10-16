@@ -11,6 +11,8 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.worksheet.page import PageMargins
 
+from .settlement_scope import project_settlement_snapshots
+
 # ==============================================================================
 # Корпоративный стиль DLC Montage (Brand Design & Palette)
 # ==============================================================================
@@ -405,7 +407,7 @@ def build_weekly_workbook(snapshot):
 def build_final_hourly_workbook(snapshots, period_start, period_end):
     """Собрать итоговый почасовой отчёт Anlage без ограничения календарной неделей."""
     grouped = defaultdict(list)
-    for snapshot in snapshots:
+    for snapshot in project_settlement_snapshots(snapshots):
         grouped[snapshot["site_id"]].append(snapshot)
     period_value = f"{period_start:%d.%m.%Y}-{period_end:%d.%m.%Y}"
     return build_weekly_workbook(

@@ -42,7 +42,7 @@ def project_accepted_entries(accepted_snapshots, include_internal=False):
     unresolved = []
     for report_id, report_version, work_date, snapshot in accepted_snapshots:
         for index, entry in enumerate(snapshot.get("entries", [])):
-            if entry.get("is_break") or entry.get("work_type_code") == "mittagspause":
+            if entry.get("is_break") or entry.get("work_type_code") in {"mittagspause", "pause"}:
                 continue
             if not include_internal and entry.get("internal_only", False):
                 continue

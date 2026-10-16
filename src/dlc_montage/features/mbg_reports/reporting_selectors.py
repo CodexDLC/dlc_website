@@ -166,7 +166,7 @@ def load_accepted_reports_dataset(
         day_hours = Decimal("0.00")
         day_material = Decimal("0.00")
 
-        for entry_dict in snapshot.get("entries") or []:
+        for entry_index, entry_dict in enumerate(snapshot.get("entries") or []):
             if not include_internal and entry_dict.get("internal_only", False):
                 continue
             e_hours = calc_fact_hours(entry_dict, wf_count)
@@ -200,6 +200,8 @@ def load_accepted_reports_dataset(
                 work_item_id=entry_dict.get("work_item_id"),
                 route=entry_dict.get("route", ""),
                 cable_type=entry_dict.get("cable_type", ""),
+                internal_only=bool(entry_dict.get("internal_only", False)),
+                entry_index=entry_index,
             )
             entry_facts.append(entry_fact)
             day_hours += e_hours

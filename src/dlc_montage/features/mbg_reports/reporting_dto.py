@@ -26,6 +26,8 @@ class AcceptedEntryFact:
     work_item_id: int | None
     route: str
     cable_type: str
+    internal_only: bool = False
+    entry_index: int = 0
 
 
 @dataclass(frozen=True)

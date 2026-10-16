@@ -36,6 +36,7 @@ from .models import (
 )
 from .policies import can_export_reports
 from .selectors import site_position_summary_map, work_completion_projection
+from .settlement_scope import project_settlement_snapshots
 
 
 @transaction.atomic
@@ -191,12 +192,15 @@ def generate_final_hours(*, actor, group_id):
         raise ValidationError(_("Для итогового почасового отчёта все отчёты Anlage должны быть приняты."))
 
     batch = accepted_revisions.load_accepted_current_revisions(reports, strict=True)
-    snapshots = list(batch.snapshots)
+    snapshots = project_settlement_snapshots(batch.snapshots)
+    if not snapshots:
+        raise ValidationError(_("Нет предъявляемых работ для итогового отчёта."))
     if any(not snapshot["address"].strip() or not snapshot["project_number"].strip() for snapshot in snapshots):
         raise ValidationError(_("В отчётах отсутствуют адрес или P/Nr. Заполните данные Standort."))
 
-    period_start = min(report.work_date for report in reports)
-    period_end = max(report.work_date for report in reports)
+    external_dates = [date.fromisoformat(snapshot["date"]) for snapshot in snapshots]
+    period_start = min(external_dates)
+    period_end = max(external_dates)
     snapshot = {
         "group_id": group.pk,
         "group_name": group.name,

@@ -20,6 +20,7 @@ from django.utils.translation import gettext as _
 from loguru import logger
 
 from features.mbg_reports.reporting_selectors import load_accepted_reports_dataset
+from features.mbg_reports.settlement_scope import project_settlement_dataset
 from features.mbg_reports.sheet_titles import assign_site_sheet_titles, match_existing_worksheet
 from features.projects.models import AcObject
 
@@ -54,17 +55,26 @@ def get_spreadsheet(client=None, sheet_id: str | None = None):
     return gc.open_by_key(sheet_id)
 
 
-def read_existing_payments(ws_summary, known_periods=None) -> dict[tuple[int, int, str], str]:
-    """Считать текущие статусы оплаты из Google Sheets для защиты ручных отметок.
-
-    FAIL-CLOSED: при любой ошибке чтения скрипт ОБЯЗАН прерываться до выполнения какой-либо записи.
-    """
-    payments = {}
+def read_existing_summary_values(ws_summary) -> list[list[str]]:
+    """Read the generated summary once and abort before writes on failure."""
     try:
-        all_vals = ws_summary.get_all_values()
+        return ws_summary.get_all_values()
     except Exception as exc:
         logger.error("Fail-closed: Could not read existing payments from Google Sheet: {}", exc)
         raise RuntimeError(f"Fail-closed: Could not read existing payments from sheet: {exc}") from exc
+
+
+def pad_generated_summary_rows(rows, existing_row_count):
+    """Overwrite the complete previously generated A:J area, including old tails."""
+    return [list(row) + [""] * (10 - len(row)) for row in rows] + [
+        [""] * 10 for _ in range(max(0, existing_row_count - len(rows)))
+    ]
+
+
+def read_existing_payments(ws_summary, known_periods=None, *, existing_values=None) -> dict[tuple[int, int, str], str]:
+    """Preserve manual payment statuses; reading failure always aborts before writes."""
+    payments = {}
+    all_vals = read_existing_summary_values(ws_summary) if existing_values is None else existing_values
 
     current_period = None
     for row in all_vals:
@@ -119,8 +129,13 @@ def sync_master_to_google_sheets(
         target_weeks=list(target_weeks) if target_weeks else None, include_paid=True
     )
 
+    dataset = project_settlement_dataset(dataset)
+
     # Fail-closed чтение перед любыми изменениями
-    existing_payments = read_existing_payments(ws_summary, known_periods=dataset.periods)
+    existing_values = read_existing_summary_values(ws_summary)
+    existing_payments = read_existing_payments(
+        ws_summary, known_periods=dataset.periods, existing_values=existing_values
+    )
 
     all_sites_set = set(dataset.all_sites.keys())
     site_obj_map = {sid: AcObject.objects.get(pk=sid) for sid in all_sites_set}
@@ -261,19 +276,12 @@ def sync_master_to_google_sheets(
         summary_rows.append(["", sub_label, "", "", "", "", "", kw_h_sum_formula, kw_a_sum_formula, ""])
         summary_rows.append([])
 
-    formula_h = (
-        "=" + "+".join(f"H{r}" for r in all_week_total_row_indices)
-        if all_week_total_row_indices
-        else "=0"
-    )
-    formula_a = (
-        "=" + "+".join(f"I{r}" for r in all_week_total_row_indices)
-        if all_week_total_row_indices
-        else "=0"
-    )
+    formula_h = "=" + "+".join(f"H{r}" for r in all_week_total_row_indices) if all_week_total_row_indices else "=0"
+    formula_a = "=" + "+".join(f"I{r}" for r in all_week_total_row_indices) if all_week_total_row_indices else "=0"
     summary_rows.append(["", "Gesamtsumme aller Wochen", "", "", "", "", "", formula_h, formula_a, ""])
 
     # Запись в лист Übersicht
+    summary_rows = pad_generated_summary_rows(summary_rows, len(existing_values))
     ws_summary.update(summary_rows, value_input_option="USER_ENTERED")
     logger.info("Successfully updated Google Sheet Übersicht with {} rows", len(summary_rows))
 

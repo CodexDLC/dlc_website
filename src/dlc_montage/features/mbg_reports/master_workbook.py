@@ -3,7 +3,7 @@
 
 Strict rules:
 - Zero ALL financial prices/rates (transport, hourly catalog, piecework);
-- Preserves actual hours and quantities exactly;
+- Includes only customer-billable work; excludes breaks and internal-only time;
 - Zero in formulas too (no hardcoded 40 or 50);
 - Historical master retains paid sites with live status from DB;
 - Reusable service function returning openpyxl.Workbook or bytes.
@@ -18,6 +18,7 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.worksheet.datavalidation import DataValidation
 
 from features.mbg_reports.reporting_selectors import load_accepted_reports_dataset
+from features.mbg_reports.settlement_scope import project_settlement_dataset
 from features.mbg_reports.sheet_titles import assign_site_sheet_titles
 from features.projects.models import AcObject
 
@@ -80,6 +81,7 @@ def build_master_settlement_workbook(
         dataset = load_accepted_reports_dataset(
             target_weeks=list(target_weeks) if target_weeks else None, include_paid=True
         )
+    dataset = project_settlement_dataset(dataset)
     all_sites_set = set(dataset.all_sites.keys())
     site_obj_map = {sid: AcObject.objects.get(pk=sid) for sid in all_sites_set}
 
@@ -454,7 +456,7 @@ def build_master_settlement_workbook(
         # ----------------------------------------------------------------------
         ws.merge_cells("A6:H6")
         b1_title = ws["A6"]
-        b1_title.value = "1. STUNDENNACHWEIS (Erfasste Arbeitszeit nach Kalenderwochen & Tagen)"
+        b1_title.value = "1. STUNDENNACHWEIS (Abrechenbare Arbeitszeit nach Kalenderwochen & Tagen)"
         b1_title.font = Font(name=FONT_FAMILY, size=11, bold=True, color=COLOR_WHITE)
         b1_title.fill = PatternFill("solid", fgColor=COLOR_NAVY_900)
         b1_title.alignment = Alignment(horizontal="left", vertical="center", indent=1)
