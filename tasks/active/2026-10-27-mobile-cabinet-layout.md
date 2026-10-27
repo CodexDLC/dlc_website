@@ -28,7 +28,8 @@
 ## Статус
 R1–R3: implementation done; verification pass по исходникам, render и browser matrix; независимый ревизор подтвердил.
 R4: implementation done; verification pass с ограничениями fixture/runtime; независимый ревизор сверил baseline/release логи и актуальные кадры.
-R5: implementation pending; verification pending.
+R5: implementation done; verification pass, независимо проверены SSH SHA/HTTPS health/опубликованные CSS.
+Состояние задачи: checked-awaiting-acceptance.
 
 ## Реализация и проверки
 - Общий time-table--stacked/data-label: дневные/выполненные работы, планы, документы, доступы, аудит и recent projects dashboard. Числовой обзор оставлен с прокруткой.
@@ -44,3 +45,12 @@ R5: implementation pending; verification pending.
 
 
 Независимая финальная сверка до коммита: R1–R4 pass, новых блокирующих дефектов нет. Подтверждены одинаковые два прежних сбоя baseline/release и 4 дополнительных случая нижних документов/desktop (0 ошибок). Live-auth и физический телефон не проверены.
+
+## Выкладка
+- UI commit: 72126f24ecb27985b06d70b5b47743ae3f0fa353, опубликован в main и установлен на https://dlc.pinlite.dev штатным deploy_manual.ps1 из чистой копии.
+- Перед выкладкой создан /srv/dlc/backups/pre-mobile-layout-20261027T074653Z.sql с закрытыми правами.
+- SSH current SHA совпадает; web/photo-worker healthy. HTTPS /health/: status/database/cache ok.
+- HTTPS CSS reports.a15c70bb3698.css и app_cabinet.6015a8ba4339.css содержат новые правила; HTML использует хешированные static URL.
+- Независимый ревизор отдельно повторил SSH/HTTPS проверки и подтвердил R5 pass. R1–R5 проверены с указанными выше ограничениями.
+- При задаче не редактировали рабочие отчёты и финансовые данные. Общий аудит всех изменений базы не проводился.
+- Финальная запись о выкладке публикуется отдельным docs-коммитом; повторная установка приложения для изменения только MD не нужна.
