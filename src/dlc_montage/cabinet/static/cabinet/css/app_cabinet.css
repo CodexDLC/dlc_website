@@ -239,5 +239,23 @@
 }
 
 
+.conversation-page { width:100%; min-width:0; overflow-wrap:anywhere; }
+.conversation-page .flex-grow-1 { min-width:0; }
+@media (max-width:767.98px) {
+  .conversation-search,.conversation-actions { flex-wrap:wrap; }
+  .conversation-search > .flex-grow-1 { flex-basis:100%; }
+  .conversation-actions > .btn { flex:1 1 100%; min-height:44px; white-space:normal; }
+  .conversation-page .email-row { display:grid !important; grid-template-columns:32px minmax(0,1fr) auto; gap:8px !important; }
+  .email-select { grid-column:1; grid-row:1 / span 3; align-self:start; min-height:44px; display:flex; align-items:center; }
+  .email-select input { width:24px; height:24px; margin:0; }
+  .email-avatar { display:none; }
+  .conversation-page .email-sender { grid-column:2; grid-row:1; min-width:0 !important; max-width:100% !important; white-space:normal; }
+  .conversation-page .email-date { grid-column:3; grid-row:1; width:auto !important; }
+  .email-subject { grid-column:2 / -1; grid-row:2; white-space:normal; overflow-wrap:anywhere; }
+  .email-status { grid-column:2 / -1; grid-row:3; flex-wrap:wrap; }
+  .conversation-page .pagination { flex-wrap:wrap; }
+}
+
+
 
 

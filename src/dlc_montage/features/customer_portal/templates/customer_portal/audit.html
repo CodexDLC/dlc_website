@@ -11,26 +11,26 @@
 
 <section class="time-card">
   <div class="time-table-scroll">
-    <table class="time-table">
+    <table class="time-table time-table--stacked">
       <thead>
         <tr>
           <th>{% trans "Когда" %}</th>
-          <th>{% trans "Кто" %}</th>
-          <th>{% trans "Заказчик" %}</th>
-          <th>{% trans "Действие" %}</th>
-          <th>{% trans "Объект" %}</th>
-          <th>{% trans "Причина" %}</th>
+          <th class="time-table-text">{% trans "Кто" %}</th>
+          <th class="time-table-text">{% trans "Заказчик" %}</th>
+          <th class="time-table-text">{% trans "Действие" %}</th>
+          <th class="time-table-text">{% trans "Объект" %}</th>
+          <th class="time-table-text">{% trans "Причина" %}</th>
         </tr>
       </thead>
       <tbody>
         {% for event in events %}
           <tr>
-            <td>{{ event.created_at|date:"d.m.Y H:i" }}</td>
-            <td>{{ event.actor.username }}</td>
-            <td>{{ event.client.name }}</td>
-            <td>{{ event.action }}</td>
-            <td>{{ event.target_type }} #{{ event.target_id }}</td>
-            <td>{{ event.reason|default:"—" }}</td>
+            <td data-label="{% trans 'Когда' %}" class="time-table-date">{{ event.created_at|date:"d.m.Y H:i" }}</td>
+            <td data-label="{% trans 'Кто' %}">{{ event.actor.username }}</td>
+            <td data-label="{% trans 'Заказчик' %}" class="time-table-text">{{ event.client.name }}</td>
+            <td data-label="{% trans 'Действие' %}" class="time-table-text time-table-actions">{{ event.action }}</td>
+            <td data-label="{% trans 'Объект' %}" class="time-table-text">{{ event.target_type }} #{{ event.target_id }}</td>
+            <td data-label="{% trans 'Причина' %}" class="time-table-text">{{ event.reason|default:"—" }}</td>
           </tr>
         {% empty %}
           <tr>

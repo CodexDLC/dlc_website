@@ -20,12 +20,12 @@
   {% if preview_rows %}
     <h2>{% trans "Проверьте позиции перед сохранением" %}</h2>
     <p class="time-hint">{% trans "Уберите ненужные строки и измените объём в единицах каталога. Для существующего плана используйте редактор позиции." %}</p>
-    <div class="time-table-scroll"><table class="time-table">
-      <thead><tr><th>{% trans "Включить" %}</th><th>{% trans "Позиция" %}</th><th>{% trans "Плановый объём" %}</th></tr></thead>
+    <div class="time-table-scroll"><table class="time-table time-table--stacked">
+      <thead><tr><th>{% trans "Включить" %}</th><th class="time-table-text">{% trans "Позиция" %}</th><th>{% trans "Плановый объём" %}</th></tr></thead>
       <tbody>{% for row in preview_rows %}<tr>
-        <td><input type="checkbox" name="include-{{ row.spec.key }}"{% if row.selected %} checked{% endif %} aria-label="{% trans 'Включить' %} {{ row.spec.label }}"></td>
-        <td><strong>{{ row.spec.label }}</strong><small> · {{ row.work_name }}{% if row.route_name %} · {{ row.route_name }}{% endif %}{% if row.cable_name %} · {{ row.cable_name }}{% endif %}</small></td>
-        <td><input type="number" name="quantity-{{ row.spec.key }}" min="0.01" step="0.01" value="{{ row.quantity }}" required aria-label="{% trans 'Плановый объём' %} {{ row.spec.label }}"> {% trans row.unit %}</td>
+        <td data-label="{% trans 'Включить' %}" class="time-table-choice"><label class="time-table-choice-control"><input type="checkbox" name="include-{{ row.spec.key }}"{% if row.selected %} checked{% endif %} aria-label="{% trans 'Включить' %} {{ row.spec.label }}"></label></td>
+        <td data-label="{% trans 'Позиция' %}" class="time-table-text"><strong>{{ row.spec.label }}</strong><small> · {{ row.work_name }}{% if row.route_name %} · {{ row.route_name }}{% endif %}{% if row.cable_name %} · {{ row.cable_name }}{% endif %}</small></td>
+        <td data-label="{% trans 'Плановый объём' %}" class="time-table-number"><input type="number" name="quantity-{{ row.spec.key }}" min="0.01" step="0.01" value="{{ row.quantity }}" required aria-label="{% trans 'Плановый объём' %} {{ row.spec.label }}"> {% trans row.unit %}</td>
       </tr>{% endfor %}</tbody>
     </table></div>
     <button class="time-button" type="submit" name="step" value="apply">{% trans "Сохранить выбранные позиции" %}</button>

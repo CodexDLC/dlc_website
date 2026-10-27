@@ -27,24 +27,24 @@
   {% if rows %}
     <h2 style="margin-top: 24px;">{% trans "Проверьте состав и плановый объём" %}</h2>
     <div class="time-table-scroll">
-      <table class="time-table">
+      <table class="time-table time-table--stacked">
         <thead>
           <tr>
             <th>{% trans "Включить" %}</th>
-            <th>{% trans "Позиция" %}</th>
+            <th class="time-table-text">{% trans "Позиция" %}</th>
             <th>{% trans "Объём" %}</th>
           </tr>
         </thead>
         <tbody>
           {% for row in rows %}
             <tr>
-              <td><input type="checkbox" name="include-{{ row.spec.key }}"{% if row.selected %} checked{% endif %}></td>
-              <td>
+              <td data-label="{% trans 'Включить' %}" class="time-table-choice"><label class="time-table-choice-control"><input type="checkbox" aria-label="{% trans 'Включить' %} {{ row.spec.label }}" name="include-{{ row.spec.key }}"{% if row.selected %} checked{% endif %}></label></td>
+              <td data-label="{% trans 'Позиция' %}" class="time-table-text">
                 {{ row.spec.label }} · {{ row.work_name }}
                 {% if row.route_name %} · {{ row.route_name }}{% endif %}
                 {% if row.cable_name %} · {{ row.cable_name }}{% endif %}
               </td>
-              <td><input type="number" name="quantity-{{ row.spec.key }}" min="0.01" step="0.01" value="{{ row.quantity }}"> {{ row.unit }}</td>
+              <td data-label="{% trans 'Объём' %}" class="time-table-number"><input type="number" aria-label="{% trans 'Объём' %} {{ row.spec.label }}" name="quantity-{{ row.spec.key }}" min="0.01" step="0.01" value="{{ row.quantity }}"> {{ row.unit }}</td>
             </tr>
           {% endfor %}
         </tbody>

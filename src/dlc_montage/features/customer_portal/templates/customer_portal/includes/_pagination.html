@@ -15,7 +15,7 @@
       {% if p == page_obj.number %}
         <span class="active" aria-current="page">{{ p }}</span>
       {% elif p >= page_obj.number|add:"-3" and p <= page_obj.number|add:"3" %}
-        <a href="?{% if page_param_name %}{{ page_param_name }}{% else %}page{% endif %}={{ p }}{% if extra_params %}&{{ extra_params }}{% endif %}">{{ p }}</a>
+        <a class="customer-pagination-number" href="?{% if page_param_name %}{{ page_param_name }}{% else %}page{% endif %}={{ p }}{% if extra_params %}&{{ extra_params }}{% endif %}">{{ p }}</a>
       {% endif %}
     {% endfor %}
 

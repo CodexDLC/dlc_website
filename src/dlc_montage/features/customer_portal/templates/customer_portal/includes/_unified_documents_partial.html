@@ -25,26 +25,26 @@
   <section class="time-card">
     <h2>{% trans "Проектные документы (PDF)" %}</h2>
     <div class="time-table-scroll">
-      <table class="time-table">
+      <table class="time-table time-table--stacked">
         <thead>
           <tr>
-            <th>{% trans "Документ" %}</th>
+            <th class="time-table-text">{% trans "Документ" %}</th>
             <th>{% trans "Anlage" %}</th>
-            <th>{% trans "Standort" %}</th>
+            <th class="time-table-text">{% trans "Standort" %}</th>
             <th>{% trans "Загружено" %}</th>
           </tr>
         </thead>
         <tbody>
           {% for file in files_page %}
             <tr>
-              <td>
+              <td data-label="{% trans 'Документ' %}" class="time-table-text">
                 <a href="{% if file.download_url %}{{ file.download_url }}{% else %}{% url 'customer_portal:file_download' file.pk %}{% endif %}">
                   <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i> {{ file.original_name }}
                 </a>
               </td>
-              <td>{{ file.group.name }}</td>
-              <td>{{ file.site.name|default:"—" }}</td>
-              <td>{{ file.created_at|date:"d.m.Y H:i"|default:file.created_at }}</td>
+              <td data-label="{% trans 'Anlage' %}" class="time-table-text">{{ file.group.name }}</td>
+              <td data-label="{% trans 'Standort' %}" class="time-table-text">{{ file.site.name|default:"—" }}</td>
+              <td data-label="{% trans 'Загружено' %}" class="time-table-date">{{ file.created_at|date:"d.m.Y H:i"|default:file.created_at }}</td>
             </tr>
           {% empty %}
             <tr>

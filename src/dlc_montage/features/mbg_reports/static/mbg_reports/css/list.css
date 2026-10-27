@@ -189,3 +189,12 @@
   .mbg-selected-groups { grid-template-columns: 1fr; }
   .mbg-picker-submit { align-items: stretch; flex-direction: column; }
 }
+
+@media(max-width:767px) {
+ .mbg-performance-table { overflow-x:visible; }
+ .mbg-performance-row { grid-template-columns:minmax(0,1fr) minmax(0,1fr); padding:12px 18px; gap:10px; }
+ .mbg-performance-row > span { min-width:0; overflow-wrap:anywhere; }
+ .mbg-performance-row > span:first-child { grid-column:1/-1; }
+ .mbg-performance-row--head { display:none; }
+ .mbg-performance-row > span[data-label]::before { content:attr(data-label); display:block; color:var(--cab-text-muted); font-size:12px; margin-bottom:4px; }
+}

@@ -39,24 +39,24 @@
 <section class="time-card">
   <h2>{% trans "Выполненные работы · принятые итоги" %}</h2>
   <div class="time-table-scroll">
-    <table class="time-table">
+    <table class="time-table time-table--stacked">
       <thead>
         <tr>
-          <th>{% trans "Работа" %}</th>
+          <th class="time-table-text">{% trans "Работа" %}</th>
           <th>{% trans "Объём" %}</th>
-          <th>{% trans "Единица" %}</th>
+          <th class="time-table-text">{% trans "Единица" %}</th>
           {% if not is_customer_view %}<th>{% trans "Чел.-ч" %}</th>{% endif %}
-          <th>{% trans "Основание" %}</th>
+          <th class="time-table-text">{% trans "Основание" %}</th>
         </tr>
       </thead>
       <tbody>
         {% for row in completed_rows %}
           <tr>
-            <td>{{ row.name }}</td>
-            <td>{{ row.quantity|default_if_none:"не подтверждено" }}</td>
-            <td>{% trans row.unit %}</td>
-            {% if not is_customer_view %}<td>{{ row.actual_person_hours }}</td>{% endif %}
-            <td>
+            <td data-label="{% trans 'Работа' %}" class="time-table-text">{{ row.name }}</td>
+            <td data-label="{% trans 'Объём' %}" class="time-table-number">{{ row.quantity|default_if_none:"не подтверждено" }}</td>
+            <td data-label="{% trans 'Единица' %}">{% trans row.unit %}</td>
+            {% if not is_customer_view %}<td data-label="{% trans 'Чел.-ч' %}" class="time-table-number">{{ row.actual_person_hours }}</td>{% endif %}
+            <td data-label="{% trans 'Основание' %}" class="time-table-text">
               {% if row.kind == 'linked' %}
                 {% trans "Связано с планом" %}
               {% elif row.kind == 'hourly' %}
@@ -88,11 +88,11 @@
     <span class="time-hint" style="margin-left: 8px;">({% trans "нажмите, чтобы развернуть" %})</span>
   </summary>
   <div class="time-table-scroll" style="margin-top: 14px;">
-    <table class="time-table">
+    <table class="time-table time-table--stacked">
       <thead>
         <tr>
           <th>{% trans "Дата" %}</th>
-          <th>{% trans "Работа" %}</th>
+          <th class="time-table-text">{% trans "Работа" %}</th>
           <th>{% trans "Объём" %}</th>
           {% if not is_customer_view %}<th>{% trans "Чел.-ч" %}</th>{% endif %}
         </tr>
@@ -100,10 +100,10 @@
       <tbody>
         {% for row in daily_work %}
           <tr{% if chosen_date and row.work_date == chosen_date %} class="customer-row-highlighted"{% endif %}>
-            <td>{{ row.work_date }}</td>
-            <td>{{ row.description }}{% if not is_customer_view and row.internal_only %} <span class="cust-badge">{% trans "Только внутренний учёт" %}</span>{% endif %}</td>
-            <td>{{ row.quantity }} {% trans row.unit %}</td>
-            {% if not is_customer_view %}<td>{{ row.actual_person_hours }}</td>{% endif %}
+            <td data-label="{% trans 'Дата' %}" class="time-table-date">{{ row.work_date }}</td>
+            <td data-label="{% trans 'Работа' %}" class="time-table-text">{{ row.description }}{% if not is_customer_view and row.internal_only %} <span class="cust-badge">{% trans "Только внутренний учёт" %}</span>{% endif %}</td>
+            <td data-label="{% trans 'Объём' %}" class="time-table-number">{{ row.quantity }} {% trans row.unit %}</td>
+            {% if not is_customer_view %}<td data-label="{% trans 'Чел.-ч' %}" class="time-table-number">{{ row.actual_person_hours }}</td>{% endif %}
           </tr>
         {% empty %}
           <tr>

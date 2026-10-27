@@ -7,9 +7,11 @@
 {% block cabinet_content %}
 
 {% url 'cabinet:conversations_inbox' as inbox_url %}
-{% include "cabinet/includes/_page_header.html" with title="{% trans 'Новое сообщение' %}" btn_label="Назад" btn_url=inbox_url btn_icon="bi-arrow-left" %}
+{% trans "Новое сообщение" as page_title %}
+{% trans "Назад" as back_label %}
+{% include "cabinet/includes/_page_header.html" with title=page_title btn_label=back_label btn_url=inbox_url btn_icon="bi-arrow-left" %}
 
-<div class="px-3 py-4" style="max-width:1400px; min-width:600px; background-color:#f8fafc; min-height:calc(100vh - 100px); border-radius:16px;">
+<div class="conversation-page px-3 py-4" style="max-width:1400px; background-color:#f8fafc; min-height:calc(100vh - 100px); border-radius:16px;">
     <div class="card border shadow-sm" style="border-radius:var(--cab-radius); border-color:#e2e8f0 !important;">
     <div class="card-body p-4">
         <form method="post">
@@ -26,7 +28,7 @@
                 <label class="form-label fw-semibold" style="font-size:.85rem;color:var(--cab-text);">{% trans "Сообщение" %}</label>
                 <textarea name="body" rows="9" class="form-control" required style="border-radius:var(--cab-radius);font-size:.9rem;resize:vertical;"></textarea>
             </div>
-            <div class="d-flex gap-2">
+            <div class="conversation-actions d-flex gap-2">
                 <button type="submit" class="btn btn-primary px-4">
                     <span class="bi bi-send-fill me-1"></span>{% trans "Отправить" %}
                 </button>

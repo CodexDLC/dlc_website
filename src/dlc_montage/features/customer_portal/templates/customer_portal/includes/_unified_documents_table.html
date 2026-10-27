@@ -51,16 +51,19 @@
         </div>
       </div>
 
+      {% if can_manage_settlement %}
+        <label class="unified-doc-select-all"><input type="checkbox" data-select-all-sites class="unified-site-select-all" title="{% trans 'Выбрать все к оплате' %}"> {% trans "Выбрать все к оплате" %}</label>
+      {% endif %}
       <div class="time-table-scroll">
-        <table class="time-table">
+        <table class="time-table time-table--stacked">
           <thead>
             <tr>
               {% if can_manage_settlement %}
                 <th style="width:36px; text-align:center;">
-                  <input type="checkbox" data-select-all-sites class="unified-site-select-cb" title="{% trans 'Выбрать все к оплате' %}">
+                  <span class="time-table-selection-heading">{% trans "Включить" %}</span>
                 </th>
               {% endif %}
-              <th>{% trans "Standort" %}</th>
+              <th class="time-table-text">{% trans "Standort" %}</th>
               <th>{% trans "Projektnummer" %}</th>
               <th>{% trans "Status" %}</th>
               {% if can_manage_settlement %}
@@ -78,17 +81,17 @@
               {% for site in sites %}
                 <tr class="{% if site.is_paid %}is-paid-row{% endif %}">
                   {% if can_manage_settlement %}
-                    <td style="text-align:center;">
-                      <input type="checkbox" form="batch-settlement-form" name="site_ids" value="{{ site.pk }}" class="unified-site-select-cb {% if site.is_paid %}is-paid-cb{% endif %}"{% if site.is_paid %} disabled title="{% trans 'Оплаченный объект не включается в новый счёт' %}"{% endif %}>
+                    <td style="text-align:center;" data-label="{% trans 'Включить' %}" class="time-table-choice">
+                      <label class="time-table-choice-control"><input type="checkbox" form="batch-settlement-form" name="site_ids" value="{{ site.pk }}" aria-label="{% trans 'Включить' %} {{ site.name }}" class="unified-site-select-cb {% if site.is_paid %}is-paid-cb{% endif %}"{% if site.is_paid %} disabled title="{% trans 'Оплаченный объект не включается в новый счёт' %}"{% endif %}></label>
                     </td>
                   {% endif %}
-                  <td>
+                  <td data-label="{% trans 'Standort' %}" class="time-table-text">
                     <a href="{% if site.detail_url %}{{ site.detail_url }}{% else %}{% url 'customer_portal:site' site.pk %}{% endif %}">{{ site.name }}</a>
                   </td>
-                  <td>{{ site.project_number|default:"—" }}</td>
-                  <td>{% if site.status_display %}{{ site.status_display }}{% elif site.get_status_display %}{{ site.get_status_display }}{% else %}—{% endif %}</td>
+                  <td data-label="{% trans 'Projektnummer' %}">{{ site.project_number|default:"—" }}</td>
+                  <td data-label="{% trans 'Status' %}" class="time-table-text">{% if site.status_display %}{{ site.status_display }}{% elif site.get_status_display %}{{ site.get_status_display }}{% else %}—{% endif %}</td>
                   {% if can_manage_settlement %}
-                    <td>
+                    <td data-label="{% trans 'Оплата' %}">
                       {% if site.is_paid %}
                         <span class="unified-doc-badge unified-doc-badge--paid">{% trans "Оплачено" %}</span>
                         <form method="post" action="{% if site.payment_toggle_url %}{{ site.payment_toggle_url }}{% else %}{% url 'mbg_reports:site_payment_toggle' site.pk %}{% endif %}" style="display:inline-block; margin-left:4px;">
@@ -110,18 +113,18 @@
                       {% endif %}
                     </td>
                   {% endif %}
-                  <td style="text-align:center;">
+                  <td style="text-align:center;" data-label="{% trans 'Акт' %}">
                     <a class="time-button secondary sm" href="{% if site.act_url %}{{ site.act_url }}{% else %}{% url 'customer_portal:accepted_work_xlsx' site.pk %}{% endif %}">
                       {% trans "Акт" %}
                     </a>
                   </td>
-                  <td style="text-align:center;">
+                  <td style="text-align:center;" data-label="{% trans 'Табель часов' %}">
                     <a class="time-button secondary sm" href="{% if site.timesheet_url %}{{ site.timesheet_url }}{% else %}{% url 'customer_portal:site_timesheet_xlsx' site.pk %}{% endif %}">
                       {% trans "Табель часов" %}
                     </a>
                   </td>
                   {% if can_manage_settlement %}
-                    <td style="text-align:center;">
+                    <td style="text-align:center;" data-label="{% trans 'Отчёт для выставления счёта' %}">
                       {% if site.settlement_report_url %}
                         <a class="time-button secondary sm" href="{{ site.settlement_report_url }}">
                           {% trans "Отчёт для выставления счёта" %}

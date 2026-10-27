@@ -150,7 +150,7 @@
 }
 
 /* Site Table Selection Checkboxes */
-.unified-site-select-cb {
+.unified-site-select-cb, .unified-site-select-all {
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -165,4 +165,16 @@
 /* Row visibility toggling for archive/paid filter */
 tr.is-paid-row.is-filtered-out {
   display: none !important;
+}
+
+.unified-doc-select-all { display:flex !important; align-items:center; gap:8px; min-height:44px; cursor:pointer; }
+@media(max-width:767px) {
+ .unified-doc-tabs { flex-wrap:wrap; }
+ .unified-doc-tab { min-height:44px; max-width:100%; text-align:left; }
+ .unified-doc-batch-bar__controls { flex-wrap:wrap; min-width:0; width:100%; }
+ .unified-doc-batch-bar .time-button { width:100%; white-space:normal; }
+ .unified-doc-batch-bar__filter { min-height:44px; }
+ .unified-documents-content .time-table-scroll { overflow-x:visible; }
+ .unified-documents-content [data-doc-group] { min-width:0; }
+ .unified-documents-content .time-table-choice-control { min-width:44px; min-height:44px; }
 }

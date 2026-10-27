@@ -88,7 +88,7 @@
     <div class="mbg-performance-table" style="margin-top: 14px; max-height: 240px; overflow-y: auto; border: 1px solid var(--cab-border); border-radius: var(--cab-radius); padding: 8px;">
       <div class="mbg-performance-row mbg-performance-row--head"><span>{% trans "Работа" %}</span><span>{% trans "Количество" %}</span><span>{% trans "Сумма" %}</span></div>
       {% for row in rows %}
-        <div class="mbg-performance-row"><span><strong>{{ row.name }}</strong><small>{% trans row.unit %}</small></span><span>{% if row.quantity == None %}{% trans "Menge ungeklärt" %}{% else %}{{ row.quantity }}{% endif %}</span><span>{% if row.amount == None %}{% trans "Preis nicht vereinbart" %}{% else %}{{ row.amount }} €{% endif %}</span></div>
+        <div class="mbg-performance-row"><span><strong>{{ row.name }}</strong><small>{% trans row.unit %}</small></span><span data-label="{% trans 'Количество' %}">{% if row.quantity == None %}{% trans "Menge ungeklärt" %}{% else %}{{ row.quantity }}{% endif %}</span><span data-label="{% trans 'Сумма' %}">{% if row.amount == None %}{% trans "Preis nicht vereinbart" %}{% else %}{{ row.amount }} €{% endif %}</span></div>
       {% endfor %}
     </div>
     {% endif %}
@@ -278,7 +278,7 @@
 }
 .mbg-export-history-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
   gap: 12px;
   margin-top: 14px;
 }

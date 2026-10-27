@@ -134,28 +134,28 @@
         <a class="time-button quiet" href="{% url 'cabinet:workspace_page' 'ac' 'groups' %}">{% trans "Все проекты" %} ({{ total_groups }}) →</a>
       </div>
       <div class="time-table-scroll">
-        <table class="time-table">
+        <table class="time-table time-table--stacked">
           <thead>
             <tr>
-              <th>{% trans "Проект (Anlage)" %}</th>
-              <th>{% trans "Адрес" %}</th>
-              <th>{% trans "Заказчик" %}</th>
-              <th>{% trans "Статус" %}</th>
+              <th class="time-table-text">{% trans "Проект (Anlage)" %}</th>
+              <th class="time-table-text">{% trans "Адрес" %}</th>
+              <th class="time-table-text">{% trans "Заказчик" %}</th>
+              <th class="time-table-text">{% trans "Статус" %}</th>
               <th style="text-align: right;">{% trans "Действия" %}</th>
             </tr>
           </thead>
           <tbody>
             {% for group in recent_groups %}
               <tr>
-                <td>
+                <td class="time-table-text" data-label="{% trans 'Проект (Anlage)' %}">
                   <strong><a href="{% url 'projects:detail' group.pk %}">{{ group.name }}</a></strong>
                 </td>
-                <td>{{ group.address|default:"—" }}</td>
-                <td>{{ group.client.name|default:"—" }}</td>
-                <td>
+                <td class="time-table-text" data-label="{% trans 'Адрес' %}">{{ group.address|default:"—" }}</td>
+                <td class="time-table-text" data-label="{% trans 'Заказчик' %}">{{ group.client.name|default:"—" }}</td>
+                <td data-label="{% trans 'Статус' %}">
                   <span class="cust-badge cust-badge--{{ group.status }}">{{ group.get_status_display }}</span>
                 </td>
-                <td style="text-align: right;">
+                <td class="time-table-actions" data-label="{% trans 'Действия' %}">
                   <div class="time-inline" style="justify-content: flex-end; gap: 6px;">
                     <a class="time-button secondary sm" href="{% url 'projects:detail' group.pk %}">{% trans "Открыть" %}</a>
                     <a class="time-button quiet sm" href="{% url 'mbg_reports:list' %}?group={{ group.pk }}">{% trans "Отчёты" %}</a>

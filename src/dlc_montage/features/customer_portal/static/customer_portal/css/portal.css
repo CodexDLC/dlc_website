@@ -398,3 +398,11 @@
   background: var(--cab-primary-dark);
   border-color: var(--cab-primary-dark);
 }
+
+@media (max-width:700px) {
+  .customer-pagination-nav { flex-wrap:wrap; }
+  .customer-pagination-nav .customer-pagination-number { display:none; }
+  .customer-pagination-nav a,.customer-pagination-nav span { min-width:44px; min-height:44px; }
+  .customer-filter-actions,.customer-card-footer { flex-wrap:wrap; }
+  .customer-header-title,.customer-card-body { min-width:0; overflow-wrap:anywhere; }
+}

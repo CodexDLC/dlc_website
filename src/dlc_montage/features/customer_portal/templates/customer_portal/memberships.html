@@ -14,11 +14,11 @@
 
 <section class="time-card">
   <div class="time-table-scroll">
-    <table class="time-table">
+    <table class="time-table time-table--stacked">
       <thead>
         <tr>
-          <th>{% trans "Пользователь" %}</th>
-          <th>{% trans "Заказчик" %}</th>
+          <th class="time-table-text">{% trans "Пользователь" %}</th>
+          <th class="time-table-text">{% trans "Заказчик" %}</th>
           <th>{% trans "Активен" %}</th>
           <th>{% trans "Создаёт проекты" %}</th>
         </tr>
@@ -26,10 +26,10 @@
       <tbody>
         {% for membership in memberships %}
           <tr>
-            <td>{{ membership.user.username }}</td>
-            <td>{{ membership.client.name }}</td>
-            <td>{{ membership.is_active|yesno:_("Да,Нет") }}</td>
-            <td>{{ membership.can_manage_projects|yesno:_("Да,Нет") }}</td>
+            <td data-label="{% trans 'Пользователь' %}" class="time-table-text">{{ membership.user.username }}</td>
+            <td data-label="{% trans 'Заказчик' %}" class="time-table-text">{{ membership.client.name }}</td>
+            <td data-label="{% trans 'Активен' %}">{{ membership.is_active|yesno:_("Да,Нет") }}</td>
+            <td data-label="{% trans 'Создаёт проекты' %}">{{ membership.can_manage_projects|yesno:_("Да,Нет") }}</td>
           </tr>
         {% empty %}
           <tr>

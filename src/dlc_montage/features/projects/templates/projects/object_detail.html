@@ -97,22 +97,22 @@
 
       {% if work_plan.rows %}
         <div class="time-table-scroll">
-          <table class="time-table">
+          <table class="time-table time-table--stacked">
             <thead>
               <tr>
-                <th>{% trans "Позиция" %}</th>
+                <th class="time-table-text">{% trans "Позиция" %}</th>
                 <th>{% trans "План" %}</th>
                 <th>{% trans "Подтверждено" %}</th>
                 <th>{% trans "Осталось" %}</th>
-                <th>{% trans "Статус" %}</th>
+                <th class="time-table-text">{% trans "Статус" %}</th>
                 <th>{% trans "Человеко-часы" %}</th>
-                {% if manager %}<th>{% trans "Действие" %}</th>{% endif %}
+                {% if manager %}<th class="time-table-text">{% trans "Действие" %}</th>{% endif %}
               </tr>
             </thead>
             <tbody>
               {% for row in work_plan.rows %}
                 <tr>
-                  <td>
+                  <td data-label="{% trans 'Позиция' %}" class="time-table-text">
                     <strong>{{ row.name }}</strong>
                     {% if row.item.completion_clarification_reason %}
                       {% get_current_language as clarification_language %}
@@ -120,10 +120,10 @@
                     {% endif %}
                     <small style="color: var(--cab-text-muted);"> · {{ row.item.work_type }}{% if row.item.route %} · {{ row.item.route }}{% endif %}{% if row.item.cable_type %} · {{ row.item.cable_type }}{% endif %}</small>
                   </td>
-                  <td>{{ row.item.planned_quantity|floatformat:2 }} {% trans row.item.unit_snapshot %}</td>
-                  <td>{{ row.completed_quantity|floatformat:2 }} {% trans row.item.unit_snapshot %}</td>
-                  <td>{{ row.remaining_quantity|floatformat:2 }} {% trans row.item.unit_snapshot %}</td>
-                  <td>
+                  <td data-label="{% trans 'План' %}" class="time-table-number">{{ row.item.planned_quantity|floatformat:2 }} {% trans row.item.unit_snapshot %}</td>
+                  <td data-label="{% trans 'Подтверждено' %}" class="time-table-number">{{ row.completed_quantity|floatformat:2 }} {% trans row.item.unit_snapshot %}</td>
+                  <td data-label="{% trans 'Осталось' %}" class="time-table-number">{{ row.remaining_quantity|floatformat:2 }} {% trans row.item.unit_snapshot %}</td>
+                  <td data-label="{% trans 'Статус' %}" class="time-table-text">
                     {% if row.status == "completed" %}
                       <span class="cust-badge cust-badge--completed">{% trans "Завершено" %}</span>
                     {% elif row.status == "not_required" %}
@@ -135,9 +135,9 @@
                       <span class="cust-badge cust-badge--not_started">{% trans "Не начато" %}</span>
                     {% endif %}
                   </td>
-                  <td>{{ row.actual_person_hours|floatformat:2 }}</td>
+                  <td data-label="{% trans 'Человеко-часы' %}" class="time-table-number">{{ row.actual_person_hours|floatformat:2 }}</td>
                   {% if manager %}
-                    <td>
+                    <td data-label="{% trans 'Действие' %}" class="time-table-text time-table-actions">
                       <div class="time-inline" style="gap: 6px; flex-wrap: wrap;">
                         <a class="time-button quiet sm" href="{% url 'projects:work_item_edit' group.pk site.pk row.item.pk %}">{% trans "Редактировать" %}</a>
                         {% if row.status == "not_required" %}
@@ -187,7 +187,7 @@
           <table class="time-table">
             <thead>
               <tr>
-                <th>{% trans "Работа" %}</th>
+                <th class="time-table-text">{% trans "Работа" %}</th>
                 <th>{% trans "Количество" %}</th>
                 <th>{% trans "Норма, чел.-ч" %}</th>
                 <th>{% trans "Факт, чел.-ч" %}</th>

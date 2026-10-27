@@ -5,10 +5,10 @@
 {% block title %}{% trans "Inbox" %}{% endblock %}
 
 {% block cabinet_content %}
-<div class="px-3 py-4" style="max-width:1400px; min-width:600px; background-color:#f8fafc; min-height:calc(100vh - 100px); border-radius:16px;">
+<div class="conversation-page px-3 py-4" style="max-width:1400px; background-color:#f8fafc; min-height:calc(100vh - 100px); border-radius:16px;">
 
     {# ── Search bar & Check ── #}
-    <div class="d-flex align-items-center gap-3 mb-3 p-2" style="background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;">
+    <div class="conversation-search d-flex align-items-center gap-3 mb-3 p-2" style="background:#f8fafc; border-radius:12px; border:1px solid #e2e8f0;">
         <div class="flex-grow-1 position-relative">
             <span class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3" style="color:#94a3b8;"></span>
             <input type="text" class="form-control border-0 shadow-none ps-5"
@@ -66,25 +66,25 @@
         <div class="d-flex align-items-center gap-3 px-3 py-2 border-bottom email-row"
              style="background:{% if not msg.is_read %}#f8fbff{% else %}#fff{% endif %}; transition: background 0.15s; min-height: 52px;">
 
-            <div class="form-check m-0">
+            <div class="email-select form-check m-0">
                 <input class="form-check-input" type="checkbox" name="message_ids" value="{{ msg.pk }}">
             </div>
 
             {# 1. Avatar #}
-            <div style="width:32px; flex-shrink:0;">
+            <div class="email-avatar" style="width:32px; flex-shrink:0;">
                 {% include "cabinet/includes/_avatar.html" with initials=msg.sender_name|first|upper color="var(--cab-primary)" size="32px" font_size=".75rem" %}
             </div>
 
             {# 2. Sender Name #}
             <a href="{% url 'cabinet:conversations_thread' msg.pk %}"
-               class="fw-bold text-truncate text-decoration-none"
+               class="email-sender fw-bold text-truncate text-decoration-none"
                style="color:#1e293b; font-size:.88rem; min-width:140px; max-width: 180px; flex-shrink:0;">
                 {{ msg.sender_name }}
             </a>
 
             {# 3. Subject + Body Snippet #}
             <a href="{% url 'cabinet:conversations_thread' msg.pk %}"
-               class="flex-grow-1 text-truncate text-decoration-none"
+               class="email-subject flex-grow-1 text-truncate text-decoration-none"
                style="color:#475569; font-size:.85rem;">
                 <span class="fw-semibold text-dark">{{ msg.subject|default:"(Без темы)" }}</span>
                 <span class="text-muted mx-1">—</span>
@@ -92,7 +92,7 @@
             </a>
 
             {# 4. Badges (Status/Topic) #}
-            <div class="d-flex gap-1 flex-shrink-0">
+            <div class="email-status d-flex gap-1 flex-shrink-0">
                 {% if not msg.is_read %}
                     <span class="badge" style="background:#fff7ed; color:#c2410c; border:1px solid #fdba74; font-size:.7rem;">{% trans "Unread" %}</span>
                 {% endif %}
@@ -106,7 +106,7 @@
             </div>
 
             {# 5. Date #}
-            <div class="text-end" style="color:#94a3b8; font-size:.78rem; width:100px; flex-shrink:0;">
+            <div class="email-date text-end" style="color:#94a3b8; font-size:.78rem; width:100px; flex-shrink:0;">
                 {% if msg.created_at.date == today %}
                     {{ msg.created_at|date:"H:i" }}
                 {% else %}
@@ -151,7 +151,9 @@
     {% endif %}
 
     {% else %}
-        {% include "cabinet/includes/_empty_state.html" with icon="bi-inbox" title="{% trans 'Входящие пусты' %}" subtitle="{% trans 'В этом разделе нет сообщений.' %}" %}
+        {% trans "Входящие пусты" as empty_title %}
+        {% trans "В этом разделе нет сообщений." as empty_subtitle %}
+        {% include "cabinet/includes/_empty_state.html" with icon="bi-inbox" title=empty_title subtitle=empty_subtitle %}
     {% endif %}
     </form>
 

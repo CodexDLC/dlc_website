@@ -107,3 +107,29 @@
  .site-row-metrics,.site-row-actions { justify-content:flex-start; }
  .site-row-actions .time-button { flex:1; }
 }
+
+/* Explicit mobile list variant; comparison tables keep horizontal scrolling. */
+.time-table th.time-table-text, .time-table td.time-table-text { text-align:left; overflow-wrap:anywhere; }
+.time-table .time-table-date { white-space:nowrap; }
+@media(max-width:767px) {
+ .time-table-scroll { max-width:100%; min-width:0; }
+ .time-table--stacked { min-width:0; }
+ .time-table--stacked, .time-table--stacked tbody { display:block; width:100%; }
+ .time-table--stacked thead { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+ .time-table--stacked tbody > tr { display:block; padding:12px 0; border-bottom:1px solid var(--cab-border); }
+ .time-table--stacked tbody > tr:last-child { border-bottom:0; }
+ .time-table--stacked td { display:block; width:auto; min-width:0; padding:6px 0; border:0; text-align:left !important; overflow-wrap:anywhere; }
+ .time-table--stacked td[data-label]::before { content:attr(data-label); display:block; margin-bottom:3px; color:var(--cab-text-muted); font-size:12px; font-weight:600; text-align:left; }
+ .time-table--stacked td.time-table-number { text-align:right !important; }
+ .time-table--stacked .time-table-date { white-space:nowrap; }
+ .time-table--stacked td.time-table-choice { min-height:44px; display:flex; align-items:center; gap:12px; }
+ .time-table--stacked .time-table-choice::before { flex:1; margin:0; }
+ .time-page .time-table-choice-control { display:inline-flex; align-items:center; justify-content:center; min-width:44px; min-height:44px; margin:0; cursor:pointer; }
+ .time-table--stacked input[type=checkbox] { width:24px; height:24px; margin:10px; }
+ .time-table--stacked td .time-button { max-width:100%; white-space:normal; overflow-wrap:anywhere; }
+ .time-table--stacked td form { max-width:100%; }
+ .time-table--stacked td .time-inline { align-items:stretch; }
+ .time-table--stacked td input:not([type=checkbox]):not([type=hidden]), .time-table--stacked td select { min-width:0; max-width:100%; }
+ .time-table--stacked .time-table-actions .time-inline { flex-direction:column; }
+ .time-table--stacked .time-table-actions .time-button { width:100%; }
+}
