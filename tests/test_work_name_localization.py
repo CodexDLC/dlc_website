@@ -45,8 +45,8 @@ def test_report_and_review_names_use_database_language_without_changing_sources(
     with override("de"):
         assert accepted_completion_rows(site)[0].name == "Eigene Arbeit"
         assert review_work_snapshot(site) == ru_snapshot
-    assert ru_snapshot[0]["name_ru"] == "Отдельная работа"
-    assert ru_snapshot[0]["sources"][0]["description"] == "Eigene Arbeit"
+    assert ru_snapshot[0]["name_ru"] == "Монтаж и подключение UV-PV"
+    assert all("description" not in source for row in ru_snapshot for source in row["sources"])
     assert accepted_snapshot_digest(site) == digest
     revision.refresh_from_db()
     assert revision.snapshot == original
@@ -109,7 +109,9 @@ def test_historical_review_read_keeps_decisions_and_original_snapshot(status):
         original="Eigene Arbeit", name_de="Eigene Arbeit", name_ru="Отдельная работа"
     )
     with override("ru"):
-        assert customer_site_detail(site).review_rows[0]["name"] == "Отдельная работа"
+        detail = customer_site_detail(site)
+        assert detail.review_legacy and detail.review_rows[0]["name"] == "Монтаж и подключение UV-PV"
+        assert "decision" not in detail.review_rows[0]
     review.refresh_from_db()
     assert review.work_snapshot == original
     assert review.item_decisions == decisions

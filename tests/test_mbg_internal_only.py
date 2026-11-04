@@ -38,7 +38,7 @@ def mixed():
     base = dict(participants=[employee], work_type=work, quantity=Decimal("1"))
     rows = [
         dict(base, starts_at=time(8), ends_at=time(9), description="Private mortar addresses", internal_only=True),
-        dict(base, starts_at=time(9), ends_at=time(10), description="Visible zero-priced work"),
+        dict(base, starts_at=time(9), ends_at=time(10), description="Visible zero-priced work", include_in_acceptance=True),
     ]
     report = save_report(
         actor=actor, site=site, work_date=date(2026, 10, 9), workforce=[employee], entries=rows, submit=True
@@ -93,7 +93,7 @@ def test_internal_linked_volume_does_not_leak_into_customer_totals(mixed):
         site=site, work_type=work, label="WR", planned_quantity=Decimal("2"), unit_snapshot="Stk."
     )
     for r in rows:
-        r.update(work_type=work, work_item=item, completed_quantity=Decimal("1"))
+        r.update(work_type=work, work_item=item, completed_quantity=Decimal("1"), include_in_acceptance=False)
     report = save_report(
         actor=actor,
         site=site,

@@ -20,7 +20,7 @@ from features.work_catalog.models import WorkType
 from .completion_projection import project_customer_entries
 from .models import CustomerAuditEvent, PlanProposal, SiteReview
 from .policies import membership_for
-from .services import accepted_snapshot_digest
+from .review_snapshot_selectors import is_customer_position_snapshot, review_snapshot_is_stale
 
 
 def audit_events_for_actor(actor):
@@ -376,19 +376,31 @@ class CustomerSiteDetail:
     review: SiteReview | None
     review_stale: bool
     review_rows: tuple
+    review_legacy: bool
     proposals: tuple[PlanProposal, ...]
 
 
 def customer_site_detail(site):
     """Собрать план, выполненное и отдельную проверку заказчика."""
+    from django.utils.translation import get_language
+
     review = SiteReview.objects.filter(site=site).first()
     stale = False
     if review and review.status in {"submitted", "accepted"}:
         try:
-            stale = review.snapshot_digest != accepted_snapshot_digest(site)
+            stale = review_snapshot_is_stale(site, review)
         except ValidationError:
             stale = True
     names = WorkNameResolver()
+    legacy = bool(review and not is_customer_position_snapshot(review.work_snapshot))
+    if legacy:
+        from .customer_position_snapshot import customer_position_snapshot
+        try:
+            display_rows = customer_position_snapshot(site, include_unperformed=True)
+        except ValidationError:
+            display_rows = []
+    else:
+        display_rows = review.work_snapshot if review else []
     return CustomerSiteDetail(
         site=site,
         plan=site_work_plan(site, include_internal=False),
@@ -399,12 +411,15 @@ def customer_site_detail(site):
         review_rows=tuple(
             {
                 **names.snapshot_row(row),
-                "unit_label": {**dict(WorkType.Unit.choices), "section": "участок"}.get(row["unit"], row["unit"]),
-                **review.item_decisions.get(row["key"], {}),
+                "unit_label": {**dict(WorkType.Unit.choices), "section": "участок",
+                               "unconfirmed": "ед. (уточняется)" if (get_language() or "").startswith("ru")
+                               else "Einheit ungeklärt"}.get(row["unit"], row["unit"]),
+                **(review.item_decisions.get(row["key"], {}) if not legacy else {}),
             }
-            for row in review.work_snapshot
+            for row in display_rows
         )
         if review
         else (),
+        review_legacy=legacy,
         proposals=tuple(PlanProposal.objects.filter(site=site).select_related("proposed_by", "decided_by")),
     )

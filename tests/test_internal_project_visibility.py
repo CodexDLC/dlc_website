@@ -44,6 +44,7 @@ def test_internal_project_history_and_hours_retain_hidden_work(client):
                 "ends_at": time(10),
                 "description": "Visible physical work",
                 "internal_only": False,
+                "include_in_acceptance": True,
             },
         ],
     )

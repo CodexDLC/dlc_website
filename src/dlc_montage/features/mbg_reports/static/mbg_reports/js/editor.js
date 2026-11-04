@@ -118,6 +118,13 @@
     const route = card.querySelector('[name$="-route"]');
     const cable = card.querySelector('[name$="-cable_type"]');
     const requirements = workRequirements(work);
+    const isOther = work?.selectedOptions[0]?.dataset.workCode === "sonstige";
+    const acceptance = card.querySelector("[data-acceptance-only]");
+    const internal = card.querySelector("[data-internal-only]");
+    if (acceptance) acceptance.hidden = !isOther;
+    if (internal) internal.hidden = isOther;
+    const acceptanceInput = acceptance?.querySelector('input[type="checkbox"]');
+    if (acceptanceInput && !isOther) acceptanceInput.checked = false;
     const details = card.querySelector("[data-work-details]");
     const routeField = card.querySelector('[data-work-parameter="route"]');
     const cableField = card.querySelector('[data-work-parameter="cable"]');

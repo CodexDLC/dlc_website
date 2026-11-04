@@ -1,0 +1,16 @@
+{% extends "internal_time/base.html" %}
+{% block report_content %}
+<h1>{% if package %}Zuordnung bearbeiten{% else %}Zuordnung hinzufügen{% endif %} · {{ site }}</h1>
+<nav class="time-inline" aria-label="Navigation"><a class="time-button secondary" href="{% url 'mbg_reports:customer_billing' site.pk %}">Zur Kundenabrechnung</a></nav>
+<section class="time-card">
+  <h2>Hinweise zur Zuordnung</h2>
+  <p>Die Abrechnungsmenge bezeichnet Einheiten der Kundenposition und ist unabhängig von den physischen Längen der Arbeiten. Für Kabelwege ist die Anzahl der Abschnitte bis 10 m gesondert einzutragen.</p>
+  <p>Für UV-PV und NH-Verteiler gehören Montage und Anschluss derselben Anlage zusammen. Die NH-Menge zählt Verteiler, nicht die Zahl ihrer Anschlüsse.</p>
+  <p>Für 01.0190 und 01.0200 sind eine manuell bestätigte Menge und eine Begründung erforderlich. Die Einheit von 01.0200 ist ungeklärt. Zugeordnete Arbeiten dienen als Nachweis; sie bestimmen die Menge nicht automatisch.</p>
+</section>
+<form method="post" class="time-card">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="time-button">Speichern</button>
+</form>
+{% endblock %}

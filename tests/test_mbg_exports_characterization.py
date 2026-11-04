@@ -224,7 +224,7 @@ def test_build_performance_workbook_in_memory_rendering():
     summary = wb["Übersicht"]
     assert summary["A1"].value == "Leistungsnachweis"
     detail = wb["Dach 1"]
-    assert detail["E9"].value == "=IF(ISNUMBER(C9), ROUND(C9*D9, 2), 0)"
+    assert detail["E9"].value == "=IF(AND(ISNUMBER(C9),ISNUMBER(D9)),ROUND(C9*D9,2),0)"
     assert detail["E10"].value == "=SUM(E9:E9)"
 
 

@@ -92,10 +92,10 @@ def test_real_billing_renderers_hide_photo_time_and_keep_internal_weekly(billing
 
     actual_review = review_work_snapshot(site)
     assert not any(row["name"] == "Cleanup" for row in actual_review)
-    photo = next(row for row in actual_review if row["kind"] == "photo_package")
-    assert (photo["quantity"], photo["unit"]) == ("1", "psch.")
-    assert len(photo["sources"]) == 4
-    assert all("actual_person_hours" not in source for source in photo["sources"])
+    assert len(actual_review) == 21
+    assert all(row["kind"] == "customer_position" for row in actual_review)
+    assert not any(row["kind"] == "photo_package" for row in actual_review)
+    assert all("actual_person_hours" not in source for row in actual_review for source in row["sources"])
     final = load_workbook(
         BytesIO(build_final_hourly_workbook([revision.snapshot], date(2026, 9, 22), date(2026, 9, 22)))
     )

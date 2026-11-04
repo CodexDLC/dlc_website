@@ -14,6 +14,50 @@ CURRENT_FINAL_HOURLY_EXPORT_TEMPLATE = "ac-final-hours-1"
 CURRENT_WORK_COMPLETION_EXPORT_TEMPLATE = "ac-work-completion-3"
 
 
+class CustomerWorkPackage(models.Model):
+    """Расчётная позиция заказчика, закрываемая набором физических работ."""
+
+    site = models.ForeignKey("projects.AcObject", on_delete=models.PROTECT, related_name="customer_work_packages")
+    position = models.ForeignKey("work_catalog.CustomerWorkPosition", on_delete=models.PROTECT)
+    label = models.CharField("Bezeichnung am Standort", max_length=255)
+    quantity = models.DecimalField("Abrechnungsmenge", max_digits=8, decimal_places=2, null=True, blank=True)
+    manual_confirmed = models.BooleanField("Ausführung manuell bestätigt", default=False)
+    note = models.TextField("Begründung / Aufmaß", blank=True)
+    is_active = models.BooleanField("Aktiv", default=True)
+    work_items = models.ManyToManyField(
+        "projects.SiteWorkItem", through="CustomerWorkRequirement", related_name="customer_packages"
+    )
+
+    class Meta:
+        ordering: ClassVar = ["position__sort_order", "pk"]
+        constraints: ClassVar = [
+            models.UniqueConstraint(fields=["site", "position", "label"], name="unique_customer_package_label"),
+            models.CheckConstraint(
+                condition=models.Q(quantity__gt=0) | models.Q(quantity__isnull=True),
+                name="customer_package_positive_quantity",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.position.code} · {self.label}"
+
+
+class CustomerWorkRequirement(models.Model):
+    """Необходимый физический объём для однократного закрытия пакета."""
+
+    package = models.ForeignKey(CustomerWorkPackage, on_delete=models.CASCADE, related_name="requirements")
+    work_item = models.ForeignKey("projects.SiteWorkItem", on_delete=models.PROTECT)
+    required_quantity = models.DecimalField(max_digits=8, decimal_places=2)
+
+    class Meta:
+        constraints: ClassVar = [
+            models.UniqueConstraint(fields=["package", "work_item"], name="unique_customer_requirement"),
+            models.CheckConstraint(
+                condition=models.Q(required_quantity__gt=0), name="customer_requirement_positive_quantity"
+            ),
+        ]
+
+
 class MbgDailyReport(models.Model):
     site = models.ForeignKey("projects.AcObject", on_delete=models.PROTECT, related_name="mbg_reports")
     work_date = models.DateField()
@@ -66,6 +110,7 @@ class MbgWorkEntry(models.Model):
     custom_description = models.CharField(max_length=500, blank=True, default="")
     description = models.CharField(max_length=500)
     internal_only = models.BooleanField(default=False)
+    include_in_acceptance = models.BooleanField(default=False, db_default=False)
     position = models.PositiveIntegerField(default=0)
 
     class Meta:

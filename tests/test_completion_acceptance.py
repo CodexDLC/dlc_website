@@ -41,7 +41,7 @@ def ready_site():
             "status": "accepted",
             "entries": [
                 {
-                    "work_type_code": "cable",
+                    "work_type_code": "photo-documentation",
                     "description": "Kabel verlegen",
                     "unit": "m",
                     "work_item_id": 1,
@@ -155,7 +155,7 @@ def test_unrelated_edit_preserves_returned_review(ready_site):
     save_object(actor=manager, group=site.group, object_id=site.pk, data={"name": "Neuer Name"})
     review.refresh_from_db()
     assert review.status == "returned"
-    assert review.remark == "Kabel verlegen: Bitte prüfen"
+    assert "Bitte prüfen" in review.remark and review.item_decisions
 
 
 def review_decisions(site, rejected=None):

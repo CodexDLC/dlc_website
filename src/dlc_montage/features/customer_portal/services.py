@@ -1,7 +1,5 @@
 """Атомарные клиентские изменения без побочных финансовых эффектов."""
 
-import hashlib
-import json
 from dataclasses import asdict
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -9,12 +7,11 @@ from pathlib import Path
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import transaction
-from django.db.models import F
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
 from features.internal_time.policies import is_manager
-from features.mbg_reports.models import MbgDailyReport, MbgReportRevision
+from features.mbg_reports.models import MbgDailyReport
 from features.project_media.models import ProjectFile
 from features.project_media.services import validate_upload
 from features.projects.models import AcObject, ProjectGroup, SiteWorkItem
@@ -25,6 +22,18 @@ from features.work_catalog.models import CableRoute, CableType, WorkType
 from .audit import group_snapshot, record_event
 from .models import ClientMembership, PlanProposal, SiteReview
 from .policies import membership_for, require_customer_group, require_customer_site
+from .review_snapshot_selectors import (
+    accepted_snapshot_digest as accepted_snapshot_digest,
+)
+from .review_snapshot_selectors import (
+    is_customer_position_snapshot as is_customer_position_snapshot,
+)
+from .review_snapshot_selectors import (
+    legacy_accepted_snapshot_digest as legacy_accepted_snapshot_digest,
+)
+from .review_snapshot_selectors import (
+    review_snapshot_is_stale as review_snapshot_is_stale,
+)
 
 
 @transaction.atomic
@@ -354,22 +363,6 @@ def review_plan(*, actor, proposal, approve, reason=""):
     return proposal
 
 
-def accepted_snapshot_digest(site):
-    """Хешировать только актуальные принятые версии отчётов объекта."""
-    reports = list(MbgDailyReport.objects.filter(site=site, status="accepted").order_by("pk"))
-    revisions = {
-        (row.report_id, row.version): row.snapshot
-        for row in MbgReportRevision.objects.filter(report__in=reports, version=F("report__version"))
-    }
-    data = []
-    for report in reports:
-        snapshot = revisions.get((report.pk, report.version))
-        if not snapshot or snapshot.get("status") != "accepted":
-            raise ValidationError(_("У принятого отчёта отсутствует текущий подтверждённый снимок."))
-        data.append([report.pk, report.version, snapshot])
-    return hashlib.sha256(json.dumps(data, sort_keys=True, default=str).encode()).hexdigest()
-
-
 @transaction.atomic
 def submit_for_review(*, actor, site):
     """Администратор отправляет неизменный срез выполненных работ клиенту."""
@@ -378,11 +371,16 @@ def submit_for_review(*, actor, site):
     site = AcObject.objects.select_for_update().get(pk=site.pk)
     if site.group.client_id is None or not site.group.client.is_active:
         raise ValidationError(_("Для проверки требуется активный заказчик Anlage."))
-    if site.status != "completed" and not MbgDailyReport.objects.filter(site=site, status="accepted").exists():
-        raise ValidationError(_("Для проверки требуются принятые дневные работы."))
+    if site.status != "completed":
+        raise ValidationError(_("На проверку можно отправить только завершённый объект."))
+    list(MbgDailyReport.objects.select_for_update().filter(site=site).order_by("pk"))
+    from features.mbg_reports.customer_billing_services import prepare_customer_packages
+
+    prepare_customer_packages(actor=actor, site=site)
     digest = accepted_snapshot_digest(site)
     review, _created = SiteReview.objects.select_for_update().get_or_create(site=site)
-    if review.status == "submitted" and review.snapshot_digest == digest:
+    if (review.status == "submitted" and is_customer_position_snapshot(review.work_snapshot)
+            and review.snapshot_digest == digest):
         raise ValidationError(_("Standort уже ожидает проверки заказчика."))
     before = {
         "status": review.status,
@@ -418,8 +416,12 @@ def decide_review(*, actor, site, decisions, snapshot_digest, submission_token):
         raise PermissionDenied
     require_customer_site(actor, site)
     review = SiteReview.objects.select_for_update().get(site=site)
+    if site.status != "completed":
+        raise ValidationError(_("Приёмка доступна только для завершённого объекта."))
     if review.status != "submitted":
         raise ValidationError(_("Нет открытой проверки."))
+    if not is_customer_position_snapshot(review.work_snapshot):
+        raise ValidationError(_("Требуется повторная отправка списка заказчика."))
     if not review.submitted_at or submission_token != review.submitted_at.isoformat():
         raise ValidationError(_("Проверка была отправлена заново. Обновите страницу перед сохранением."))
     if snapshot_digest != review.snapshot_digest or review.snapshot_digest != accepted_snapshot_digest(site):
@@ -467,37 +469,10 @@ def decide_review(*, actor, site, decisions, snapshot_digest, submission_token):
 
 
 def review_work_snapshot(site):
-    """Снять безценовой состав приёмки из подтверждённых версий дневных работ."""
-    from features.work_catalog.localization import WorkNameResolver
+    """Снять полный каталог заказчика без финансовых данных."""
+    from .customer_position_snapshot import customer_position_snapshot
 
-    from .selectors import accepted_completion_rows
-
-    names = WorkNameResolver()
-    rows = []
-    for index, row in enumerate(accepted_completion_rows(site, localized=False)):
-        rows.append(
-            {
-                "key": str(index + 1),
-                "name": names.pair(row.name)[0],
-                "name_de": names.pair(row.name)[0],
-                "name_ru": names.pair(row.name)[1],
-                "route_de": names.pair(row.route)[0],
-                "route_ru": names.pair(row.route)[1],
-                "cable_type_de": names.pair(row.cable_type)[0],
-                "cable_type_ru": names.pair(row.cable_type)[1],
-                "unit": row.unit,
-                "quantity": str(row.quantity) if row.quantity is not None else None,
-                "kind": row.kind,
-                "route": row.route,
-                "cable_type": row.cable_type,
-                "work_item_id": row.work_item_id,
-                "sources": [
-                    {k: v for k, v in source.items() if k not in {"actual_person_hours", "normative_person_hours"}}
-                    for source in row.sources
-                ],
-            }
-        )
-    return rows
+    return customer_position_snapshot(site, include_unperformed=True)
 
 
 @transaction.atomic
@@ -505,21 +480,11 @@ def backfill_review_snapshot(*, actor, review):
     """Заполнить ранее отправленную проверку без смены даты, статуса и решений."""
     if not is_manager(actor):
         raise PermissionDenied
-    site = AcObject.objects.select_for_update().get(pk=review.site_id)
+    AcObject.objects.select_for_update().get(pk=review.site_id)
     review = SiteReview.objects.select_for_update().get(pk=review.pk)
     if review.status != "submitted" or review.work_snapshot:
         return review
-    if review.snapshot_digest != accepted_snapshot_digest(site):
-        raise ValidationError(_("Принятые работы изменились. Попросите отправить объект на проверку заново."))
-    review.work_snapshot = review_work_snapshot(site)
-    review.save(update_fields=["work_snapshot"])
-    _audit(
-        actor=actor,
-        action="review_snapshot_prepared",
-        target=review,
-        after={"digest": review.snapshot_digest, "work_snapshot": review.work_snapshot},
-    )
-    return review
+    raise ValidationError(_("Для нового списка требуется повторная отправка объекта."))
 
 
 @transaction.atomic
@@ -531,38 +496,12 @@ def refresh_pending_review_snapshot(*, actor, review):
     review = SiteReview.objects.select_for_update().get(pk=review.pk)
     if review.status != "submitted" or review.item_decisions:
         raise ValidationError("Only submitted reviews without decisions can be refreshed.")
+    if not is_customer_position_snapshot(review.work_snapshot):
+        raise ValidationError("Legacy reviews require explicit resubmission.")
     if review.snapshot_digest != accepted_snapshot_digest(site):
-        raise ValidationError("Accepted report digest changed; resubmission is required.")
-    replacement = review_work_snapshot(site)
-
-    def sources(rows):
-        return {
-            (s.get("report_id"), s.get("report_version"), s.get("entry_index"))
-            for row in rows
-            for s in row.get("sources", [])
-            if str(s.get("description", "")).strip().casefold() != "mittagspause"
-        }
-
-    if review.work_snapshot and sources(review.work_snapshot) != sources(replacement):
-        raise ValidationError("Review source composition changed; resubmission is required.")
-    if replacement == review.work_snapshot:
-        return review
-    before = {"work_snapshot": review.work_snapshot, "submitted_at": review.submitted_at.isoformat()}
-    review.work_snapshot = replacement
-    review.submitted_at = timezone.now()
-    review.save(update_fields=["work_snapshot", "submitted_at"])
-    _audit(
-        actor=actor,
-        action="review_snapshot_refreshed",
-        target=review,
-        before=before,
-        after={
-            "digest": review.snapshot_digest,
-            "work_snapshot": replacement,
-            "submitted_at": review.submitted_at.isoformat(),
-        },
-    )
+        raise ValidationError("Review content changed; resubmission is required.")
     return review
+
 
 
 def upload_customer_pdf(*, actor, group, upload, site=None, caption=""):

@@ -1,0 +1,24 @@
+{% extends "internal_time/base.html" %}
+{% block report_content %}
+<h1>Kundenpositionen und Preise</h1>
+<nav class="time-inline" aria-label="Katalogaktionen">
+  <a class="time-button secondary" href="{% url 'work_catalog:list' %}">Arbeitskatalog</a>
+  <a class="time-button" href="{% url 'work_catalog:customer_list' %}">Neue Position</a>
+</nav>
+<div class="time-grid">
+  <div>
+    {% for item in items %}
+    <a class="time-card time-report-link" href="{% url 'work_catalog:customer_edit' item.pk %}">
+      <strong>{{ item.code }} · {{ item.name_de }}</strong>
+      <small>{{ item.unit_price }} € / {{ item.get_unit_display }}{% if not item.is_active %} · Inaktiv{% endif %}{% if item.manual_only %} · Nur manuelle Zuordnung{% endif %}</small>
+    </a>
+    {% empty %}<p>Keine Positionen vorhanden.</p>{% endfor %}
+  </div>
+  <form method="post" class="time-card">
+    {% csrf_token %}
+    <h2>{% if editing %}Position bearbeiten{% else %}Position anlegen{% endif %}</h2>
+    {{ form.as_p }}
+    <button class="time-button">Speichern</button>
+  </form>
+</div>
+{% endblock %}

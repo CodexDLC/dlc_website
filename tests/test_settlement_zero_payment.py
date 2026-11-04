@@ -1,4 +1,3 @@
-# ruff: noqa: RUF003
 """Тесты доменной логики оплат Standort, нулевых финансовых расценок и контрактов выборки."""
 
 from datetime import date, time, timedelta
@@ -445,13 +444,13 @@ def test_suppress_historical_embedded_prices_in_new_artifacts(settlement_setup, 
     artifact = generate_performance_report(actor=admin, group_id=group.pk, include_paid=True)
 
     site_data = artifact.snapshot["sites"][0]
-    assert site_data["known_subtotal"] == "0.00"
-    assert site_data["amount"] == "0.00"
+    assert site_data["known_subtotal"] == "55.00"
+    assert site_data["amount"] == "55.00"
 
-    row_data = site_data["rows"][0]
-    # Зашитая историческая цена 50.00 подавлена в 0.00
-    assert row_data["unit_price"] == "0.00"
-    assert row_data["amount"] == "0.00"
+    row_data = next(row for row in site_data["rows"] if row["code"] == "01.0110")
+    # Исторические 50 EUR не переиспользуются: действует согласованный каталог 55 EUR.
+    assert row_data["unit_price"] == "55.00"
+    assert row_data["amount"] == "55.00"
 
 
 def test_fingerprint_distinguishes_zero_version_and_include_paid(settlement_setup, monkeypatch, tmp_path):
@@ -485,5 +484,5 @@ def test_fingerprint_distinguishes_zero_version_and_include_paid(settlement_setu
     art_all = generate_performance_report(actor=admin, group_id=group.pk, include_paid=True)
 
     assert art_unpaid.fingerprint != art_all.fingerprint
-    assert art_unpaid.template_version == "ac-perf-zero-1"
-    assert art_all.template_version == "ac-perf-zero-1"
+    assert art_unpaid.template_version == "ac-customer-perf-1"
+    assert art_all.template_version == "ac-customer-perf-1"

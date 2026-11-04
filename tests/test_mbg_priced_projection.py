@@ -154,9 +154,9 @@ def test_priced_excel_marks_incomplete_totals_and_keeps_old_artifact(priced_data
     with first.file.open("rb") as source:
         book = load_workbook(source)
     site_sheet = book.worksheets[1]
-    tray_line = next(row for row in site_sheet.iter_rows(min_row=9) if str(row[0].value).startswith("Trasse"))
-    delivery_line = next(row for row in site_sheet.iter_rows(min_row=9) if row[0].value == "Lieferung")
-    assert tray_line[3].value == 0
+    tray_line = next(row for row in site_sheet.iter_rows(min_row=9) if "· Trasse" in str(row[0].value))
+    delivery_line = next(row for row in site_sheet.iter_rows(min_row=9) if "· Lieferung" in str(row[0].value))
+    assert tray_line[3].value == "Preis ungeklärt"
     assert tray_line[4].data_type == "f"
     assert delivery_line[4].data_type == "f"
     assert "Teilbetrag" in " ".join(str(c.value) for row in book.active for c in row if c.value)

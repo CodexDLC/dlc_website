@@ -1,7 +1,9 @@
 """Двуязычный справочник работ."""
 
+from decimal import Decimal
 from typing import ClassVar
 
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.translation import get_language, gettext_noop
 from django.utils.translation import gettext_lazy as _
@@ -147,3 +149,28 @@ class WorkDescriptionTranslation(models.Model):
 
     def __str__(self):
         return (self.name_ru or self.name_de) if (get_language() or "").startswith("ru") else self.name_de
+
+
+class CustomerWorkPosition(models.Model):
+    class Unit(models.TextChoices):
+        PIECE = "piece", "Stk."
+        TEN_METERS = "ten_meters", "bis 10 m"
+        HOUR = "hour", "Std."
+        FLAT = "flat", "psch."
+        UNCONFIRMED = "unconfirmed", "Einheit ungeklärt"
+
+    code = models.CharField(max_length=32, unique=True)
+    name_de = models.CharField(max_length=255)
+    name_ru = models.CharField(max_length=255)
+    unit = models.CharField(max_length=24, choices=Unit.choices)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(Decimal("0"))])
+    manual_only = models.BooleanField(default=False)
+    sort_order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    note = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ("sort_order", "code")
+
+    def __str__(self):
+        return f"{self.code} {self.name_de}"

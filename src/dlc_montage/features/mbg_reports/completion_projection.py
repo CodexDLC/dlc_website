@@ -64,6 +64,7 @@ def project_accepted_entries(accepted_snapshots, include_internal=False):
                 "actual_person_hours": str(entry.get("actual_person_hours", "0")),
                 "normative_person_hours": str(entry.get("normative_person_hours", "0")),
                 "work_type_code": entry.get("work_type_code", ""),
+                "include_in_acceptance": entry.get("include_in_acceptance", False),
                 "calculation_rule": entry.get("calculation_rule", ""),
                 "unit": unit,
                 "route": route,

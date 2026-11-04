@@ -575,7 +575,7 @@ def build_performance_workbook(snapshot):
         summary.merge_cells(start_row=warning_row, start_column=1, end_row=warning_row, end_column=tot_col)
         text_cell(
             summary.cell(warning_row, 1),
-            "Hinweis: Preise oder Mengen nicht vereinbart; Teilbetrag ist kein Endbetrag.",
+            "Hinweis: Zuordnung, Ausführung oder Mengen sind offen; Teilbetrag ist kein Endbetrag.",
         )
         summary.cell(warning_row, 1).alignment = Alignment(wrap_text=True, vertical="center")
         summary.row_dimensions[warning_row].height = 30
@@ -628,7 +628,10 @@ def build_performance_workbook(snapshot):
         sheet.row_dimensions[8].height = 28
 
         for line, row in enumerate(site_snapshot["rows"], 9):
-            text_cell(sheet.cell(line, 1), row["name"])
+            prefix = f"{row['code']} · " if row.get("price_state") == "customer_agreed" else (
+                "Zuordnung offen · " if row.get("price_state") == "unmapped" else ""
+            )
+            text_cell(sheet.cell(line, 1), prefix + row["name"])
             sheet.cell(line, 1).font = Font(name=FONT_FAMILY, size=10, color=COLOR_GRAY_900)
 
             text_cell(sheet.cell(line, 2), row["unit"])
@@ -645,14 +648,16 @@ def build_performance_workbook(snapshot):
 
             # Col 4: Einzelpreis
             if row["unit_price"] is None:
-                sheet.cell(line, 4, 0.0).number_format = '#,##0.00 "€"'
+                text_cell(sheet.cell(line, 4), "Preis ungeklärt")
             else:
                 sheet.cell(line, 4, float(Decimal(row["unit_price"]))).number_format = '#,##0.00 "€"'
             sheet.cell(line, 4).font = Font(name=FONT_FAMILY, size=10, color=COLOR_GRAY_900)
             sheet.cell(line, 4).alignment = Alignment(horizontal="right", vertical="top")
 
             # Col 5: Gesamt = Menge * Einzelpreis (динамическая формула)
-            sheet.cell(line, 5, f"=IF(ISNUMBER(C{line}), ROUND(C{line}*D{line}, 2), 0)").number_format = '#,##0.00 "€"'
+            sheet.cell(
+                line, 5, f"=IF(AND(ISNUMBER(C{line}),ISNUMBER(D{line})),ROUND(C{line}*D{line},2),0)"
+            ).number_format = '#,##0.00 "€"'
             sheet.cell(line, 5).font = Font(name=FONT_FAMILY, size=10, color=COLOR_GRAY_900)
             sheet.cell(line, 5).alignment = Alignment(horizontal="right", vertical="top")
 

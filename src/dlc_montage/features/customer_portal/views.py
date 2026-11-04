@@ -245,7 +245,7 @@ def reviews(request):
     _require_portal(request.user)
     request.cabinet_module = "customer"
     queryset = (
-        SiteReview.objects.filter(site__in=sites_for_actor(request.user))
+        SiteReview.objects.filter(site__in=sites_for_actor(request.user), site__status="completed")
         .select_related("site", "site__group")
         .order_by("-submitted_at", "-pk")
     )

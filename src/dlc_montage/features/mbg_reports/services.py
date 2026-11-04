@@ -113,6 +113,7 @@ def record_revision(report, actor, action, reason):
                 "unit_price": str(e.unit_price),
                 "amount": str(e.amount),
                 "internal_only": e.internal_only,
+                "include_in_acceptance": e.include_in_acceptance,
             }
             for e in report.entries.select_related("work_type", "work_item", "cable_type", "route").prefetch_related(
                 "participants"
@@ -176,6 +177,9 @@ def save_report(
         work = WorkType.objects.get(pk=work.pk)
         if not work.is_active or not work.supports_direction("ac"):
             raise ValidationError(_("Выберите активный вид работ AC."))
+        include = row.get("include_in_acceptance", False)
+        if not isinstance(include, bool) or (include and (work.code != "sonstige" or row.get("internal_only", False))):
+            raise ValidationError(_("На приёмку можно добавить только прочую работу без отметки внутреннего учёта."))
         quantity = row.get("quantity")
         cable_type = row.get("cable_type")
         route = row.get("route")
@@ -243,6 +247,7 @@ def save_report(
         prepared.append(
             {
                 **row,
+                "internal_only": not include if work.code == "sonstige" else row.get("internal_only", False),
                 "participants": participants,
                 "custom_description": row.get("description", "").strip(),
                 "description": description,
@@ -326,6 +331,7 @@ def save_report(
             custom_description=row["custom_description"],
             description=row["description"],
             internal_only=row.get("internal_only", False),
+            include_in_acceptance=row.get("include_in_acceptance", False),
         )
         entry.full_clean()
         entry.save()
@@ -340,6 +346,8 @@ def review_report(*, actor, report_id, version, decision, reason=""):
     """Принятие или возврат создаёт отдельную ревизию."""
     if not is_manager(actor):
         raise PermissionDenied
+    site_id = MbgDailyReport.objects.values_list("site_id", flat=True).get(pk=report_id)
+    AcObject.objects.select_for_update().get(pk=site_id)
     report = MbgDailyReport.objects.select_for_update().select_related("site__group").get(pk=report_id)
     if report.version != version or report.status != "submitted":
         raise ValidationError(_("Отчёт уже изменён или не отправлен на проверку."))

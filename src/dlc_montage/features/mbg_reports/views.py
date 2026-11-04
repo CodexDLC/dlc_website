@@ -400,6 +400,7 @@ def editor(request, pk=None):
                 "heavy_connections": entry.heavy_connections,
                 "with_underconstruction": entry.with_underconstruction,
                 "internal_only": entry.internal_only,
+                "include_in_acceptance": entry.include_in_acceptance,
                 "description": entry.custom_description,
             }
             for entry in report.entries.prefetch_related("participants")
@@ -429,6 +430,7 @@ def editor(request, pk=None):
                 "heavy_connections",
                 "with_underconstruction",
                 "internal_only",
+                "include_in_acceptance",
                 "description",
             )
             rows = []

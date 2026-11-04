@@ -1,9 +1,18 @@
 from django.urls import path
 
-from . import views
+from . import customer_billing_views, views
 
 app_name = "mbg_reports"
 urlpatterns = [
+    path("site/<int:site_id>/customer-billing/", customer_billing_views.customer_billing, name="customer_billing"),
+    path(
+        "site/<int:site_id>/customer-billing/new/", customer_billing_views.customer_package, name="customer_package_new"
+    ),
+    path(
+        "site/<int:site_id>/customer-billing/<int:pk>/",
+        customer_billing_views.customer_package,
+        name="customer_package_edit",
+    ),
     path("", views.report_list, name="list"),
     path("exports/", views.export_hub, name="export_hub"),
     path("new/", views.editor, name="new"),

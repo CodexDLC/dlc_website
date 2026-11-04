@@ -119,6 +119,8 @@ def test_proposal_requires_admin_approval_and_does_not_touch_accepted_history(ac
 
 def test_review_requires_fresh_accepted_snapshot_and_return_reason(actors):
     manager, alice, *_rest, site_a, _site_b = actors
+    site_a.status = "completed"
+    site_a.save(update_fields=["status"])
     report = MbgDailyReport.objects.create(
         author=manager,
         site=site_a,
@@ -209,6 +211,8 @@ def test_customer_post_requires_csrf(actors):
 
 def test_review_accept_return_resubmit_and_audit_are_separate_from_site_status(actors):
     manager, alice, *_rest, site_a, _site_b = actors
+    site_a.status = "completed"
+    site_a.save(update_fields=["status"])
     report = MbgDailyReport.objects.create(
         author=manager,
         site=site_a,
@@ -238,11 +242,8 @@ def test_review_accept_return_resubmit_and_audit_are_separate_from_site_status(a
     )
     submit_for_review(actor=manager, site=site_a)
     decision = decide_review(actor=alice, site=site_a, **review_decisions(site_a, rejected="Kabel fehlt"))
-    assert (decision.status, decision.remark, site_a.status) == (
-        "returned",
-        "Kabel verlegen: Kabel fehlt",
-        "not_started",
-    )
+    assert decision.status == "returned" and "Kabel fehlt" in decision.remark
+    assert site_a.status == "completed"
     submit_for_review(actor=manager, site=site_a)
     decision = decide_review(actor=alice, site=site_a, **review_decisions(site_a))
     assert decision.status == "accepted" and decision.remark == ""

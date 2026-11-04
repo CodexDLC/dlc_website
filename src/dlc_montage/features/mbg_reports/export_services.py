@@ -13,6 +13,7 @@ from django.utils.translation import gettext as _
 from features.projects.models import AcObject, ProjectGroup
 
 from . import accepted_revisions
+from .customer_billing_selectors import customer_billing_summary
 from .export_storage import (
     find_existing_final_hourly_export,
     find_existing_performance_export,
@@ -35,7 +36,7 @@ from .models import (
     WeeklyExport,
 )
 from .policies import can_export_reports
-from .selectors import site_position_summary_map, work_completion_projection
+from .selectors import work_completion_projection
 from .settlement_scope import project_settlement_snapshots
 
 
@@ -321,18 +322,11 @@ def generate_performance_report(
         else ("Alle aktiven Anlagen" if is_preliminary else "Alle abgeschlossenen Anlagen")
     )
 
-    position_rows_by_site = site_position_summary_map([site.pk for site in sites], include_internal=False)
+    position_rows_by_site = {site.pk: customer_billing_summary(site) for site in sites}
 
     def _site_snapshot_entry(site):
         summary = position_rows_by_site[site.pk]
-        accepted_rows = [r for r in summary.rows if r.sources]
-        has_excluded = bool(summary.excluded_reports)
-        has_incomplete = (
-            has_excluded
-            or any(r.quantity is None for r in accepted_rows if r.unit != "Std.")
-            or any(r.price_state == "unagreed" or r.amount is None for r in accepted_rows)
-        )
-        amount_val = None if has_incomplete else "0.00"
+        amount_val = str(summary.amount) if summary.amount is not None else None
         return {
             "site_id": site.pk,
             "site_name": site.name,
@@ -343,8 +337,17 @@ def generate_performance_report(
             "status": site.status,
             "is_paid": site.is_paid,
             "excluded_reports": list(summary.excluded_reports),
-            "known_subtotal": "0.00",
+            "known_subtotal": str(summary.known_subtotal),
             "amount": amount_val,
+            "packages": [
+                {"id": p.package.pk, "code": p.package.position.code, "label": p.package.label,
+                 "quantity": str(p.package.quantity) if p.package.quantity is not None else None,
+                 "state": p.state, "note": p.package.note,
+                 "requirements": [{"work_item_id": r.work_item_id, "required": str(r.required_quantity),
+                                   "completed": str(r.completed_quantity), "is_required": r.is_required}
+                                  for r in p.requirements]}
+                for p in summary.packages
+            ],
             "rows": [
                 {
                     "code": row.code,
@@ -361,7 +364,7 @@ def generate_performance_report(
                     "work_item_id": row.work_item_id,
                     "sources": list(row.sources),
                 }
-                for row in summary.rows
+                for row in (*summary.rows, *summary.unmapped_rows)
             ],
         }
 
@@ -372,15 +375,15 @@ def generate_performance_report(
         "include_paid": include_paid,
         "document_type": doc_type,
         "export_date": today_str,
-        "pricing_version": "zero_rates_v1",
+        "pricing_version": "customer_packages_v1",
         "sites": [_site_snapshot_entry(site) for site in sites],
     }
-    template_ver = "ac-perf-zero-1"
+    template_ver = "ac-customer-perf-1"
     fingerprint = sha256(
         json.dumps(
             {
                 "template": template_ver,
-                "pricing_version": "zero_rates_v1",
+                "pricing_version": "customer_packages_v1",
                 "include_paid": include_paid,
                 "group_ids": [g.pk for g in groups],
                 "is_preliminary": is_preliminary,

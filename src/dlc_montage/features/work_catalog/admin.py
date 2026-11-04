@@ -9,3 +9,5 @@ from .models import WorkDescriptionTranslation
 class WorkDescriptionTranslationAdmin(admin.ModelAdmin):
     list_display = ("original", "name_de", "name_ru")
     search_fields = ("original", "name_de", "name_ru")
+
+from . import customer_admin  # noqa: F401

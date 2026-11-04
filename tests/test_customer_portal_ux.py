@@ -386,7 +386,7 @@ def test_reviews_grid_and_empty_help(ux_setup, client, monkeypatch):
 
     # Создаём 25 проверок
     for i in range(1, 26):
-        st = AcObject.objects.create(group=ctx["group_a"], name=f"Standort Rev {i:02d}")
+        st = AcObject.objects.create(group=ctx["group_a"], name=f"Standort Rev {i:02d}", status="completed")
         SiteReview.objects.create(site=st, status="submitted", remark=f"Prüfung {i}")
 
     res_grid = client.get(reverse("customer_portal:reviews"))

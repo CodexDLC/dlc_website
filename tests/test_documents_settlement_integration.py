@@ -1,4 +1,3 @@
-# ruff: noqa: RUF001, RUF002
 """Integration tests for AC documents, settlement, master workbook, and Google sync.
 
 Verifies:
@@ -24,7 +23,7 @@ Verifies:
 
 from datetime import date, timedelta
 from io import BytesIO
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 from uuid import uuid4
 
 import pytest
@@ -32,22 +31,18 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import reverse
 from django.utils import timezone
-from openpyxl import load_workbook
-
 from features.customer_portal.models import CustomerAuditEvent
 from features.customer_portal.services import grant_membership
-from features.mbg_reports.google_sync import read_existing_payments, sync_master_to_google_sheets
+from features.mbg_reports.google_sync import sync_master_to_google_sheets
 from features.mbg_reports.master_workbook import build_master_settlement_workbook
 from features.mbg_reports.models import MbgDailyReport, MbgReportRevision
-from features.work_catalog.models import WorkType
 from features.projects.models import AcObject, Client, ProjectGroup
 from features.projects.settlement import (
-    filter_sites_for_historical_ledger,
-    filter_sites_for_invoice,
     mark_site_paid,
-    set_site_payment_status,
     unmark_site_paid,
 )
+from features.work_catalog.models import WorkType
+from openpyxl import load_workbook
 
 pytestmark = pytest.mark.django_db
 
@@ -69,14 +64,25 @@ def integration_data():
     group_ac = ProjectGroup.objects.create(name="Anlage AC Nord", client=client, has_ac=True, status="active")
     group_dc = ProjectGroup.objects.create(name="Anlage DC Sud", client=client, has_ac=False, status="active")
 
-    site1 = AcObject.objects.create(group=group_ac, name="Standort 101", address="Str 1", project_number="P-101", status="completed")
-    site2 = AcObject.objects.create(group=group_ac, name="Standort 102", address="Str 2", project_number="P-102", status="completed", is_paid=True)
-    site_dc = AcObject.objects.create(group=group_dc, name="Standort DC 1", address="Str DC", project_number="P-DC", status="completed")
+    site1 = AcObject.objects.create(
+        group=group_ac, name="Standort 101", address="Str 1", project_number="P-101", status="completed"
+    )
+    site2 = AcObject.objects.create(
+        group=group_ac,
+        name="Standort 102",
+        address="Str 2",
+        project_number="P-102",
+        status="completed",
+        is_paid=True,
+    )
+    site_dc = AcObject.objects.create(
+        group=group_dc, name="Standort DC 1", address="Str DC", project_number="P-DC", status="completed"
+    )
 
-    wt_material, _ = WorkType.objects.get_or_create(
+    _wt_material, _ = WorkType.objects.get_or_create(
         code="material-delivery", defaults={"name_de": "Materialtransport", "calculation_rule": "actual"}
     )
-    wt_hourly, _ = WorkType.objects.get_or_create(
+    _wt_hourly, _ = WorkType.objects.get_or_create(
         code="sonstige", defaults={"name_de": "Zusatzarbeiten", "calculation_rule": "actual"}
     )
 
@@ -236,7 +242,9 @@ def test_independent_paid_unpaid_post_controls(integration_data, client):
     client.force_login(admin)
 
     # Toggle to paid
-    res = client.post(reverse("mbg_reports:site_payment_toggle", args=[site.pk]), {"is_paid": "1", "note": "Bank transfer"})
+    res = client.post(
+        reverse("mbg_reports:site_payment_toggle", args=[site.pk]), {"is_paid": "1", "note": "Bank transfer"}
+    )
     assert res.status_code == 302
     site.refresh_from_db()
     assert site.is_paid is True
@@ -283,7 +291,11 @@ def test_batch_invoice_validation_and_zero_pricing(integration_data, client):
     # Follow redirect to download file
     res_download = client.get(res_ok.url)
     assert res_download.status_code == 200
-    content_bytes = b"".join(res_download.streaming_content) if hasattr(res_download, "streaming_content") else res_download.content
+    content_bytes = (
+        b"".join(res_download.streaming_content)
+        if hasattr(res_download, "streaming_content")
+        else res_download.content
+    )
     wb = load_workbook(BytesIO(content_bytes), data_only=True)
     summary_sheet = wb.active
     # All prices and amounts in output must be 0.00
@@ -320,7 +332,7 @@ def test_master_workbook_zero_rates_and_formulas(integration_data):
     assert found_bezahlt and found_offen
 
     # 2. Check site sheet formulas and cells
-    site_sheet = [s for s in wb.worksheets if s.title != "Übersicht"][0]
+    site_sheet = next(s for s in wb.worksheets if s.title != "Übersicht")
     for row in site_sheet.iter_rows():
         for cell in row:
             if cell.value and isinstance(cell.value, str) and cell.value.startswith("="):

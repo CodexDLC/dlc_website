@@ -109,9 +109,10 @@
           {% if demo_editor %}
           <div class="time-wide">{{ entry.description.label_tag }}{{ entry.description }}{{ entry.description.errors }}</div>
           {% else %}
-          <div class="time-wide">{{ entry.internal_only }} {{ entry.internal_only.label_tag }}{{ entry.internal_only.errors }}
+          <div class="time-wide" data-internal-only>{{ entry.internal_only }} {{ entry.internal_only.label_tag }}{{ entry.internal_only.errors }}
             <p class="time-hint">{% trans "Работа и часы остаются в DLC; строка не попадает в счёт, акт и кабинет заказчика." %}</p>
           </div>
+          <div class="time-wide" data-acceptance-only hidden>{{ entry.include_in_acceptance }} {{ entry.include_in_acceptance.label_tag }}{{ entry.include_in_acceptance.errors }}</div>
           <details class="time-details" data-work-details>
             <summary>{% trans "Кабель, путь и дополнительные параметры" %}</summary>
             <div class="time-grid three mbg-details-grid">

@@ -25,6 +25,7 @@ class WorkTypeSelect(forms.Select):
         option = super().create_option(name, value, label, selected, index, subindex=subindex, attrs=attrs)
         work = getattr(value, "instance", None)
         if work:
+            option["attrs"]["data-work-code"] = work.code
             option["attrs"]["data-requires-route"] = str(work.requires_route).lower()
             option["attrs"]["data-requires-cable"] = str(work.requires_cable_type).lower()
         return option
@@ -215,6 +216,7 @@ class EntryForm(LocalizedFormMixin, forms.Form):
     heavy_connections = forms.IntegerField(label=_("Тяжёлые подключения"), min_value=0, initial=0)
     with_underconstruction = forms.BooleanField(label=_("С монтажной конструкцией"), required=False)
     description = forms.CharField(label=_("Свой текст на немецком"), max_length=500, required=False)
+    include_in_acceptance = forms.BooleanField(label=_("Добавить на приёмку / Zur Abnahme hinzufügen"), required=False)
     internal_only = forms.BooleanField(
         label=_("Только внутренний учёт / Nur interne Zeiterfassung"), required=False, initial=False
     )
@@ -229,6 +231,11 @@ class EntryForm(LocalizedFormMixin, forms.Form):
 
     def clean(self):
         cleaned = super().clean()
+        work = cleaned.get("work_type")
+        if work and work.code == "sonstige":
+            cleaned["internal_only"] = not cleaned.get("include_in_acceptance", False)
+        elif cleaned.get("include_in_acceptance"):
+            self.add_error("include_in_acceptance", _("Это поле доступно только для прочей работы."))
         if (cleaned.get("work_item") is None) != (cleaned.get("completed_quantity") is None):
             raise forms.ValidationError(_("Позиция плана и прирост объёма вводятся вместе."))
         return cleaned

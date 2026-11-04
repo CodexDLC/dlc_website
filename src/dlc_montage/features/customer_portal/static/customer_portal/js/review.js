@@ -23,5 +23,14 @@ document.querySelectorAll('[data-item-review]').forEach(form => {
   form.addEventListener('change', event => {
     if (event.target.matches('input[type="radio"]')) update(event.target.closest('[data-review-item]'));
   });
+  form.querySelector('[data-review-accept-all]')?.addEventListener('click', () => {
+    rows.forEach(row => {
+      const accepted = row.querySelector('input[type="radio"][value="accepted"]');
+      if (accepted) accepted.checked = true;
+      const comment = row.querySelector('[data-review-comment] textarea');
+      if (comment) { comment.value = ''; comment.required = false; }
+    });
+    update();
+  });
   update();
 });

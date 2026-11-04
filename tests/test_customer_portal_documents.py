@@ -7,10 +7,12 @@ from uuid import uuid4
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from django.utils.translation import override
 from features.customer_portal.models import SiteReview
 from features.customer_portal.services import grant_membership
 from features.mbg_reports.models import MbgDailyReport, MbgReportRevision
 from features.projects.models import AcObject, Client, ProjectGroup
+from features.work_catalog.localization import WorkNameResolver
 from openpyxl import load_workbook
 
 pytestmark = pytest.mark.django_db
@@ -150,7 +152,8 @@ def test_multi_person_row_and_actual_hours_sum(portal_setup, client):
     assert "Worker 2" not in str_values
 
 
-def test_hourly_and_unresolved_quantities_not_guessed(portal_setup, client):
+@pytest.mark.parametrize("language", ["ru", "de"])
+def test_hourly_and_unresolved_quantities_not_guessed(portal_setup, client, language):
     ctx = portal_setup
     # Hourly row has unit Std., actual hours 4.0, but no physical volume
     # Unresolved piece row has completed_quantity=None
@@ -174,18 +177,31 @@ def test_hourly_and_unresolved_quantities_not_guessed(portal_setup, client):
     _create_report_with_snapshot(ctx["site_a1"], ctx["admin"], date(2026, 10, 2), entries)
 
     client.force_login(ctx["alice"])
-    res = client.get(reverse("customer_portal:accepted_work_xlsx", args=[ctx["site_a1"].pk]))
+    with override(language):
+        url = reverse("customer_portal:accepted_work_xlsx", args=[ctx["site_a1"].pk])
+        names = WorkNameResolver()
+        cable_name = names.display("Kabelverlegung ohne Mengenerfassung")
+        hourly_name = names.display("Fehlersuche Wechselrichter")
+    res = client.get(url)
     assert res.status_code == 200
     wb = load_workbook(BytesIO(res.content))
     sheet = wb["Arbeiten"] if "Arbeiten" in wb.sheetnames else wb.active
     rows = list(sheet.iter_rows(values_only=True))
 
-    # Find the row for 'Kabelverlegung ohne Mengenerfassung'
-    unresolved_row = next(r for r in rows if r and "Kabelverlegung ohne Mengenerfassung" in str(r[0]))
+    # The completed-work section has its own quantity column; daily rows start with a date.
+    header = next(r for r in rows if r and r[0] == "Erbrachte Arbeiten")
+    assert header[:5] == ("Erbrachte Arbeiten", "Menge", "Einheit", "Personenstunden", "Nachweis")
+    unresolved_row = next(r for r in rows if r and r[0] == cable_name)
     # Quantity must be 'ungeklärt' / 'не подтверждено', NOT 1 or 0!
     qty_val = unresolved_row[1]
     assert str(qty_val).lower() in ("ungeklärt", "nicht bestätigt", "не подтверждено")
-    assert qty_val not in (0, 1, "0", "1")
+    assert qty_val not in (0, 1, 2, "0", "1", "2", "2.00")
+    assert unresolved_row[2:5] == ("m", 2, "unresolved")
+    hourly_row = next(r for r in rows if r and r[0] == hourly_name)
+    assert str(hourly_row[1]).lower() in ("ungeklärt", "nicht bestätigt", "не подтверждено")
+    assert hourly_row[1] not in (0, 1, 4, "0", "1", "4", "4.00")
+    assert hourly_row[2] is None
+    assert hourly_row[3:5] == (4, "hourly")
 
 
 def test_stale_accepted_snapshot_not_masked(portal_setup, client):

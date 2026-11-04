@@ -6,7 +6,8 @@ from uuid import uuid4
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from features.customer_portal.services import grant_membership
+from django.utils.translation import override
+from features.customer_portal.services import grant_membership, submit_for_review
 from features.mbg_reports.models import MbgDailyReport, MbgReportRevision
 from features.projects.models import AcObject, Client, ProjectGroup, SiteWorkItem
 from features.work_catalog.models import WorkType
@@ -162,26 +163,34 @@ def test_ac_groups_and_objects_filters_pagination_and_no_dc_only(ac_setup, clien
     assert 'name="sort"' in content_objects
 
 
-def test_unified_object_top_and_internal_manager_block_isolation(ac_setup, client):
+@pytest.mark.parametrize("language,work_name", [("ru", "Монтаж инвертора"), ("de", "Wechselrichter Montage")])
+def test_unified_object_top_and_internal_manager_block_isolation(ac_setup, client, language, work_name):
     """Единый верх объекта: адрес/статус DLC, ОДНА таблица выполненных работ, фото/документы, свёрнутая история.
 
     Клиент не видит внутренний блок плана и финансы; менеджер видит блок управления планом ниже общего верха.
     """
     site_ac = ac_setup["site_ac"]
     group_ac = ac_setup["group_ac"]
+    site_ac.status = "completed"
+    site_ac.save(update_fields=["status"])
 
     # 1. Клиентский кабинет (customer_portal:site)
     client.force_login(ac_setup["customer"])
-    resp_cust = client.get(reverse("customer_portal:site", args=[site_ac.pk]))
+    with override(language):
+        customer_url = reverse("customer_portal:site", args=[site_ac.pk])
+        manager_url = reverse("projects:site_detail", args=[group_ac.pk, site_ac.pk])
+        work_item_url = reverse("projects:work_item_new", args=[group_ac.pk, site_ac.pk])
+        status_label = str(site_ac.get_status_display())
+    resp_cust = client.get(customer_url)
     assert resp_cust.status_code == 200
     content_cust = resp_cust.content.decode()
 
     # Адрес и статус DLC
     assert "Sonnenweg 1A" in content_cust
-    assert site_ac.get_status_display() in content_cust
+    assert status_label in content_cust
 
     # ОДНА сводная таблица выполненных работ
-    assert "Wechselrichter Montage" in content_cust
+    assert work_name in content_cust
     # Клиентский план со строками 'План и выполненный объём' убран
     assert "План и выполненный объём" not in content_cust
     # История работ свёрнута (через details)
@@ -189,21 +198,35 @@ def test_unified_object_top_and_internal_manager_block_isolation(ac_setup, clien
     # Никаких внутренних финансовых сумм / цен / предварительных расчётов для клиента
     assert "Teilbetrag" not in content_cust
     assert "Preis nicht vereinbart" not in content_cust
-    # Note regarding lack of per-work acceptance by Emil
-    assert "не реализована" in content_cust or "nicht implementiert" in content_cust or "общая проверка" in content_cust
+    # Before submission the customer cannot decide on an unpublished work snapshot.
+    assert 'data-item-review' not in content_cust
+    assert 'name="decision-1"' not in content_cust
+    review = submit_for_review(actor=ac_setup["manager"], site=site_ac)
+    assert len(review.work_snapshot) == 21
+    submitted = client.get(customer_url)
+    assert submitted.status_code == 200
+    submitted_html = submitted.content.decode()
+    assert work_name in submitted_html
+    assert 'data-item-review' in submitted_html
+    assert 'name="decision-customer:10.010" value="accepted"' in submitted_html
+    assert 'name="decision-customer:10.010" value="rejected"' in submitted_html
+    assert 'name="comment-customer:10.010"' in submitted_html
+    assert "Teilbetrag" not in submitted_html
+    assert "Preis nicht vereinbart" not in submitted_html
 
     # 2. Внутренний CRM-маршрут менеджера (projects:site_detail)
     client.force_login(ac_setup["manager"])
-    resp_mgr = client.get(reverse("projects:site_detail", args=[group_ac.pk, site_ac.pk]))
+    resp_mgr = client.get(manager_url)
     assert resp_mgr.status_code == 200
     content_mgr = resp_mgr.content.decode()
 
     # Внутренний менеджерский блок плана находится НИЖЕ общего верха
     assert "Sonnenweg 1A" in content_mgr
-    assert "Wechselrichter Montage" in content_mgr
+    assert work_name in content_mgr
     # Менеджер видит готовность плана и элементы управления
-    assert "План работ Standort" in content_mgr or "Готовность плана" in content_mgr
-    assert reverse("projects:work_item_new", args=[group_ac.pk, site_ac.pk]) in content_mgr
+    assert work_item_url not in content_cust
+    assert work_item_url not in submitted_html
+    assert work_item_url in content_mgr
     assert "status-quick-select" in content_mgr or 'name="status"' in content_mgr
 
 

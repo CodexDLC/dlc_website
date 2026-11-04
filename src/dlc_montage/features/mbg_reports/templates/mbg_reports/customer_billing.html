@@ -1,0 +1,70 @@
+{% extends "internal_time/base.html" %}
+{% block report_content %}
+<h1>Kundenabrechnung · {{ site }}</h1>
+<nav class="time-inline" aria-label="Aktionen zur Kundenabrechnung">
+  <a class="time-button secondary" href="{% url 'projects:site_detail' site.group_id site.pk %}">Zum Standort</a>
+  <a class="time-button secondary" href="{% url 'work_catalog:customer_list' %}">Kundenpositionen und Preise</a>
+  <a class="time-button secondary" href="{% url 'mbg_reports:site_performance_export' site.pk %}">Leistungsnachweis als Excel</a>
+  <a class="time-button" href="{% url 'mbg_reports:customer_package_new' site.pk %}">Zuordnung hinzufügen</a>
+</nav>
+<form method="post" class="time-card">
+  {% csrf_token %}
+  <button class="time-button" name="action" value="prepare">Eindeutige Zuordnungen vorbereiten</button>
+</form>
+<section class="time-card">
+  <h2>Positionen</h2>
+  <div class="time-table-scroll">
+    <table class="time-table">
+      <thead><tr><th>Nr.</th><th>Leistung</th><th>Einheit</th><th>Preis</th><th>Menge</th><th>Betrag</th></tr></thead>
+      <tbody>
+        {% for row in summary.rows %}
+        <tr><td>{{ row.code }}</td><td>{{ row.name }}</td><td>{{ row.unit }}</td><td>{{ row.unit_price }} €</td><td>{{ row.quantity|default_if_none:"Menge ungeklärt" }}</td><td>{{ row.amount|default_if_none:"ungeklärt" }} €</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p>Bekannte Zwischensumme: {{ summary.known_subtotal }} €</p>
+  <p>Gesamt: {% if summary.amount is not None %}{{ summary.amount }} €{% else %}noch nicht vollständig{% endif %}</p>
+</section>
+<section class="time-card">
+  <h2>Zuordnungen und Fortschritt</h2>
+  {% for progress in summary.packages %}
+  <section>
+    <h3><a href="{% url 'mbg_reports:customer_package_edit' site.pk progress.package.pk %}">{{ progress.package.position.code }} · {{ progress.package.label }}</a></h3>
+    <p>{% if progress.state == 'completed' %}Abgeschlossen{% elif progress.state == 'partial' %}Teilweise ausgeführt{% elif progress.state == 'not_started' %}Noch nicht begonnen{% else %}Zuordnung oder Menge prüfen{% endif %} · Abrechnungsmenge: {{ progress.package.quantity|default_if_none:'Menge ungeklärt' }} · Anrechenbar: {{ progress.quantity }} · {{ progress.amount }} €</p>
+    {% if progress.package.note %}<p>Hinweis: {{ progress.package.note }}</p>{% endif %}
+    <ul>
+      {% for item in progress.requirements %}
+      <li>{{ item.label }}: {{ item.completed_quantity }} / {{ item.required_quantity }}{% if not item.is_required %} · nicht erforderlich{% endif %}</li>
+      {% empty %}<li>Keine Arbeiten zugeordnet.</li>{% endfor %}
+    </ul>
+    {% if progress.sources %}
+    <details>
+      <summary>Nachweise und erfasste Zeit</summary>
+      <ul>
+        {% for source in progress.sources %}
+        <li>
+          {% if source.work_date %}{{ source.work_date }} · {% endif %}
+          {% if source.description %}{{ source.description }}{% elif source.kind == 'manual_customer_quantity' %}Manuell bestätigte Abrechnungsmenge{% elif source.kind == 'plan_clarification' %}Bestätigter Arbeitsfortschritt{% else %}Nachweis{% endif %}
+          {% if source.actual_person_hours %} · {{ source.actual_person_hours }} Personenstunden{% endif %}
+          {% if source.standard_connections %} · {{ source.standard_connections }} Anschlüsse erfasst{% endif %}
+          {% if source.reason %} · {{ source.reason }}{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      <p>Erfasste Anschlüsse erläutern den Arbeitsaufwand; sie vervielfachen die NH-Abrechnungsmenge nicht.</p>
+    </details>
+    {% endif %}
+  </section>
+  {% empty %}<p>Keine aktiven Zuordnungen vorhanden.</p>{% endfor %}
+</section>
+<section class="time-card">
+  <h2>Nicht zugeordnete Arbeiten im Standortplan</h2>
+  <ul>{% for item in summary.unassigned_items %}<li>{{ item.label }} · {{ item.planned_quantity }} {{ item.unit_snapshot }}</li>{% empty %}<li>Keine.</li>{% endfor %}</ul>
+</section>
+<section class="time-card">
+  <h2>Angenommene Arbeiten ohne Abrechnungsposition</h2>
+  <ul>{% for row in summary.unmapped_rows %}<li>{{ row.name }} · {{ row.quantity|default_if_none:"Menge ungeklärt" }} {{ row.unit }}</li>{% empty %}<li>Keine.</li>{% endfor %}</ul>
+  {% if summary.excluded_reports %}<p>Berichte ohne auswertbaren Stand: {{ summary.excluded_reports|join:", " }}. Der Gesamtbetrag ist unvollständig.</p>{% endif %}
+</section>
+{% endblock %}

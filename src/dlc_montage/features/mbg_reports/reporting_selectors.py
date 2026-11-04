@@ -4,6 +4,7 @@ from collections import defaultdict
 from decimal import Decimal
 from typing import Any
 
+from django.core.exceptions import ValidationError
 from django.db.models import F
 
 from features.customer_portal.models import SiteReview
@@ -75,11 +76,15 @@ def resolve_curator_review(site: AcObject, current_digest: str | None = None) ->
 
     if review.status == "accepted":
         if current_digest is None:
+            from features.customer_portal.review_snapshot_selectors import review_snapshot_is_stale
+
             try:
-                current_digest = compute_site_snapshot_digest(site)
-            except Exception:
-                current_digest = ""
-        if review.snapshot_digest and review.snapshot_digest == current_digest:
+                is_current = not review_snapshot_is_stale(site, review)
+            except ValidationError:
+                is_current = False
+        else:
+            is_current = review.snapshot_digest == current_digest
+        if review.snapshot_digest and is_current:
             return CuratorReviewFact(
                 status="Freigegeben",
                 freigabe="Nein",  # Technical acceptance is NOT payment authorization

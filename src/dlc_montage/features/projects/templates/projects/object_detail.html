@@ -36,6 +36,7 @@
       </form>
     {% endif %}
     {% if export_allowed %}
+      <a class="time-button secondary" href="{% url 'mbg_reports:customer_billing' site.pk %}">Abrechnung nach Kundenpositionen</a>
       <a class="time-button quiet" href="{% url 'mbg_reports:performance_exports' site.group_id %}">{% trans "Акты Anlage →" %}</a>
     {% endif %}
   </div>

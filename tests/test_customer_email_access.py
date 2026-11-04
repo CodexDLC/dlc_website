@@ -118,9 +118,12 @@ def test_scanner_get_and_head_do_not_authenticate_or_consume(access_actors, meth
 
 def test_review_link_only_shows_pending_customer_reviews_and_default_keeps_history(access_actors):
     _, _, _, _, site_a, site_b = access_actors
+    site_a.status = site_b.status = "completed"
+    site_a.save(update_fields=["status"])
+    site_b.save(update_fields=["status"])
     pending = SiteReview.objects.create(site=site_a, status="submitted")
     SiteReview.objects.create(site=site_b, status="submitted")
-    accepted_site = AcObject.objects.create(group=site_a.group, name="Accepted")
+    accepted_site = AcObject.objects.create(group=site_a.group, name="Accepted", status="completed")
     accepted = SiteReview.objects.create(site=accepted_site, status="accepted")
     browser = HttpClient()
     response = confirm(browser, issue(access_actors).reviews_url)
