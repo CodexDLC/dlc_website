@@ -62,6 +62,7 @@ from .modules.admin import *  # noqa
 from .modules.sitemap import *  # noqa
 from .modules.codex import *  # noqa
 from .modules.private_storage import *  # noqa
+from .modules.customer_digest import *  # noqa
 
 # ═══════════════════════════════════════════
 # General Settings

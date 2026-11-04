@@ -1,0 +1,17 @@
+{% autoescape off %}DLC Montage · Tagesübersicht {{ digest.work_date|date:"d.m.Y" }}
+
+Arbeiten
+{% for site in digest.sites %}
+{{ site.name }}{% if site.address %} · {{ site.address }}{% endif %}
+{{ site.intervals }} · {{ site.completed }}/{{ site.planned }} Planpositionen abgeschlossen
+{% empty %}Keine bestätigten Arbeiten für diesen Tag.
+{% endfor %}
+Tagesarbeiten ansehen: {{ works_url }}
+
+Abnahme
+{{ digest.pending_photo_count }} Standorte mit Fotos warten auf Ihre Abnahme.
+Zur Abnahme: {{ reviews_url }}
+
+Die persönlichen Zugangslinks gelten 24 Stunden. Bitte leiten Sie diese E-Mail nicht weiter.
+Beim nächsten Versand werden vorherige Zugangslinks ungültig.
+{% endautoescape %}

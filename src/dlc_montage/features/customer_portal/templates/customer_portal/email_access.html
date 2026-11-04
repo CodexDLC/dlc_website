@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="same-origin">
+  <title>Kundenzugang · DLC Montage</title>
+  <style nonce="{{ script_nonce }}">
+    body { margin: 0; background: #f4f6f8; color: #0a2540; font: 1rem/1.6 system-ui, sans-serif; }
+    main { box-sizing: border-box; max-width: 36rem; margin: 10vh auto; padding: 2rem; background: white; border-radius: .75rem; }
+    h1 { line-height: 1.2; }
+    button, a { font: inherit; }
+    button { padding: .75rem 1.25rem; border: 0; border-radius: .35rem; background: #007a4d; color: white; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: default; }
+    a { color: #0a2540; }
+    @media (max-width: 40rem) { main { margin: 2rem 1rem; padding: 1.5rem; } }
+  </style>
+</head>
+<body>
+<main>
+  {% if expired %}
+    <h1>Dieser Zugang ist nicht mehr gültig</h1>
+    <p>Der Link ist abgelaufen, wurde ersetzt oder der Kundenzugang wurde geändert. Bitte verwenden Sie die neueste E-Mail oder melden Sie sich mit Ihrem Passwort an.</p>
+    {% if request.user.is_authenticated %}
+      <form method="post" action="{% url 'customer_portal:email_access' %}">
+        {% csrf_token %}<button type="submit" name="action" value="password_login">Abmelden und mit Passwort anmelden</button>
+      </form>
+    {% else %}<a href="{% url 'account_login' %}">Mit Passwort anmelden</a>{% endif %}
+  {% else %}
+    <h1>Kundenzugang öffnen</h1>
+    <p>Öffnen Sie Ihren persönlichen Kundenbereich. Der Zugang endet spätestens 24 Stunden nach Ausstellung der E-Mail. Ein neuer Link ersetzt den bisherigen Zugang.</p>
+    {% if request.user.is_authenticated %}
+      <p>Sie sind derzeit als <strong>{{ request.user.get_username }}</strong> angemeldet. Mit der Bestätigung melden Sie dieses Konto ab und öffnen den Kundenzugang aus der E-Mail.</p>
+    {% endif %}
+    <p>Durch das Öffnen werden keine Arbeiten abgenommen.</p>
+    <form method="post" action="{% url 'customer_portal:email_access' %}" id="email-access-form">
+      {% csrf_token %}
+      <input type="hidden" name="token" id="access-token" value="">
+      <input type="hidden" name="target" id="access-target" value="">
+      <button type="submit" id="access-submit" disabled>Kundenzugang bestätigen</button>
+    </form>
+    <p id="access-missing" hidden>Bitte öffnen Sie den vollständigen Link aus Ihrer neuesten E-Mail.</p>
+    <noscript><p>Für den sicheren E-Mail-Zugang ist JavaScript erforderlich. Alternativ können Sie sich mit Ihrem Passwort anmelden.</p></noscript>
+    {% if request.user.is_authenticated %}
+      <form method="post" action="{% url 'customer_portal:email_access' %}">
+        {% csrf_token %}<button type="submit" name="action" value="password_login">Abmelden und mit Passwort anmelden</button>
+      </form>
+    {% else %}<p><a href="{% url 'account_login' %}">Mit Passwort anmelden</a></p>{% endif %}
+    <script nonce="{{ script_nonce }}">
+      (() => {
+        const fragment = new URLSearchParams(window.location.hash.slice(1));
+        window.history.replaceState(null, '', window.location.pathname);
+        const token = fragment.get('token') || '';
+        const target = fragment.get('target') || '';
+        if (/^[A-Za-z0-9_-]{43}$/.test(token) && ['works', 'reviews'].includes(target)) {
+          document.getElementById('access-token').value = token;
+          document.getElementById('access-target').value = target;
+          document.getElementById('access-submit').disabled = false;
+        } else {
+          document.getElementById('access-missing').hidden = false;
+        }
+      })();
+    </script>
+  {% endif %}
+</main>
+</body>
+</html>

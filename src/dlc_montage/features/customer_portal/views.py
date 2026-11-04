@@ -249,6 +249,8 @@ def reviews(request):
         .select_related("site", "site__group")
         .order_by("-submitted_at", "-pk")
     )
+    if request.GET.get("status") == "submitted":
+        queryset = queryset.filter(status="submitted")
     page_obj = Paginator(queryset, 20).get_page(request.GET.get("page"))
     return render(
         request,
@@ -256,6 +258,7 @@ def reviews(request):
         {
             "reviews_page": page_obj,
             "reviews": page_obj,
+            "review_filter_params": "status=submitted" if request.GET.get("status") == "submitted" else "",
         },
     )
 

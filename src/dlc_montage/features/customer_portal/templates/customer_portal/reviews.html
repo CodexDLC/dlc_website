@@ -53,6 +53,6 @@
   {% endfor %}
 </div>
 
-{% include "customer_portal/includes/_pagination.html" with page_obj=reviews_page %}
+{% include "customer_portal/includes/_pagination.html" with page_obj=reviews_page extra_params=review_filter_params %}
 
 {% endblock %}

@@ -3,10 +3,12 @@
 from django.urls import path
 
 from . import views
+from .email_access_views import email_access
 
 app_name = "customer_portal"
 
 urlpatterns = [
+    path("email-access/", email_access, name="email_access"),
     path("", views.home, name="home"),
     path("account/", views.account, name="account"),
     path("objects/", views.objects, name="objects"),

@@ -1,0 +1,11 @@
+[Unit]
+Description=DLC digest weekdays at 08:00 Europe/Berlin
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 08:00:00 Europe/Berlin
+Persistent=false
+AccuracySec=1s
+Unit=dlc-customer-digest.service
+
+[Install]
+WantedBy=timers.target

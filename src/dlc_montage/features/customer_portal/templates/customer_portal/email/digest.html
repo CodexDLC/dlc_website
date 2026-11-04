@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><title>DLC Montage</title></head>
+<body style="margin:0;background:#f3f6f8;font-family:Arial,sans-serif;color:#0A2540">
+<table role="presentation" style="width:100%;max-width:620px;margin:0 auto;padding:24px"><tr><td>
+<p style="font-size:13px;font-weight:bold;letter-spacing:1px">DLC MONTAGE</p>
+<h1 style="font-size:23px;margin:8px 0 20px">Tagesübersicht · {{ digest.work_date|date:"d.m.Y" }}</h1>
+<table role="presentation" style="width:100%;background:white;border-radius:12px;padding:20px;margin-bottom:16px"><tr><td>
+<h2 style="font-size:18px;margin:0 0 14px">Arbeiten</h2>
+{% for site in digest.sites %}<p style="margin:12px 0"><strong>{{ site.name }}</strong>{% if site.address %}<br>{{ site.address }}{% endif %}<br>{{ site.intervals }}<br><strong>{{ site.completed }}/{{ site.planned }}</strong> Planpositionen abgeschlossen</p>{% empty %}<p>Keine bestätigten Arbeiten für diesen Tag.</p>{% endfor %}
+<p style="margin:20px 0 4px"><a style="background:#00A86B;color:white;padding:11px 16px;border-radius:6px;text-decoration:none;display:inline-block" href="{{ works_url }}">Tagesarbeiten ansehen</a></p>
+</td></tr></table>
+<table role="presentation" style="width:100%;background:white;border-radius:12px;padding:20px"><tr><td>
+<h2 style="font-size:18px;margin:0 0 12px">Abnahme</h2>
+<p style="margin:0"><strong>{{ digest.pending_photo_count }}</strong> Standorte mit Fotos warten auf Ihre Abnahme.</p>
+<p style="margin:20px 0 4px"><a style="background:#0A2540;color:white;padding:11px 16px;border-radius:6px;text-decoration:none;display:inline-block" href="{{ reviews_url }}">Zur Abnahme</a></p>
+</td></tr></table>
+<p style="font-size:12px;color:#586979;line-height:1.5">Die persönlichen Zugangslinks gelten 24 Stunden. Bitte leiten Sie diese E-Mail nicht weiter. Beim nächsten Versand werden vorherige Zugangslinks ungültig.</p>
+</td></tr></table></body></html>

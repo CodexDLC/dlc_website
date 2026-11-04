@@ -21,6 +21,43 @@ class ClientMembership(models.Model):
         ordering: ClassVar = ["user_id"]
 
 
+class CustomerEmailAccessGrant(models.Model):
+    """One replaceable email issuance, bound to an existing customer membership."""
+
+    membership = models.ForeignKey(ClientMembership, on_delete=models.CASCADE, related_name="email_access_grants")
+    client = models.ForeignKey("projects.Client", on_delete=models.PROTECT)
+    membership_updated_at = models.DateTimeField()
+    token_digest = models.CharField(max_length=64, unique=True)
+    work_date = models.DateField()
+    issued_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    revoked_at = models.DateTimeField(null=True, blank=True)
+
+
+class CustomerDigestDelivery(models.Model):
+    """One durable attempt per recipient, work day and delivery mode; no bearer data."""
+
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    client = models.ForeignKey("projects.Client", on_delete=models.PROTECT)
+    work_date = models.DateField()
+    mode = models.CharField(max_length=8, choices=[("test", "Test"), ("live", "Live")])
+    status = models.CharField(max_length=16, default="preparing", choices=[
+        ("preparing", "Preparing"), ("sending", "Sending"), ("sent", "Sent"),
+        ("failed", "Failed before delivery"), ("uncertain", "Delivery uncertain"),
+    ])
+    grant = models.ForeignKey(CustomerEmailAccessGrant, on_delete=models.PROTECT, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    attempted_at = models.DateTimeField(null=True, blank=True)
+    sent_at = models.DateTimeField(null=True, blank=True)
+    failure_code = models.CharField(max_length=32, blank=True)
+
+    class Meta:
+        constraints: ClassVar = [models.UniqueConstraint(
+            fields=["recipient", "client", "work_date", "mode"], name="unique_customer_digest_day",
+        )]
+
+
 class PlanProposal(models.Model):
     """Отдельный проект плана до явного решения администратора."""
 
